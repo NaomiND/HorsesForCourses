@@ -1,10 +1,12 @@
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "horses-for-courses.Core", "horses-for-courses.Core\horses-for-courses.Core.csproj", "{2B915D32-7B65-3372-7812-6D3FBABAA665}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "horses-for-courses.Tests", "horses-for-courses.Tests\horses-for-courses.Tests.csproj", "{89871E4E-9C45-A22D-CCB1-1B9F8E7A950D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "horses-for-courses.WebApi", "horses-for-courses.WebApi\horses-for-courses.WebApi.csproj", "{9A174D05-53B6-41B1-A231-2A2AB72579A3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,6 +22,10 @@ Global
 		{89871E4E-9C45-A22D-CCB1-1B9F8E7A950D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{89871E4E-9C45-A22D-CCB1-1B9F8E7A950D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{89871E4E-9C45-A22D-CCB1-1B9F8E7A950D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A174D05-53B6-41B1-A231-2A2AB72579A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A174D05-53B6-41B1-A231-2A2AB72579A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A174D05-53B6-41B1-A231-2A2AB72579A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A174D05-53B6-41B1-A231-2A2AB72579A3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
