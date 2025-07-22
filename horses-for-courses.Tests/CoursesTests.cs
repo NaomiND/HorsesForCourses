@@ -1,6 +1,7 @@
 namespace horses_for_courses.Tests;
 
-public class UnitTest1
+public class CourseTests
+
 {
     [Fact]
     public void Test1()

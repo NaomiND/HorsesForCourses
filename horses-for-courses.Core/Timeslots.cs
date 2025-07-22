@@ -1,0 +1,1 @@
+namespace horses_for_courses.Core;
