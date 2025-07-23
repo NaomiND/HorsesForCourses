@@ -14,14 +14,14 @@ Een opleiding:
 
 ## Coaches
 Een coach:
-[ ] beschikt over een lijst van vaardigheden (competenties).
-[ ] is slechts geschikt voor opleidingen waarvoor hij of zij alle vereiste competenties bezit.
+[X] beschikt over een lijst van vaardigheden (competenties).
+[X] is slechts geschikt voor opleidingen waarvoor hij of zij alle vereiste competenties bezit.
 [ ] kan niet worden toegewezen aan overlappende opleidingen en moet dus beschikbaar zijn op de ingeplande momenten.
 [ ] Interactie met het Domein
 [ ] Om de interactie met het domein mogelijk te maken via een (toekomstige) Web API, voorzie je de volgende gefaseerde operaties:
 
-[ ] Coach registreren: maak een coach aan met naam en e-mailadres.
-[ ] Coach Competenties toevoegen/verwijderen
+[X] Coach registreren: maak een coach aan met naam en e-mailadres.
+[X] Coach Competenties toevoegen/verwijderen
 [ ] Cursus aanmaken: maak een lege cursus aan met naam en periode.
 [ ] Cursus Competenties toevoegen/verwijderen
 [ ] Cursus Lesmomenten toevoegen/verwijderen (dag, beginuur, einduur).

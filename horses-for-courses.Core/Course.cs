@@ -6,6 +6,8 @@ public class Course
 {
     public Guid Id { get; }
     public string CourseName { get; }
+    private readonly List<string> competenceList = new();       //lijst van competenties (collection)
+    public IReadOnlyCollection<string> Competences => competenceList.AsReadOnly();
 
     public Course(Guid id, string course)
     {
@@ -14,9 +16,9 @@ public class Course
     }
 }
 
-// Een opleiding:
 
-// Heeft een naam.
+
+
 // wordt ingepland over een bepaalde periode met een start- en einddatum.
 // heeft vaste lesmomenten, bijvoorbeeld op maandag en woensdag van 10u tot 12u.
 // heeft enkel les op weekdagen (maandag t.e.m. vrijdag).
