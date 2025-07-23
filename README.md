@@ -1,33 +1,33 @@
 ## Opleidingen
 Een opleiding:
-[ ] Heeft een naam.
-[ ] wordt ingepland over een bepaalde periode met een start- en einddatum.
-[ ] heeft vaste lesmomenten, bijvoorbeeld op maandag en woensdag van 10u tot 12u.
-[ ] heeft enkel les op weekdagen (maandag t.e.m. vrijdag).
-[ ] plant lessen uitsluitend binnen de kantooruren (tussen 9u00 en 17u00).
-[ ] moet in totaal minstens één uur duren.
-[ ] vereist een lijst van coach-competenties.
-[ ] wordt begeleid door exact één coach.
-[ ] is ongeldig zolang er geen lesmomenten zijn toegevoegd.
-[ ] kan pas een coach toegewezen krijgen nadat de opleiding als geldig en definitief is bevestigd.
-[ ] laat geen wijzigingen aan het lesrooster meer toe zodra een coach is toegewezen.
+[X] Heeft een naam.
+[X] wordt ingepland over een bepaalde periode met een start- en einddatum.
+[x] heeft vaste lesmomenten, bijvoorbeeld op maandag en woensdag van 10u tot 12u.
+[X] heeft enkel les op weekdagen (maandag t.e.m. vrijdag).
+[x] plant lessen uitsluitend binnen de kantooruren (tussen 9u00 en 17u00).
+[X] moet in totaal minstens één uur duren.
+[X] vereist een lijst van coach-competenties.
+[X] wordt begeleid door exact één coach.
+[X] is ongeldig zolang er geen lesmomenten zijn toegevoegd.
+[X] kan pas een coach toegewezen krijgen nadat de opleiding als geldig en definitief is bevestigd.
+[X] laat geen wijzigingen aan het lesrooster meer toe zodra een coach is toegewezen.
 
 ## Coaches
 Een coach:
 [X] beschikt over een lijst van vaardigheden (competenties).
 [X] is slechts geschikt voor opleidingen waarvoor hij of zij alle vereiste competenties bezit.
-[ ] kan niet worden toegewezen aan overlappende opleidingen en moet dus beschikbaar zijn op de ingeplande momenten.
+[X] kan niet worden toegewezen aan overlappende opleidingen en moet dus beschikbaar zijn op de ingeplande momenten.
 [ ] Interactie met het Domein
 [ ] Om de interactie met het domein mogelijk te maken via een (toekomstige) Web API, voorzie je de volgende gefaseerde operaties:
 
 [X] Coach registreren: maak een coach aan met naam en e-mailadres.
 [X] Coach Competenties toevoegen/verwijderen
-[ ] Cursus aanmaken: maak een lege cursus aan met naam en periode.
-[ ] Cursus Competenties toevoegen/verwijderen
-[ ] Cursus Lesmomenten toevoegen/verwijderen (dag, beginuur, einduur).
-[ ] Cursus bevestigen: markeer de cursus als geldig en definitief, mits hij aan alle voorwaarden voldoet (inclusief minstens één lesmoment).
-[ ] Coach toewijzen: wijs een coach toe, enkel indien de cursus bevestigd is en de coach geschikt én beschikbaar is.
-[ ] Denk bij elk van deze stappen aan geldige foutmeldingen, domeinvalidaties en het garanderen van een consistente toestand.
+[X] Cursus aanmaken: maak een lege cursus aan met naam en periode.
+[X] Cursus Competenties toevoegen/verwijderen
+[X] Cursus Lesmomenten toevoegen/verwijderen (dag, beginuur, einduur).
+[X] Cursus bevestigen: markeer de cursus als geldig en definitief, mits hij aan alle voorwaarden voldoet (inclusief minstens één lesmoment).
+[X] Coach toewijzen: wijs een coach toe, enkel indien de cursus bevestigd is en de coach geschikt én beschikbaar is.
+[x] Denk bij elk van deze stappen aan geldige foutmeldingen, domeinvalidaties en het garanderen van een consistente toestand.
 
 # Architectuur: Layered Architecture (Separation of Concerns)
     - Presentation Layer: buitenste laag. Verantwoordelijk voor communicatie met de buitenwereld. Voor APIen DTO's.
@@ -35,24 +35,25 @@ Een coach:
     - Domain Layer: Het hart. Complexe businesslogica, regels en kernelementen van het systeem (klassen). Volledig onafhankelijk van de andere lagen. Principes van DDD (Domain Driven Design)
     - Infrastructure Layer: De technicus. Implementeert vb database-toegang, communicatie met externe systemen. (voorlopig niet nodig).
 
-**DOMAIN LAYER**
+**DOMAIN LAYER** ok
 - coach: entity & aggregate root
-    └── properties (Id, Name, Email) X 
-    └── collections: lijst competences X
-    └── methods: add, remove, required(has all) logica of coach juiste comp heeft
+    └── properties: Id, Name, Email  
+    └── collections: list competences 
+    └── methods: create, add comp, remove comp, required(coach has req. comp) 
 
 - course: entity & aggregate root
-    └── properties (Id, Name, PlanningPeriod, AssignedCoach (optie), Status)
-    └── collections: lijst competences, lijst timeslot
-    └── methodes: add, remove, addScheduledTimeSlot (validatie, weekdagen, kantooruren, geen overlap), removeTS, confirm(valideert alle regels, alles ok =>status confirmed), assignChoach (na confirmed course=> status finalized, slaat coachID, daarna course Immutable qua planning)
+    └── properties: Id, Name, PlanningPeriod, AssignedCoach(optie)
+    └── collections: list competences, list ScheduledTimeSlot (lesmomenten)
+    └── methods: create, add comp, remove comp, addScheduledTimeSlot , removeTS, confirm(alles ok =>status confirmed), 
+    assignCoach (status finalized: slaat coachID op + Na toewijzing → immutable planning)
+    Een opleiding is ongeldig zolang er geen lesmomenten zijn
     
 - Value Objects (kleine, onveranderlijke objecten, vertegenwoordigen concept uit domein)
-    └── Period: Heeft een StartDate en EndDate. Bevat logica om te valideren dat de einddatum na de startdatum komt.
-    └── TimeSlot: Heeft een StartTime en EndTime. Bevat logica om de duur te berekenen en te valideren (bv. minstens één uur).
-    └── ScheduledTimeSlot: Combineert een DayOfWeek (bv. maandag) met een TimeSlot. Bevat de validatieregels (enkel weekdag, binnen kantooruren 9u-17u).
-    └── Competency: Een simpele string of een object met een Name. Is onveranderlijk.
+    └── Period: StartDate en EndDate. (met logica + validatie)
+    └── TimeSlot: StartTime en EndTime. ( met logica + validatie bv min 1u)
+    └── ScheduledTimeSlot: Combineert een Weekday (Enum) (bv. maandag) met een TimeSlot. Met validatie: weekdagen, kantooruren, geen overlap
 
-**APPLICATION LAYER** 
+**APPLICATION LAYER**  - TO DO!
 - CoachService
     └── RegisterCoach(name, email): nieuw Coach object aanmaken, vragen aan de repository om het op te slaan.
     └── AddCompetencyToCoach(coachId, competency): Haalt de Coach op via de repository, roept de AddCompetency methode op de Coach aan, en slaat de gewijzigde Coach weer op.
@@ -77,7 +78,5 @@ Repositories: Concrete implementaties van de repository interfaces uit de Applic
 Hier komt de code die de database connectie, tabellen, etc. beheert.
 
 **PRESENTATION LAYER (Web API)**
-Controllers: bv. CoachesController, TrainingsController.
-DTOs (Data Transfer Objects): Simpele klassen om data van en naar de API te sturen, bv. CreateCoachDto, TrainingDetailsDto. De controllers vertalen de DTOs naar commando's voor de Application Layer en vertalen de resultaten (of fouten) terug naar HTTP-responses.
-
-dateOnly
+Controllers: bv. CoachesController, CoursesController.
+DTOs (Data Transfer Objects): Simpele klassen om data van en naar de API te sturen, bv. CreateCoachDto, CourseDetailsDto. De controllers vertalen de DTOs naar commando's voor de Application Layer en vertalen de resultaten (of fouten) terug naar HTTP-responses.

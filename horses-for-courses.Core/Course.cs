@@ -1,31 +1,90 @@
-﻿using System.Data.Common;
-
-namespace horses_for_courses.Core;
+﻿namespace horses_for_courses.Core;
 
 public class Course
 {
-    public Guid Id { get; }
-    public string CourseName { get; }
-    private readonly List<string> competenceList = new();       //lijst van competenties (collection)
-    public IReadOnlyCollection<string> Competences => competenceList.AsReadOnly();
+    public Guid Id { get; private set; }
+    public string CourseName { get; private set; }
+    public PlanningPeriod Period { get; private set; }
 
-    public Course(Guid id, string course)
+    private readonly List<string> requiredCompetencies = new();
+    public IReadOnlyCollection<string> RequiredCompetencies => requiredCompetencies.AsReadOnly();
+
+    private readonly List<ScheduledTimeSlot> scheduledTimeSlots = new();
+    public IReadOnlyCollection<ScheduledTimeSlot> ScheduledTimeSlots => scheduledTimeSlots.AsReadOnly();
+
+    public CourseStatus Status { get; private set; } = CourseStatus.Draft;
+    public Coach? AssignedCoach { get; private set; }
+
+    public Course(Guid id, string course, PlanningPeriod period)
     {
         Id = id;
         CourseName = course;
+        Period = period ?? throw new ArgumentNullException(nameof(period));
+    }
+
+    public static Course Create(string name, PlanningPeriod period)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            throw new ArgumentException("Cursusnaam is verplicht.");
+
+        return new Course(Guid.NewGuid(), name, period);
+    }
+
+    public void AddRequiredCompetence(string competency)
+    {
+        if (string.IsNullOrWhiteSpace(competency))
+            throw new ArgumentException("Competentie kan niet leeg zijn.");
+
+        if (requiredCompetencies.Contains(competency, StringComparer.OrdinalIgnoreCase))
+            throw new InvalidOperationException("Competentie werd reeds toegevoegd.");
+
+        requiredCompetencies.Add(competency);
+    }
+
+    public void RemoveRequiredCompetence(string competency)
+    {
+        int removed = requiredCompetencies.RemoveAll(c => string.Equals(c, competency, StringComparison.OrdinalIgnoreCase));
+        if (removed == 0)
+            throw new InvalidOperationException($"Competentie '{competency}' niet gevonden.");
+    }
+
+    public void AddScheduledTimeSlot(ScheduledTimeSlot slot)            // lesmoment toevoegen
+    {
+        if (Status != CourseStatus.Draft)
+            throw new InvalidOperationException("Het lesmoment kan niet meer gewijzigd worden na bevestiging of coach toewijzing.");
+
+        if (scheduledTimeSlots.Any(existing => existing.OverlapsWith(slot)))
+            throw new InvalidOperationException("Dit lesmoment overlapt met een bestaand lesmoment.");
+
+        scheduledTimeSlots.Add(slot);
+    }
+
+    public void RemoveScheduledTimeSlot(ScheduledTimeSlot slot)         //lesmoment verwijderen
+    {
+        if (Status != CourseStatus.Draft)
+            throw new InvalidOperationException("Het lesmoment kan niet meer gewijzigd worden na bevestiging of coach toewijzing.");
+
+        if (!scheduledTimeSlots.Remove(slot))
+            throw new InvalidOperationException("Lesmoment niet gevonden.");
+    }
+
+    public void Confirm()
+    {
+        if (!scheduledTimeSlots.Any())
+            throw new InvalidOperationException("Kan cursus niet bevestigen zonder lesmoment(en).");
+
+        Status = CourseStatus.Confirmed;
+    }
+
+    public void AssignCoach(Coach coach)
+    {
+        if (Status != CourseStatus.Confirmed)
+            throw new InvalidOperationException("Cursus bevestigen voordat je een coach kan toevoegen.");
+
+        if (!coach.HasAllRequiredCompetences(requiredCompetencies))
+            throw new InvalidOperationException("De coach heeft niet de gewenste competenties voor deze cursus.");
+
+        AssignedCoach = coach;
+        Status = CourseStatus.Finalized;
     }
 }
-
-
-
-
-// wordt ingepland over een bepaalde periode met een start- en einddatum.
-// heeft vaste lesmomenten, bijvoorbeeld op maandag en woensdag van 10u tot 12u.
-// heeft enkel les op weekdagen (maandag t.e.m. vrijdag).
-// plant lessen uitsluitend binnen de kantooruren (tussen 9u00 en 17u00).
-// moet in totaal minstens één uur duren.
-// vereist een lijst van coach-competenties.
-// wordt begeleid door exact één coach.
-// is ongeldig zolang er geen lesmomenten zijn toegevoegd.
-// kan pas een coach toegewezen krijgen nadat de opleiding als geldig en definitief is bevestigd.
-// laat geen wijzigingen aan het lesrooster meer toe zodra een coach is toegewezen.

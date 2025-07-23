@@ -61,7 +61,7 @@ public class CoachTests
     [Theory]
     [InlineData("")]
     [InlineData("   ")]
-    public void AddCompetence_ThrowsArgumentExceptionWhenCompetenceIsInvalid(string invalidCompetence)
+    public void AddCompetence_InvalidInput_ThrowsArgumentException(string invalidCompetence)
     {
         FullName name = new FullName("Test", "Coach");
         EmailAddress email = EmailAddress.From("test@example.com");

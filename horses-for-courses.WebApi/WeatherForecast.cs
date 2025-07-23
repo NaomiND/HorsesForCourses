@@ -1,4 +1,4 @@
-namespace horses_for_cCourses.WebApi;
+namespace horses_for_courses.WebApi;
 
 public class WeatherForecast
 {

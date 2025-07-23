@@ -1,5 +1,3 @@
-using System.Linq;
-
 namespace horses_for_courses.Core;
 
 public class Coach
@@ -28,10 +26,10 @@ public class Coach
     public void AddCompetence(string competence)
     {
         if (string.IsNullOrWhiteSpace(competence))
-            throw new ArgumentException("Competence cannot be empty.");
+            throw new ArgumentException("Competentie kan niet leeg zijn.");
 
         if (competenceList.Contains(competence, StringComparer.OrdinalIgnoreCase))
-            throw new InvalidOperationException("Competence already exists.");
+            throw new InvalidOperationException("Competentie werd reeds toegevoegd.");
 
         competenceList.Add(competence);
     }
@@ -40,7 +38,7 @@ public class Coach
     {
         int removedCount = competenceList.RemoveAll(c => string.Equals(c, competence, StringComparison.OrdinalIgnoreCase)); // RemoveAll en StringComparer (hoofdlettergevoelige delete)
         if (removedCount == 0)
-            throw new InvalidOperationException($"Competence '{competence}' not found.");
+            throw new InvalidOperationException($"Competentie '{competence}' niet gevonden.");
     }
 
     public void ClearCompetences()
@@ -56,5 +54,3 @@ public class Coach
         return requiredCompetences.All(rc => competenceList.Contains(rc, StringComparer.OrdinalIgnoreCase));    //Linq
     }
 }
-
-// kan niet worden toegewezen aan overlappende opleidingen en moet dus beschikbaar zijn op de ingeplande momenten.
