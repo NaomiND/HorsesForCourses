@@ -1,6 +1,6 @@
 using horses_for_courses.Core;
 
-namespace horses_for_courses.WebApi;
+namespace horses_for_courses.Repository;
 
 public class InMemoryCourseRepository        //TODO
 {

@@ -4,6 +4,7 @@ using Serilog;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using horses_for_courses.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 

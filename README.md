@@ -1,33 +1,54 @@
-## Opleidingen
-Een opleiding:
-[X] Heeft een naam.
-[X] wordt ingepland over een bepaalde periode met een start- en einddatum.
-[x] heeft vaste lesmomenten, bijvoorbeeld op maandag en woensdag van 10u tot 12u.
-[X] heeft enkel les op weekdagen (maandag t.e.m. vrijdag).
-[x] plant lessen uitsluitend binnen de kantooruren (tussen 9u00 en 17u00).
-[X] moet in totaal minstens één uur duren.
-[X] vereist een lijst van coach-competenties.
-[X] wordt begeleid door exact één coach.
-[X] is ongeldig zolang er geen lesmomenten zijn toegevoegd.
-[X] kan pas een coach toegewezen krijgen nadat de opleiding als geldig en definitief is bevestigd.
-[X] laat geen wijzigingen aan het lesrooster meer toe zodra een coach is toegewezen.
+## COACHES
+### 🧩 POST /coaches
 
-## Coaches
-Een coach:
-[X] beschikt over een lijst van vaardigheden (competenties).
-[X] is slechts geschikt voor opleidingen waarvoor hij of zij alle vereiste competenties bezit.
-[X] kan niet worden toegewezen aan overlappende opleidingen en moet dus beschikbaar zijn op de ingeplande momenten.
-[ ] Interactie met het Domein
-[ ] Om de interactie met het domein mogelijk te maken via een (toekomstige) Web API, voorzie je de volgende gefaseerde operaties:
+**Als** administrator
+**Wil ik** een coach kunnen registreren met naam en e-mailadres
+**Zodat** deze beschikbaar is voor toekomstige cursussen
 
-[X] Coach registreren: maak een coach aan met naam en e-mailadres.
-[X] Coach Competenties toevoegen/verwijderen
-[X] Cursus aanmaken: maak een lege cursus aan met naam en periode.
-[X] Cursus Competenties toevoegen/verwijderen
-[X] Cursus Lesmomenten toevoegen/verwijderen (dag, beginuur, einduur).
-[X] Cursus bevestigen: markeer de cursus als geldig en definitief, mits hij aan alle voorwaarden voldoet (inclusief minstens één lesmoment).
-[X] Coach toewijzen: wijs een coach toe, enkel indien de cursus bevestigd is en de coach geschikt én beschikbaar is.
-[x] Denk bij elk van deze stappen aan geldige foutmeldingen, domeinvalidaties en het garanderen van een consistente toestand.
+### 🧩 POST /coaches/{id}/skills
+
+**Als** administrator
+**Wil ik** competenties kunnen toevoegen of verwijderen bij een coach
+**Zodat** zijn of haar geschiktheid aangepast kan worden
+
+Inkomende Dto bevat een lijst van alle skills, het domein verwijdert of voegt deze toe naar gelang
+of maakt de coach skill lijst leeg en repopulate deze met binnenkomende.
+toevoegen of verwijderen, niet de beste woordkeuze
+
+## COURSES
+### 🧩 POST /courses
+
+**Als** cursusverantwoordelijke
+**Wil ik** een nieuwe cursus kunnen aanmaken met naam en periode
+**Zodat** ik nadien het rooster en de vereisten kan invullen
+
+### 🧩 POST /courses/{id}/skills
+
+**Als** cursusverantwoordelijke
+**Wil ik** competenties kunnen toevoegen of verwijderen bij een cursus
+**Zodat** ik kan aangeven wat een coach moet kunnen
+
+
+### 🧩 POST /courses/{id}/timeslots
+
+**Als** cursusverantwoordelijke
+**Wil ik** lesmomenten kunnen toevoegen of verwijderen bij een cursus
+**Zodat** ik het rooster kan opstellen
+
+
+### ✅ POST /courses/{id}/confirm
+
+**Als** cursusverantwoordelijke
+**Wil ik** een cursus kunnen bevestigen
+**Zodat** ik zeker weet dat alles in orde is en een coach toegewezen mag worden
+
+
+### 🧩 POST /courses/{id}/assign-coach
+
+**Als** cursusverantwoordelijke
+**Wil ik** een coach kunnen toewijzen aan een bevestigde cursus
+**Zodat** de cursus daadwerkelijk kan doorgaan met een geschikte coach
+
 
 # Architectuur: Layered Architecture (Separation of Concerns)
     - Presentation Layer: buitenste laag. Verantwoordelijk voor communicatie met de buitenwereld. Voor APIen DTO's.
@@ -53,10 +74,31 @@ Een coach:
     └── TimeSlot: StartTime en EndTime. ( met logica + validatie bv min 1u)
     └── ScheduledTimeSlot: Combineert een Weekday (Enum) (bv. maandag) met een TimeSlot. Met validatie: weekdagen, kantooruren, geen overlap
 
+Domain Layer
+Aggregates:
+
+Coach: heeft competenties + methoden AddCompetency, RemoveCompetency, HasAllCompetencies(...)
+
+Course: bevat validaties bij AddScheduledTimeSlot, Confirm(), AssignCoach()
+
+Value Objects:
+
+Period: Validatie van begin/einddatum
+
+TimeSlot: Start/EndTime, minimumduur = 1 uur
+
+ScheduledTimeSlot: bevat DayOfWeek + TimeSlot, met extra validaties (weekdag, kantooruren)
+
+Competency: simpele waarde (string-based object)
+
+Domain Service:
+
+CoachAvailabilityService: controleert overlappingen met andere opleidingen van coach
+
 **APPLICATION LAYER**  - TO DO!
 - CoachService
     └── RegisterCoach(name, email): nieuw Coach object aanmaken, vragen aan de repository om het op te slaan.
-    └── AddCompetencyToCoach(coachId, competency): Haalt de Coach op via de repository, roept de AddCompetency methode op de Coach aan, en slaat de gewijzigde Coach weer op.
+    └── Add/RemoveCompetencyToCoach(coachId, competency): Haalt de Coach op via de repository, roept de Add/Remove methode op Coach aan, en slaat de gewijzigde Coach weer op.
 
 - CourseService
     └── CreateCourse(name, startDate, endDate): Maakt een nieuwe Course aan en slaat deze op.
@@ -73,10 +115,71 @@ Een coach:
     └──CoachAvailabilityService:
                 IsCoachAvailableForCourse(coach, Course): Deze service haalt alle andere opleidingen op waar de coach al aan toegewezen is en controleert of de lesmomenten van de nieuwe Course overlappen met de lesmomenten van de bestaande opleidingen.
 
+Application Layer
+CoachService:
+
+RegisterCoach(name, email)
+
+AddCompetencyToCoach(coachId, competency)
+
+CourseService:
+
+CreateCourse(name, start, end)
+
+AddScheduledTimeSlotToCourse(...)
+
+ConfirmCourse(courseId)
+
+AssignCoachToCourse(courseId, coachId): bevat checks op status, competenties, beschikbaarheid
+
 **INFRASTRUCTURE LAYER**
-Repositories: Concrete implementaties van de repository interfaces uit de Application Layer (bv. EntityFrameworkCoachRepository die met een database praat).
+Repositories: Concrete implementaties van de repository interfaces uit de Application Layer (bv. EntityFrameworkCoachRepository die met een database praat). Of een tijdelijke opslag via InMemory. 
 Hier komt de code die de database connectie, tabellen, etc. beheert.
 
 **PRESENTATION LAYER (Web API)**
-Controllers: bv. CoachesController, CoursesController.
-DTOs (Data Transfer Objects): Simpele klassen om data van en naar de API te sturen, bv. CreateCoachDto, CourseDetailsDto. De controllers vertalen de DTOs naar commando's voor de Application Layer en vertalen de resultaten (of fouten) terug naar HTTP-responses.
+Controllers: Coachesontroller, CourseController.
+DTOs (Data Transfer Objects): Data van en naar de API te sturen: CreateCoachDTO, CourseDetailsDto. 
+De controllers vertalen de DTOs naar commando's voor de Application Layer en vertalen de resultaten (of fouten) terug naar HTTP-responses.
+
+API Controllers + DTO’s:
+
+Controllers praten alleen via de Application Layer
+
+Duidelijke scheiding van HTTP-laag en domeinlogica
+
+Voorzie foutmeldingen bij invalidaties (bv. 400 BadRequest met uitleg)
+
+
+
+
+# TO DO
+## Opleidingen
+Een opleiding:
+[X] Heeft een naam.
+[X] wordt ingepland over een bepaalde periode met een start- en einddatum.
+[x] heeft vaste lesmomenten, bijvoorbeeld op maandag en woensdag van 10u tot 12u.
+[X] heeft enkel les op weekdagen (maandag t.e.m. vrijdag).
+[x] plant lessen uitsluitend binnen de kantooruren (tussen 9u00 en 17u00).
+[X] moet in totaal minstens één uur duren.
+[X] vereist een lijst van coach-competenties.
+[X] wordt begeleid door exact één coach.
+[X] is ongeldig zolang er geen lesmomenten zijn toegevoegd.
+[X] kan pas een coach toegewezen krijgen nadat de opleiding als geldig en definitief is bevestigd.
+[X] laat geen wijzigingen aan het lesrooster meer toe zodra een coach is toegewezen.
+
+## Coaches
+Een coach:
+[X] beschikt over een lijst van vaardigheden (competenties).
+[X] is slechts geschikt voor opleidingen waarvoor hij of zij alle vereiste competenties bezit.
+[X] kan niet worden toegewezen aan overlappende opleidingen en moet dus beschikbaar zijn op de ingeplande momenten.
+[X] Interactie met het Domein
+[X] Om de interactie met het domein mogelijk te maken via een (toekomstige) Web API, voorzie je de volgende gefaseerde operaties:
+
+[X] Coach registreren: maak een coach aan met naam en e-mailadres.
+[X] Coach Competenties toevoegen/verwijderen
+[X] Cursus aanmaken: maak een lege cursus aan met naam en periode.
+[X] Cursus Competenties toevoegen/verwijderen
+[X] Cursus Lesmomenten toevoegen/verwijderen (dag, beginuur, einduur).
+[X] Cursus bevestigen: markeer de cursus als geldig en definitief, mits hij aan alle voorwaarden voldoet (inclusief minstens één lesmoment).
+[X] Coach toewijzen: wijs een coach toe, enkel indien de cursus bevestigd is en de coach geschikt én beschikbaar is.
+[x] Denk bij elk van deze stappen aan geldige foutmeldingen, domeinvalidaties en het garanderen van een consistente toestand.
