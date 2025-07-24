@@ -1,16 +1,19 @@
-// public class InMemoryCoachRepository        TODO
-// {
-//     private readonly Dictionary<Guid, Coach> _coaches = new();
+using horses_for_courses.Core;
 
-// public void Add(Coach coach)
-// {
-//     _coaches[coach.Id] = coach;
-// }
+namespace horses_for_courses.WebApi;
 
-// public Coach? GetById(Guid id)
-// {
-//     return _coaches.TryGetValue(id, out var coach) ? coach : null;
-// }
+public class InMemoryCoachRepository        //TODO
+{
+    private readonly Dictionary<Guid, Coach> _coaches = new();
 
-// ...
-// }
+    public void Add(Coach coach)
+    {
+        _coaches[coach.Id] = coach;
+    }
+
+    public Coach? GetById(Guid id)
+    {
+        return _coaches.TryGetValue(id, out var coach) ? coach : null;
+    }
+
+}

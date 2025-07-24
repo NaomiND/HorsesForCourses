@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace horses_for_cCourses.WebApi.Controllers;
+namespace horses_for_courses.WebApi.Controllers;
 
 [ApiController]
 [Route("[controller]")]
