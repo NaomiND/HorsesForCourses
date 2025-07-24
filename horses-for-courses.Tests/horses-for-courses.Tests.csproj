@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\horses-for-courses.Core\horses-for-courses.Core.csproj" />
+    <ProjectReference Include="..\horses-for-courses.WebApi\horses-for-courses.WebApi.csproj" />
   </ItemGroup>
 
 </Project>

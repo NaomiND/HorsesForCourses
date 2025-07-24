@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\horses-for-courses.Core\horses-for-courses.Core.csproj" />
+    <InternalsVisibleTo Include="horses-for-courses.Tests" />
   </ItemGroup>
 
 </Project>
