@@ -4,6 +4,7 @@ using Serilog;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using horses_for_courses.Repository;
+using horses_for_courses.WebApi.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,22 +36,25 @@ builder.Services.AddScoped<Logger>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-app.UseExceptionHandler(appBuilder =>
+app.Use(async (context, next) =>
 {
-    appBuilder.Run(async context =>
+    try
     {
-        context.Response.StatusCode = 500;
+        await next();
+    }
+    catch (DomainException ex)
+    {
+        context.Response.StatusCode = 422;
         context.Response.ContentType = "application/problem+json";
-
         var problem = new ProblemDetails
         {
-            Title = "Er is een fout opgetreden",
-            Status = 500,
-            Detail = "Er ging iets mis tijdens het verwerken van je verzoek."
+            Status = 422,
+            Title = "Domain Error",
+            Detail = ex.Message,
+            Type = "https://httpstatuses.com/422"
         };
-
         await context.Response.WriteAsJsonAsync(problem);
-    });
+    }
 });
 
 if (app.Environment.IsDevelopment())

@@ -10,20 +10,9 @@ public class InMemoryCoachRepository        //TODO
         return _coaches.TryGetValue(id, out var coach) ? coach : null;
     }
 
-    public void Add(Coach coach)
-    {
-        _coaches[coach.Id] = coach;
-    }
     public void Save(Coach coach)
     {
-        if (_coaches.ContainsKey(coach.Id))
-        {
-            _coaches[coach.Id] = coach;
-        }
-        else
-        {
-            _coaches.Add(coach.Id, coach);
-        }
+        _coaches[coach.Id] = coach;
     }
 }
 

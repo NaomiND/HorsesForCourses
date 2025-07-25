@@ -11,19 +11,8 @@ public class InMemoryCourseRepository        //TODO
         return _courses.TryGetValue(id, out var course) ? course : null;
     }
 
-    public void Add(Course course)
-    {
-        _courses[course.Id] = course;
-    }
     public void Save(Course course)
     {
-        if (_courses.ContainsKey(course.Id))
-        {
-            _courses[course.Id] = course;
-        }
-        else
-        {
-            _courses.Add(course.Id, course);
-        }
+        _courses[course.Id] = course;
     }
 }

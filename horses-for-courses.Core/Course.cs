@@ -48,6 +48,11 @@ public class Course
             throw new InvalidOperationException($"Competentie '{competency}' niet gevonden.");
     }
 
+    public void ClearRequiredCompetences()
+    {
+        requiredCompetencies.Clear();
+    }
+
     public void AddScheduledTimeSlot(ScheduledTimeSlot slot)            // lesmoment toevoegen
     {
         if (Status != CourseStatus.Draft)

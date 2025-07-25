@@ -1,3 +1,5 @@
+generic id is beter dan een guid id voor deze opdracht
+
 ## COACHES
 ### 🧩 POST /coaches                OK  
 
@@ -16,34 +18,34 @@ of maakt de coach skill lijst leeg en repopulate deze met binnenkomende.
 toevoegen of verwijderen, niet de beste woordkeuze
 
 ## COURSES
-### 🧩 POST /courses
+### 🧩 POST /courses                OK  
 
 **Als** cursusverantwoordelijke
 **Wil ik** een nieuwe cursus kunnen aanmaken met naam en periode
 **Zodat** ik nadien het rooster en de vereisten kan invullen
 
-### 🧩 POST /courses/{id}/skills
+### 🧩 POST /courses/{id}/skills    OK
 
 **Als** cursusverantwoordelijke
 **Wil ik** competenties kunnen toevoegen of verwijderen bij een cursus
 **Zodat** ik kan aangeven wat een coach moet kunnen
 
 
-### 🧩 POST /courses/{id}/timeslots
+### 🧩 POST /courses/{id}/timeslots OK
 
 **Als** cursusverantwoordelijke
 **Wil ik** lesmomenten kunnen toevoegen of verwijderen bij een cursus
 **Zodat** ik het rooster kan opstellen
 
 
-### ✅ POST /courses/{id}/confirm
+### ✅ POST /courses/{id}/confirm   OK
 
 **Als** cursusverantwoordelijke
 **Wil ik** een cursus kunnen bevestigen
 **Zodat** ik zeker weet dat alles in orde is en een coach toegewezen mag worden
 
 
-### 🧩 POST /courses/{id}/assign-coach
+### 🧩 POST /courses/{id}/assign-coach  OK
 
 **Als** cursusverantwoordelijke
 **Wil ik** een coach kunnen toewijzen aan een bevestigde cursus
