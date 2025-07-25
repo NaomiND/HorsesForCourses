@@ -23,7 +23,7 @@ public class Coach
         return new Coach(Guid.NewGuid(), fullName, emailAddress);
     }
 
-    public void UpdateCompetence(string competence)
+    public void AddCompetence(string competence)
     {
         if (string.IsNullOrWhiteSpace(competence))
             throw new ArgumentException("Competentie kan niet leeg zijn.");

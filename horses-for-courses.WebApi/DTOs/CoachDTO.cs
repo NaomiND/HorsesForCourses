@@ -1,4 +1,3 @@
-using horses_for_courses.Core;
 namespace horses_for_courses.Dtos;
 
 public class CoachDTO

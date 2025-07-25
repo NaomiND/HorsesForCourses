@@ -1,11 +1,11 @@
 ## COACHES
-### 🧩 POST /coaches
+### 🧩 POST /coaches                OK  
 
 **Als** administrator
 **Wil ik** een coach kunnen registreren met naam en e-mailadres
 **Zodat** deze beschikbaar is voor toekomstige cursussen
 
-### 🧩 POST /coaches/{id}/skills
+### 🧩 POST /coaches/{id}/skills    OK
 
 **Als** administrator
 **Wil ik** competenties kunnen toevoegen of verwijderen bij een coach
