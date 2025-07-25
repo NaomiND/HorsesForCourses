@@ -1,58 +1,4 @@
-generic id is beter dan een guid id voor deze opdracht
-TODO! ALLES WERKT. MAAR FOUT BIJ COMPETENCES WANNEER Nederlands gegeven wordt aan coach en vb nederlands gevraagd bij cursus 
-=> ik had nochtans hoofdlettergevoeligheid aangepast? Of enkel bij registratie. Nakijken.
-
-## COACHES
-### 🧩 POST /coaches                OK  
-
-**Als** administrator
-**Wil ik** een coach kunnen registreren met naam en e-mailadres
-**Zodat** deze beschikbaar is voor toekomstige cursussen
-
-### 🧩 POST /coaches/{id}/skills    OK
-
-**Als** administrator
-**Wil ik** competenties kunnen toevoegen of verwijderen bij een coach
-**Zodat** zijn of haar geschiktheid aangepast kan worden
-
-Inkomende Dto bevat een lijst van alle skills, het domein verwijdert of voegt deze toe naar gelang
-of maakt de coach skill lijst leeg en repopulate deze met binnenkomende.
-toevoegen of verwijderen, niet de beste woordkeuze
-
-## COURSES
-### 🧩 POST /courses                OK  
-
-**Als** cursusverantwoordelijke
-**Wil ik** een nieuwe cursus kunnen aanmaken met naam en periode
-**Zodat** ik nadien het rooster en de vereisten kan invullen
-
-### 🧩 POST /courses/{id}/skills    OK
-
-**Als** cursusverantwoordelijke
-**Wil ik** competenties kunnen toevoegen of verwijderen bij een cursus
-**Zodat** ik kan aangeven wat een coach moet kunnen
-
-
-### 🧩 POST /courses/{id}/timeslots OK
-
-**Als** cursusverantwoordelijke
-**Wil ik** lesmomenten kunnen toevoegen of verwijderen bij een cursus
-**Zodat** ik het rooster kan opstellen
-
-
-### ✅ POST /courses/{id}/confirm   OK
-
-**Als** cursusverantwoordelijke
-**Wil ik** een cursus kunnen bevestigen
-**Zodat** ik zeker weet dat alles in orde is en een coach toegewezen mag worden
-
-
-### 🧩 POST /courses/{id}/assign-coach  OK
-
-**Als** cursusverantwoordelijke
-**Wil ik** een coach kunnen toewijzen aan een bevestigde cursus
-**Zodat** de cursus daadwerkelijk kan doorgaan met een geschikte coach
-
+generic id is beter dan een guid id voor deze opdracht TO DO
 
 # Architectuur: Layered Architecture (Separation of Concerns)
     - Presentation Layer: buitenste laag. Verantwoordelijk voor communicatie met de buitenwereld. Voor APIen DTO's.
@@ -78,27 +24,6 @@ toevoegen of verwijderen, niet de beste woordkeuze
     └── TimeSlot: StartTime en EndTime. ( met logica + validatie bv min 1u)
     └── ScheduledTimeSlot: Combineert een Weekday (Enum) (bv. maandag) met een TimeSlot. Met validatie: weekdagen, kantooruren, geen overlap
 
-Domain Layer
-Aggregates:
-
-Coach: heeft competenties + methoden AddCompetency, RemoveCompetency, HasAllCompetencies(...)
-
-Course: bevat validaties bij AddScheduledTimeSlot, Confirm(), AssignCoach()
-
-Value Objects:
-
-Period: Validatie van begin/einddatum
-
-TimeSlot: Start/EndTime, minimumduur = 1 uur
-
-ScheduledTimeSlot: bevat DayOfWeek + TimeSlot, met extra validaties (weekdag, kantooruren)
-
-Competency: simpele waarde (string-based object)
-
-Domain Service:
-
-CoachAvailabilityService: controleert overlappingen met andere opleidingen van coach
-
 **APPLICATION LAYER**  - TO DO!
 - CoachService
     └── RegisterCoach(name, email): nieuw Coach object aanmaken, vragen aan de repository om het op te slaan.
@@ -119,22 +44,6 @@ CoachAvailabilityService: controleert overlappingen met andere opleidingen van c
     └──CoachAvailabilityService:
                 IsCoachAvailableForCourse(coach, Course): Deze service haalt alle andere opleidingen op waar de coach al aan toegewezen is en controleert of de lesmomenten van de nieuwe Course overlappen met de lesmomenten van de bestaande opleidingen.
 
-Application Layer
-CoachService:
-
-RegisterCoach(name, email)
-
-AddCompetencyToCoach(coachId, competency)
-
-CourseService:
-
-CreateCourse(name, start, end)
-
-AddScheduledTimeSlotToCourse(...)
-
-ConfirmCourse(courseId)
-
-AssignCoachToCourse(courseId, coachId): bevat checks op status, competenties, beschikbaarheid
 
 **INFRASTRUCTURE LAYER**
 Repositories: Concrete implementaties van de repository interfaces uit de Application Layer (bv. EntityFrameworkCoachRepository die met een database praat). Of een tijdelijke opslag via InMemory. 
@@ -153,12 +62,8 @@ Duidelijke scheiding van HTTP-laag en domeinlogica
 
 Voorzie foutmeldingen bij invalidaties (bv. 400 BadRequest met uitleg)
 
-
-
-
 # TO DO
 ## Opleidingen
-Een opleiding:
 [X] Heeft een naam.
 [X] wordt ingepland over een bepaalde periode met een start- en einddatum.
 [x] heeft vaste lesmomenten, bijvoorbeeld op maandag en woensdag van 10u tot 12u.
@@ -172,7 +77,6 @@ Een opleiding:
 [X] laat geen wijzigingen aan het lesrooster meer toe zodra een coach is toegewezen.
 
 ## Coaches
-Een coach:
 [X] beschikt over een lijst van vaardigheden (competenties).
 [X] is slechts geschikt voor opleidingen waarvoor hij of zij alle vereiste competenties bezit.
 [X] kan niet worden toegewezen aan overlappende opleidingen en moet dus beschikbaar zijn op de ingeplande momenten.
@@ -187,3 +91,47 @@ Een coach:
 [X] Cursus bevestigen: markeer de cursus als geldig en definitief, mits hij aan alle voorwaarden voldoet (inclusief minstens één lesmoment).
 [X] Coach toewijzen: wijs een coach toe, enkel indien de cursus bevestigd is en de coach geschikt én beschikbaar is.
 [x] Denk bij elk van deze stappen aan geldige foutmeldingen, domeinvalidaties en het garanderen van een consistente toestand.
+
+**WEBAPI - CONTROLLERS**
+### 🧩 POST /coaches                OK  
+
+**Als** administrator
+**Wil ik** een coach kunnen registreren met naam en e-mailadres
+**Zodat** deze beschikbaar is voor toekomstige cursussen
+
+### 🧩 POST /coaches/{id}/skills    OK
+
+**Als** administrator
+**Wil ik** competenties kunnen toevoegen of verwijderen bij een coach
+**Zodat** zijn of haar geschiktheid aangepast kan worden
+
+### 🧩 POST /courses                OK  
+
+**Als** cursusverantwoordelijke
+**Wil ik** een nieuwe cursus kunnen aanmaken met naam en periode
+**Zodat** ik nadien het rooster en de vereisten kan invullen
+
+### 🧩 POST /courses/{id}/skills    OK
+
+**Als** cursusverantwoordelijke
+**Wil ik** competenties kunnen toevoegen of verwijderen bij een cursus
+**Zodat** ik kan aangeven wat een coach moet kunnen
+
+### 🧩 POST /courses/{id}/timeslots OK
+
+**Als** cursusverantwoordelijke
+**Wil ik** lesmomenten kunnen toevoegen of verwijderen bij een cursus
+**Zodat** ik het rooster kan opstellen
+
+### ✅ POST /courses/{id}/confirm   OK
+
+**Als** cursusverantwoordelijke
+**Wil ik** een cursus kunnen bevestigen
+**Zodat** ik zeker weet dat alles in orde is en een coach toegewezen mag worden
+
+### 🧩 POST /courses/{id}/assign-coach  OK
+
+**Als** cursusverantwoordelijke
+**Wil ik** een coach kunnen toewijzen aan een bevestigde cursus
+**Zodat** de cursus daadwerkelijk kan doorgaan met een geschikte coach
+
