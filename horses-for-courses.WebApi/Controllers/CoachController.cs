@@ -22,11 +22,11 @@ public class CoachesController : ControllerBase
         var coach = new Coach(Guid.NewGuid(), FullName.From(dto.Name), EmailAddress.From(dto.Email));
         _coachRepository.Save(coach);
 
-        return Ok(coach.Id);
+        return Ok(coach);
     }
 
     [HttpPost("{id}/skills")]                   //Vervangt de competenties (skills) van een specifieke coach.
-    public IActionResult UpdateCoachCompetences(Guid id, [FromBody] UpdateCoachCompetencesDTO dto)
+    public IActionResult UpdateCoachCompetences([FromBody] UpdateCoachCompetencesDTO dto, Guid id)
     {
         var coach = _coachRepository.GetById(id);
         if (coach is null) return NotFound();

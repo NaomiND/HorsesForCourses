@@ -1,4 +1,6 @@
 generic id is beter dan een guid id voor deze opdracht
+TODO! ALLES WERKT. MAAR FOUT BIJ COMPETENCES WANNEER Nederlands gegeven wordt aan coach en vb nederlands gevraagd bij cursus 
+=> ik had nochtans hoofdlettergevoeligheid aangepast? Of enkel bij registratie. Nakijken.
 
 ## COACHES
 ### 🧩 POST /coaches                OK  

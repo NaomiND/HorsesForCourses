@@ -30,7 +30,7 @@ Log.Logger = new LoggerConfiguration()
 builder.Host.UseSerilog();
 
 builder.Services.AddSingleton<InMemoryCourseRepository>();
-builder.Services.AddScoped<InMemoryCoachRepository>();
+builder.Services.AddSingleton<InMemoryCoachRepository>();
 builder.Services.AddScoped<Logger>();
 
 var app = builder.Build();
