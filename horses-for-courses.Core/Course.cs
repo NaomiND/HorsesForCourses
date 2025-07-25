@@ -35,7 +35,7 @@ public class Course
         if (string.IsNullOrWhiteSpace(competency))
             throw new ArgumentException("Competentie kan niet leeg zijn.");
 
-        if (requiredCompetencies.Contains(competency, StringComparer.OrdinalIgnoreCase))
+        if (requiredCompetencies.Contains(competency.ToLower()))
             throw new InvalidOperationException("Competentie werd reeds toegevoegd.");
 
         requiredCompetencies.Add(competency);
@@ -43,7 +43,7 @@ public class Course
 
     public void RemoveRequiredCompetence(string competency)
     {
-        int removed = requiredCompetencies.RemoveAll(c => string.Equals(c, competency, StringComparison.OrdinalIgnoreCase));
+        int removed = requiredCompetencies.RemoveAll(c => string.Equals(c, competency.ToLower()));
         if (removed == 0)
             throw new InvalidOperationException($"Competentie '{competency}' niet gevonden.");
     }

@@ -28,7 +28,7 @@ public class Coach
         if (string.IsNullOrWhiteSpace(competence))
             throw new ArgumentException("Competentie kan niet leeg zijn.");
 
-        if (competenceList.Contains(competence, StringComparer.OrdinalIgnoreCase))
+        if (competenceList.Contains(competence.ToLower()))
             throw new InvalidOperationException("Competentie werd reeds toegevoegd.");
 
         competenceList.Add(competence);
@@ -36,7 +36,7 @@ public class Coach
 
     public void RemoveCompetence(string competence)
     {
-        int removedCount = competenceList.RemoveAll(c => string.Equals(c, competence, StringComparison.OrdinalIgnoreCase)); // RemoveAll en StringComparer (hoofdlettergevoelige delete)
+        int removedCount = competenceList.RemoveAll(c => string.Equals(c, competence.ToLower())); // RemoveAll en StringComparer (hoofdlettergevoelige delete)
         if (removedCount == 0)
             throw new InvalidOperationException($"Competentie '{competence}' niet gevonden.");
     }
@@ -48,9 +48,10 @@ public class Coach
 
     public bool HasAllRequiredCompetences(IEnumerable<string> requiredCompetences)
     {
+        List<string> lowerCase = requiredCompetences.Select(x => x.ToLower()).ToList();
         if (requiredCompetences == null)
             throw new ArgumentNullException(nameof(requiredCompetences));
 
-        return requiredCompetences.All(rc => competenceList.Contains(rc, StringComparer.OrdinalIgnoreCase));    //Linq
+        return requiredCompetences.All(rc => lowerCase.Contains(rc.ToLower()));    //Linq
     }
 }
