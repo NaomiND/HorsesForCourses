@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>horses_for_courses.WebApi</RootNamespace>
+    <NoWarn>CS8618</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,6 +16,7 @@
   <ItemGroup>
     <ProjectReference Include="..\horses-for-courses.Core\horses-for-courses.Core.csproj" />
     <InternalsVisibleTo Include="horses-for-courses.Tests" />
+
   </ItemGroup>
 
 </Project>

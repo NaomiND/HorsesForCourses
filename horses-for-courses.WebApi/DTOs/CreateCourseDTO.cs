@@ -1,7 +1,7 @@
 using horses_for_courses.Core;
 namespace horses_for_courses.Dtos;
 
-public class CourseDTO               //Meestal get; set;: standaard en meest flexibele benadering voor DTO's, vanwege serialisatie/deserialisatie.
+public class CreateCourseDTO               //Meestal get; set;: standaard en meest flexibele benadering voor DTO's, vanwege serialisatie/deserialisatie.
 {
     public Guid Id { get; set; }
     public string CourseName { get; set; }

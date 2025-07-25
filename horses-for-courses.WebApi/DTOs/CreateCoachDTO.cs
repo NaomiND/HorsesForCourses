@@ -5,7 +5,6 @@ public class CreateCoachDTO               //Meestal get; set;: standaard en mees
 {
     public string Name { get; set; }
     public string Email { get; set; }
-
 }
 
 //gebruik hier: var dto = coachMapper.ConvertToDTO(coach);

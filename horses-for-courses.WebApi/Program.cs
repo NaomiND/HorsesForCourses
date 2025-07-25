@@ -21,7 +21,6 @@ builder.Services.AddSwaggerGen(options =>
         Description = "API voor het beheren van cursussen en coaches"
     });
 });
-builder.Services.AddSingleton<InMemoryCoachRepository>();
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -29,6 +28,11 @@ Log.Logger = new LoggerConfiguration()
     .CreateLogger();
 
 builder.Host.UseSerilog();
+
+builder.Services.AddSingleton<InMemoryCourseRepository>();
+builder.Services.AddScoped<InMemoryCoachRepository>();
+builder.Services.AddScoped<Logger>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -59,7 +63,6 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

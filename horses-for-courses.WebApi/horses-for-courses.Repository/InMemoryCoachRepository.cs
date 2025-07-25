@@ -27,9 +27,5 @@ public class InMemoryCoachRepository        //TODO
     {
         _coaches[coach.Id] = coach;
     }
-
-
-
-
 }
 

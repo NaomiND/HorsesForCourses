@@ -4,9 +4,9 @@ namespace horses_for_courses.WebApi;
 
 public class Logger
 {
-    private readonly ILogger<CoachController> _logger;
+    private readonly ILogger<CoachesController> _logger;
 
-    public Logger(ILogger<CoachController> logger)
+    public Logger(ILogger<CoachesController> logger)
     {
         _logger = logger;
     }
