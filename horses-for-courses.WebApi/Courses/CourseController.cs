@@ -35,11 +35,17 @@ public class CoursesController : ControllerBase
         }
     }
 
-    [HttpGet("{id}")]                        // Ondersteunende GET voor CreatedAtAction
+    [HttpGet("{id}")]
     public IActionResult GetCourseById(Guid id)
     {
         var course = _courseRepository.GetById(id);
         return course is null ? NotFound() : Ok(course);
+    }
+
+    [HttpGet("")]
+    public ActionResult<Coach> GetBy
+    {
+
     }
 
     [HttpPost("{id}/skills")]                 // Vervangt de vereiste competenties voor een cursus.

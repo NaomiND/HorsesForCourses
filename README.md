@@ -1,4 +1,32 @@
-generic id is beter dan een guid id voor deze opdracht TO DO
+# TODO
+
+- [ ] generic id is beter dan een guid id voor deze opdracht
+- [ ] geen domeinobjecten teruggeven ook niet bij ophalen
+- [X] mapper maken voor coach en course
+- [ ] [HttpPost("{id}/skills")] - aanpassen
+- [ ] try-catch niet in controllers
+- [X] mapstructuur aanpassen
+- [ ] testen van ProblemDetails
+
+### 🧩 Get /coaches         OK   
+**Als** administrator 
+**Wil ik** een lijst van alle coaches kunnen opvragen
+**Zodat** ik een eenvoudig overzicht heb
+
+### 🧩 Get /coaches/{id}    OK
+**Als** administrator
+**Wil ik** een coach per id kunnen opvragen
+**Zodat** deze data beschikbaar is voor weergave en wijziging
+
+### 🧩 Get /courses
+**Als** cursusverantwoordelijke
+**Wil ik** een lijst van alle coaches kunnen opvragen
+**Zodat** ik een eenvoudig overzicht heb
+
+### 🧩 Get /courses/{id}    OK
+**Als** cursusverantwoordelijke
+**Wil ik** een cursus per id kunnen opvragen 
+**Zodat** deze data beschikbaar is voor weergave en wijziging
 
 # Architectuur: Layered Architecture (Separation of Concerns)
     - Presentation Layer: buitenste laag. Verantwoordelijk voor communicatie met de buitenwereld. Voor APIen DTO's.
@@ -24,7 +52,7 @@ generic id is beter dan een guid id voor deze opdracht TO DO
     └── TimeSlot: StartTime en EndTime. ( met logica + validatie bv min 1u)
     └── ScheduledTimeSlot: Combineert een Weekday (Enum) (bv. maandag) met een TimeSlot. Met validatie: weekdagen, kantooruren, geen overlap
 
-**APPLICATION LAYER**  - TO DO!
+**APPLICATION LAYER**  - Enkel met service beginnen als de opdracht te groot wordt. 
 - CoachService
     └── RegisterCoach(name, email): nieuw Coach object aanmaken, vragen aan de repository om het op te slaan.
     └── Add/RemoveCompetencyToCoach(coachId, competency): Haalt de Coach op via de repository, roept de Add/Remove methode op Coach aan, en slaat de gewijzigde Coach weer op.
@@ -45,7 +73,7 @@ generic id is beter dan een guid id voor deze opdracht TO DO
                 IsCoachAvailableForCourse(coach, Course): Deze service haalt alle andere opleidingen op waar de coach al aan toegewezen is en controleert of de lesmomenten van de nieuwe Course overlappen met de lesmomenten van de bestaande opleidingen.
 
 
-**INFRASTRUCTURE LAYER**
+**INFRASTRUCTURE LAYER**  -  momenteel IN Memory storage. Reeds onafhankelijk voor koppeling met database. 
 Repositories: Concrete implementaties van de repository interfaces uit de Application Layer (bv. EntityFrameworkCoachRepository die met een database praat). Of een tijdelijke opslag via InMemory. 
 Hier komt de code die de database connectie, tabellen, etc. beheert.
 
@@ -55,12 +83,9 @@ DTOs (Data Transfer Objects): Data van en naar de API te sturen: CreateCoachDTO,
 De controllers vertalen de DTOs naar commando's voor de Application Layer en vertalen de resultaten (of fouten) terug naar HTTP-responses.
 
 API Controllers + DTO’s:
-
 Controllers praten alleen via de Application Layer
-
 Duidelijke scheiding van HTTP-laag en domeinlogica
-
-Voorzie foutmeldingen bij invalidaties (bv. 400 BadRequest met uitleg)
+Voorzie foutmeldingen bij invalidaties (bv. 422 BadRequest met uitleg)
 
 # TO DO
 ## Opleidingen
@@ -93,45 +118,38 @@ Voorzie foutmeldingen bij invalidaties (bv. 400 BadRequest met uitleg)
 [x] Denk bij elk van deze stappen aan geldige foutmeldingen, domeinvalidaties en het garanderen van een consistente toestand.
 
 **WEBAPI - CONTROLLERS**
-### 🧩 POST /coaches                OK  
 
+### 🧩 POST /coaches                OK  
 **Als** administrator
 **Wil ik** een coach kunnen registreren met naam en e-mailadres
 **Zodat** deze beschikbaar is voor toekomstige cursussen
 
 ### 🧩 POST /coaches/{id}/skills    OK
-
 **Als** administrator
 **Wil ik** competenties kunnen toevoegen of verwijderen bij een coach
 **Zodat** zijn of haar geschiktheid aangepast kan worden
 
 ### 🧩 POST /courses                OK  
-
 **Als** cursusverantwoordelijke
 **Wil ik** een nieuwe cursus kunnen aanmaken met naam en periode
 **Zodat** ik nadien het rooster en de vereisten kan invullen
 
 ### 🧩 POST /courses/{id}/skills    OK
-
 **Als** cursusverantwoordelijke
 **Wil ik** competenties kunnen toevoegen of verwijderen bij een cursus
 **Zodat** ik kan aangeven wat een coach moet kunnen
 
 ### 🧩 POST /courses/{id}/timeslots OK
-
 **Als** cursusverantwoordelijke
 **Wil ik** lesmomenten kunnen toevoegen of verwijderen bij een cursus
 **Zodat** ik het rooster kan opstellen
 
 ### ✅ POST /courses/{id}/confirm   OK
-
 **Als** cursusverantwoordelijke
 **Wil ik** een cursus kunnen bevestigen
 **Zodat** ik zeker weet dat alles in orde is en een coach toegewezen mag worden
 
 ### 🧩 POST /courses/{id}/assign-coach  OK
-
 **Als** cursusverantwoordelijke
 **Wil ik** een coach kunnen toewijzen aan een bevestigde cursus
 **Zodat** de cursus daadwerkelijk kan doorgaan met een geschikte coach
-

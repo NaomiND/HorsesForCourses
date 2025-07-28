@@ -10,6 +10,11 @@ public class InMemoryCoachRepository        //TODO
         return _coaches.TryGetValue(id, out var coach) ? coach : null;
     }
 
+    public IEnumerable<Coach> GetAll()
+    {
+        return _coaches.Values;
+    }
+
     public void Save(Coach coach)
     {
         _coaches[coach.Id] = coach;

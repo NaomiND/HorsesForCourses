@@ -35,7 +35,7 @@ public class CoachesController : ControllerBase
 
         foreach (var competence in dto.Competences)
         {
-            coach.AddCompetence(competence);
+            coach.AddCompetence(competence); //dit mappen voor terug te geven aan (hele foreach en clear) => replace
         }
         _coachRepository.Save(coach);
 
@@ -43,9 +43,21 @@ public class CoachesController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public ActionResult<Coach> GetById(Guid id)
+    public ActionResult<CoachDTO> GetById(Guid id)
     {
         var coach = _coachRepository.GetById(id);
-        return coach is null ? NotFound() : Ok(coach);
+        if (coach is null)
+            return NotFound();
+
+        var coachDto = CoachMapper.ToDTO(coach);
+        return Ok(coachDto);
+    }
+
+    [HttpGet]
+    public ActionResult<IEnumerable<CoachDTO>> GetAll()
+    {
+        var coaches = _coachRepository.GetAll();
+        var coachDtos = CoachMapper.ToDTOList(coaches);
+        return Ok(coachDtos);
     }
 }
