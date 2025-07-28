@@ -1,7 +1,7 @@
 using horses_for_courses.Core;
 namespace horses_for_courses.Repository;
 
-public class InMemoryCoachRepository        //TODO
+public class InMemoryCoachRepository
 {
     private readonly Dictionary<Guid, Coach> _coaches = new();
 

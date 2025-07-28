@@ -18,65 +18,49 @@ public class CoursesController : ControllerBase
         _coachRepository = coachRepository;
     }
 
-    [HttpPost]                              // Maakt een nieuwe cursus aan met een naam en een periode.
+    [HttpPost]                                  // Maakt een nieuwe cursus aan met een naam en een periode.
     public IActionResult CreateCourse([FromBody] CreateCourseDTO dto)
     {
-        try
-        {
-            var period = new PlanningPeriod(dto.StartDate, dto.EndDate);
-            var course = Course.Create(dto.CourseName, period);
-            _courseRepository.Save(course);
+        var period = new PlanningPeriod(dto.StartDate, dto.EndDate);
+        var course = Course.Create(dto.CourseName, period);
 
-            return CreatedAtAction(nameof(GetCourseById), new { id = course.Id }, course);
-        }
-        catch (ArgumentException ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        _courseRepository.Save(course);
+
+        var courseDto = CourseMapper.ToDTO(course);
+        return CreatedAtAction(nameof(GetCourseById), new { id = course.Id }, courseDto);
     }
 
     [HttpGet("{id}")]
     public IActionResult GetCourseById(Guid id)
     {
         var course = _courseRepository.GetById(id);
-        return course is null ? NotFound() : Ok(course);
+        if (course is null)
+            return NotFound();
+
+        var courseDto = CourseMapper.ToDTO(course);
+        return Ok(courseDto);
     }
 
-    [HttpGet("")]
-    public ActionResult<Coach> GetBy
+    [HttpGet]
+    public ActionResult<IEnumerable<CourseDTO>> GetAll()
     {
-
+        var courses = _courseRepository.GetAll();
+        var courseDtos = CourseMapper.ToDTOList(courses);
+        return Ok(courseDtos);
     }
 
-    [HttpPost("{id}/skills")]                 // Vervangt de vereiste competenties voor een cursus.
+    [HttpPost("{id}/skills")]                       // Vervangt de vereiste competenties voor een cursus.
     public IActionResult UpdateCourseCompetences(Guid id, [FromBody] UpdateCourseCompetencesDTO dto)
     {
         var course = _courseRepository.GetById(id);
         if (course is null) return NotFound();
 
-        try
-        {
-            // Om de lijst te vervangen, moeten we eerst de oude verwijderen.
-            // Een 'ClearRequiredCompetencies' methode in de Course class zou hier handig zijn. ZIE COACH!!
+        course.UpdateRequiredCompetences(dto.RequiredCompetences);
 
-            var currentCompetencies = course.RequiredCompetencies.ToList();
-            foreach (var competency in currentCompetencies)
-            {
-                course.RemoveRequiredCompetence(competency);
-            }
+        _courseRepository.Save(course);
 
-            // Voeg de nieuwe competenties toe
-            foreach (var competency in dto.RequiredCompetences)
-            {
-                course.AddRequiredCompetence(competency);
-            }
-
-            return Ok(course);
-        }
-        catch (Exception ex) when (ex is ArgumentException or InvalidOperationException)
-        {
-            return BadRequest(ex.Message);
-        }
+        var courseDto = CourseMapper.ToDTO(course);
+        return Ok(courseDto);
     }
 
     [HttpPost("{id}/timeslots")]
@@ -85,27 +69,21 @@ public class CoursesController : ControllerBase
         var course = _courseRepository.GetById(id);
         if (course is null) return NotFound();
 
-        try
+        var currentSlots = course.ScheduledTimeSlots.ToList();
+        foreach (var slot in currentSlots)
         {
-            var currentSlots = course.ScheduledTimeSlots.ToList();
-            foreach (var slot in currentSlots)
-            {
-                course.RemoveScheduledTimeSlot(slot);
-            }
-
-            foreach (var slotDto in dto.TimeSlots)              // Voeg de nieuwe lesmomenten toe
-            {
-                var timeSlot = new TimeSlot(slotDto.StartTime, slotDto.EndTime);
-                var scheduledSlot = new ScheduledTimeSlot(slotDto.Day, timeSlot);
-                course.AddScheduledTimeSlot(scheduledSlot);
-            }
-
-            return Ok(course);
+            course.RemoveScheduledTimeSlot(slot);
         }
-        catch (Exception ex) when (ex is ArgumentException or InvalidOperationException)
+
+        foreach (var slotDto in dto.TimeSlots)
         {
-            return BadRequest(ex.Message);
+            var timeSlot = new TimeSlot(slotDto.StartTime, slotDto.EndTime);
+            var scheduledSlot = new ScheduledTimeSlot(slotDto.Day, timeSlot);
+            course.AddScheduledTimeSlot(scheduledSlot);
         }
+
+        var courseDto = CourseMapper.ToDTO(course);
+        return Ok(courseDto);
     }
 
     [HttpPost("{id}/confirm")]                                  // Bevestigt een cursus zodat een coach toegewezen kan worden.
@@ -114,15 +92,10 @@ public class CoursesController : ControllerBase
         var course = _courseRepository.GetById(id);
         if (course is null) return NotFound();
 
-        try
-        {
-            course.Confirm();
-            return Ok(course);
-        }
-        catch (InvalidOperationException ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        course.Confirm();
+
+        var courseDto = CourseMapper.ToDTO(course);
+        return Ok(courseDto);
     }
 
     [HttpPost("{id}/assign-coach")]                             // Wijst een geschikte coach toe aan een bevestigde cursus.
@@ -134,14 +107,9 @@ public class CoursesController : ControllerBase
         var coach = _coachRepository.GetById(dto.CoachId);
         if (coach is null) return NotFound($"Coach met ID {dto.CoachId} niet gevonden.");
 
-        try
-        {
-            course.AssignCoach(coach);
-            return Ok(course);
-        }
-        catch (InvalidOperationException ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        course.AssignCoach(coach);
+
+        var courseDto = CourseMapper.ToDTO(course);
+        return Ok(courseDto);
     }
 }

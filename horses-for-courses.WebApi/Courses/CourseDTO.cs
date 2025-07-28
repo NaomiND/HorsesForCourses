@@ -6,9 +6,10 @@ public class CourseDTO
     public Guid Id { get; set; }
     public string CourseName { get; set; } = string.Empty;
     public PlanningPeriod Period { get; set; }
-    public IReadOnlyCollection<string> RequiredCompetencies { get; set; } = [];
-    public IReadOnlyCollection<ScheduledTimeSlot> ScheduledTimeSlots { get; set; } = [];
-    public CourseStatus Status { get; private set; } = CourseStatus.Draft;
-    public Coach? AssignedCoach { get; private set; }
-
+    public DateTime StartDate { get; set; }
+    public DateTime EndDate { get; set; }
+    public List<string> RequiredCompetences { get; set; } = new();
+    public List<ScheduledTimeSlotDTO> ScheduledTimeSlots { get; set; } = new();
+    public bool IsConfirmed { get; set; }    //public CourseStatus Status { get; private set; } = CourseStatus.Draft;
+    public Guid? AssignedCoachId { get; set; }
 }

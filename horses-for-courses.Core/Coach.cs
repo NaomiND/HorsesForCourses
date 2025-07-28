@@ -46,6 +46,16 @@ public class Coach
         competenceList.Clear();
     }
 
+    public void UpdateCompetences(IEnumerable<string> newCompetences)
+    {
+        ClearCompetences();
+
+        foreach (var competence in newCompetences)
+        {
+            AddCompetence(competence);
+        }
+    }
+
     public bool HasAllRequiredCompetences(IEnumerable<string> requiredCompetences)
     {
         List<string> lowerCase = requiredCompetences.Select(x => x.ToLower()).ToList();

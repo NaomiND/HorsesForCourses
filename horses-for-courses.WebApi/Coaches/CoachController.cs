@@ -16,34 +16,34 @@ public class CoachesController : ControllerBase
         _coachRepository = coachrepository;
     }
 
-    [HttpPost]                                  //Registreert een nieuwe coach met naam en e-mailadres.
+
+    [HttpPost]
     public IActionResult RegisterCoach([FromBody] CreateCoachDTO dto)
     {
         var coach = new Coach(Guid.NewGuid(), FullName.From(dto.Name), EmailAddress.From(dto.Email));
         _coachRepository.Save(coach);
 
-        return Ok(coach);
+        var coachDto = CoachMapper.ToDTO(coach);
+        return Ok(coachDto);
     }
 
-    [HttpPost("{id}/skills")]                   //Vervangt de competenties (skills) van een specifieke coach.
+    [HttpPost("{id}/skills")]
     public IActionResult UpdateCoachCompetences([FromBody] UpdateCoachCompetencesDTO dto, Guid id)
     {
         var coach = _coachRepository.GetById(id);
-        if (coach is null) return NotFound();
+        if (coach is null)
+            return NotFound();
 
-        coach.ClearCompetences();               // Maak de lijst leeg en vul deze opnieuw met de skills uit de DTO
+        coach.UpdateCompetences(dto.Competences);
 
-        foreach (var competence in dto.Competences)
-        {
-            coach.AddCompetence(competence); //dit mappen voor terug te geven aan (hele foreach en clear) => replace
-        }
         _coachRepository.Save(coach);
 
-        return Ok(coach);                       // Stuur bijgewerkte coach terug
+        var coachDto = CoachMapper.ToDTO(coach);
+        return Ok(coachDto);
     }
 
     [HttpGet("{id}")]
-    public ActionResult<CoachDTO> GetById(Guid id)
+    public IActionResult GetCoachById(Guid id)
     {
         var coach = _coachRepository.GetById(id);
         if (coach is null)

@@ -1,10 +1,10 @@
 # TODO
 
 - [ ] generic id is beter dan een guid id voor deze opdracht
-- [ ] geen domeinobjecten teruggeven ook niet bij ophalen
+- [X] geen domeinobjecten teruggeven ook niet bij ophalen
 - [X] mapper maken voor coach en course
-- [ ] [HttpPost("{id}/skills")] - aanpassen
-- [ ] try-catch niet in controllers
+- [X] [HttpPost("{id}/skills")] - aanpassen
+- [X] try-catch niet in controllers
 - [X] mapstructuur aanpassen
 - [ ] testen van ProblemDetails
 
@@ -18,7 +18,7 @@
 **Wil ik** een coach per id kunnen opvragen
 **Zodat** deze data beschikbaar is voor weergave en wijziging
 
-### 🧩 Get /courses
+### 🧩 Get /courses         OK
 **Als** cursusverantwoordelijke
 **Wil ik** een lijst van alle coaches kunnen opvragen
 **Zodat** ik een eenvoudig overzicht heb

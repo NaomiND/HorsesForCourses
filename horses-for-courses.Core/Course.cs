@@ -53,6 +53,16 @@ public class Course
         requiredCompetencies.Clear();
     }
 
+    public void UpdateRequiredCompetences(IEnumerable<string> newRequiredCompetencies)
+    {
+        ClearRequiredCompetences();
+
+        foreach (var competence in newRequiredCompetencies)
+        {
+            AddRequiredCompetence(competence);
+        }
+    }
+
     public void AddScheduledTimeSlot(ScheduledTimeSlot slot)            // lesmoment toevoegen
     {
         if (Status != CourseStatus.Draft)
