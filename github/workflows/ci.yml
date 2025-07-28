@@ -20,10 +20,10 @@ jobs:
           dotnet-version: '8.0.x'
 
       - name: Restore dependencies
-        run: dotnet restore horses-for-courses.sln
+        run: dotnet restore HorsesForCourses.sln
 
       - name: Build solution
-        run: dotnet build horses-for-courses.sln --no-restore --configuration Release
+        run: dotnet build HorsesForCourses.sln --no-restore --configuration Release
 
       - name: Run tests
-        run: dotnet test horses-for-courses.Tests/horses-for-courses.Tests.csproj --no-build --configuration Release --logger trx
+        run: dotnet test HorsesForCourses.Tests/HorsesForCourses.Tests.csproj --no-build --configuration Release --logger trx

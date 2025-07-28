@@ -1,6 +1,0 @@
-@horses_for_courses.WebApi_HostAddress = http://localhost:5270
-
-GET {{horses_for_courses.WebApi_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
