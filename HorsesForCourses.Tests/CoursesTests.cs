@@ -21,7 +21,7 @@ public class CourseTests
 
         course.AddRequiredCompetence("Testing");
 
-        Assert.Contains("Testing", course.RequiredCompetencies);
+        Assert.Contains("testing", course.RequiredCompetencies);
     }
 
     [Theory]

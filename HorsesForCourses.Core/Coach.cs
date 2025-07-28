@@ -31,7 +31,7 @@ public class Coach
         if (competenceList.Contains(competence.ToLower()))
             throw new InvalidOperationException("Competentie werd reeds toegevoegd.");
 
-        competenceList.Add(competence);
+        competenceList.Add(competence.ToLower());
     }
 
     public void RemoveCompetence(string competence)
@@ -58,7 +58,7 @@ public class Coach
 
     public bool HasAllRequiredCompetences(IEnumerable<string> requiredCompetences)
     {
-        List<string> lowerCase = requiredCompetences.Select(x => x.ToLower()).ToList();
+        List<string> lowerCase = competenceList.Select(x => x.ToLower()).ToList();
         if (requiredCompetences == null)
             throw new ArgumentNullException(nameof(requiredCompetences));
 

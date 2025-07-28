@@ -38,7 +38,7 @@ public class Course
         if (requiredCompetencies.Contains(competency.ToLower()))
             throw new InvalidOperationException("Competentie werd reeds toegevoegd.");
 
-        requiredCompetencies.Add(competency);
+        requiredCompetencies.Add(competency.ToLower());
     }
 
     public void RemoveRequiredCompetence(string competency)

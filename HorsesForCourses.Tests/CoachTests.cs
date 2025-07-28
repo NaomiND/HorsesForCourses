@@ -50,7 +50,7 @@ public class CoachTests
         FullName name = new FullName("Test", "Coach");
         EmailAddress email = EmailAddress.From("test@example.com");
         Coach coach = new Coach(Guid.NewGuid(), name, email);
-        string competence = "C# Programming";
+        string competence = "c# programming";
 
         coach.AddCompetence(competence);
 
@@ -95,7 +95,7 @@ public class CoachTests
 
         Assert.DoesNotContain("French", coach.Competences);
         Assert.Single(coach.Competences);
-        Assert.Contains("C# Programming", coach.Competences);
+        Assert.Contains("c# programming", coach.Competences);
     }
 
     [Fact]
@@ -107,7 +107,7 @@ public class CoachTests
         coach.AddCompetence("C# Programming");
 
         Assert.Throws<InvalidOperationException>(() => coach.RemoveCompetence("French"));
-        Assert.Contains("C# Programming", coach.Competences);
+        Assert.Contains("c# programming", coach.Competences);
     }
 
     [Fact]
