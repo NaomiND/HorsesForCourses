@@ -30,25 +30,6 @@ public class CoursesController : ControllerBase
         return CreatedAtAction(nameof(GetCourseById), new { id = course.Id }, courseDto);
     }
 
-    [HttpGet("{id}")]
-    public IActionResult GetCourseById(int id)
-    {
-        var course = _courseRepository.GetById(id);
-        if (course is null)
-            return NotFound();
-
-        var courseDto = CourseMapper.ToDTO(course);
-        return Ok(courseDto);
-    }
-
-    [HttpGet]
-    public ActionResult<IEnumerable<CourseDTO>> GetAll()
-    {
-        var courses = _courseRepository.GetAll();
-        var courseDtos = CourseMapper.ToDTOList(courses);
-        return Ok(courseDtos);
-    }
-
     [HttpPost("{id}/skills")]                       // Vervangt de vereiste competenties voor een cursus.
     public IActionResult UpdateCourseSkills(int id, [FromBody] UpdateCourseSkillsDTO dto)
     {
@@ -111,5 +92,25 @@ public class CoursesController : ControllerBase
 
         var courseDto = CourseMapper.ToDTO(course);
         return Ok(courseDto);
+    }
+
+
+    [HttpGet("{id}")]
+    public IActionResult GetCourseById(int id)
+    {
+        var course = _courseRepository.GetById(id);
+        if (course is null)
+            return NotFound();
+
+        var courseDto = CourseMapper.ToDTO(course);
+        return Ok(courseDto);
+    }
+
+    [HttpGet]
+    public ActionResult<IEnumerable<CourseDTO>> GetAll()
+    {
+        var courses = _courseRepository.GetAll();
+        var courseDtos = CourseMapper.ToDTOList(courses);
+        return Ok(courseDtos);
     }
 }

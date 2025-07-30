@@ -23,8 +23,9 @@ public class CoachesController : ControllerBase
         var coach = new Coach(FullName.From(dto.Name), EmailAddress.From(dto.Email));
         _coachRepository.Save(coach);
 
-        var coachDto = CoachMapper.ToDTO(coach);
-        return Ok(coachDto);
+        return Ok(coach.Id);
+        // var coachDto = CoachMapper.ToDTO(coach);             //indien Id enkel beschikbaar na mapping
+        // return Ok(coachDto.Id);
     }
 
     [HttpPost("{id}/skills")]
@@ -38,7 +39,7 @@ public class CoachesController : ControllerBase
 
         _coachRepository.Save(coach);
 
-        var coachDto = CoachMapper.ToDTO(coach);
+        var coachDto = CoachMapper.ToDTO(coach);        //TODO
         return Ok(coachDto);
     }
 
@@ -49,7 +50,7 @@ public class CoachesController : ControllerBase
         if (coach is null)
             return NotFound();
 
-        var coachDto = CoachMapper.ToDTO(coach);
+        var coachDto = CoachMapper.ToDTO(coach);        //TODO
         return Ok(coachDto);
     }
 
@@ -57,7 +58,8 @@ public class CoachesController : ControllerBase
     public ActionResult<IEnumerable<CoachDTO>> GetAll()
     {
         var coaches = _coachRepository.GetAll();
-        var coachDtos = CoachMapper.ToDTOList(coaches);
+        var allCourses = _courseRepository.GetAll();        //waaaaarommmmm??
+        var coachDtos = CoachMapper.ToDTOList(coaches, allCourses);
         return Ok(coachDtos);
     }
 }

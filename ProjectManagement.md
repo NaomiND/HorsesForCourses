@@ -1,19 +1,42 @@
 # TODO
 - [X] Guid Id naar int Id
 - [X] Competences naar Skills
-- [] RequiredCompetences naar Skills
-- [X] POST /coaches
+- [X] RequiredCompetences naar Skills
+- [X] POST /coaches : return enkel id; verwijder naam, e-mail, skills
 - [X] POST /coaches/{id}/skills : Competences naar Skills
 - [X] POST /Course : courseName naar Name en Id verwijderen
-- [] POST /courses/{id}/skills: ReqComp => Skills
-- [] POST /courses/{id}/timeslots: day int => string
-- [] POST /courses/{id}/assign-coach: courseId verwijderen
+- [X] POST /courses/{id}/skills : ReqComp => Skills
+- [] POST /courses/{id}/timeslots : day int => string, tijd naar uur ipv uur en minuten?
+- [X] POST /courses/{id}/confirm
+- [X] POST /courses/{id}/assign-coach : courseId verwijderen
 
--[] GET `/coaches`: numberOfCoursesAssignedTo toevoegen, skills verwijderen
--[] GET `/coaches/{id}`: Toevoegen: "courses": [ { "id": 10, "name": "Advanced C#" }, { "id": 12, "name": "Test-Driven Development" }  ]
--[] 
--[]
--[]
+-[] GET /coaches: numberOfCoursesAssignedTo toevoegen, skills verwijderen
+-[] GET /coaches/{id} : Toevoegen: "courses": [ { "id": 10, "name": "Advanced C#" }, { "id": 12, "name": "Test-Driven Development" }  ]
+-[] GET /courses : verwijderen: period (enkel start en end), skills, timeslots, IsConfirmed => hasSchedule, assignedCoachId;   
+toevoegen: hasCoach : false
+-[] GET /courses/{id} : verwijderen period (enkel start en end), isConfirmed; aanpassen: ScheduledTimeSlots, assignedcoach => coach (met id en naam)
+  "id": 10,                     
+  "name": "Advanced C#",        
+  "startDate": "2025-09-01",
+  "endDate": "2025-09-05",
+  "skills": ["C#", "LINQ"],
+  "timeslots": [
+    { "day": "Monday", "start": 9, "end": 12 },
+    { "day": "Tuesday", "start": 13, "end": 17 }
+  ],
+  "coach": { "id": 42, "name": "Alice" }
+  HUIDIGE RESPONSE
+{
+  "id": 0,                      ok
+  "name": "WebAPI",             ok
+  "period": null,               
+  "startDate": "0001-01-01T00:00:00",
+  "endDate": "0001-01-01T00:00:00",
+  "skills": [],
+  "scheduledTimeSlots": [],
+  "isConfirmed": false,
+  "assignedCoachId": null
+}
 - [ ] testen van ProblemDetails
 
 # Architectuur: Layered Architecture (Separation of Concerns)
@@ -105,7 +128,7 @@ Voorzie foutmeldingen bij invalidaties (bv. 422 BadRequest met uitleg)
 [X] Coach toewijzen: wijs een coach toe, enkel indien de cursus bevestigd is en de coach geschikt én beschikbaar is.
 [x] Denk bij elk van deze stappen aan geldige foutmeldingen, domeinvalidaties en het garanderen van een consistente toestand.
 
-**WEBAPI - CONTROLLERS**
+## WEBAPI - CONTROLLERS
 
 ### 🧩 POST /coaches                OK  
 **Als** administrator **Wil ik** een coach kunnen registreren met naam en e-mailadres
