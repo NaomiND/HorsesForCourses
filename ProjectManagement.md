@@ -3,12 +3,17 @@
 - [X] Competences naar Skills
 - [] RequiredCompetences naar Skills
 - [X] POST /coaches
-- [] POST /coaches/{id}/skills : Competences naar Skills
-- [] POST /Course ; courseName naar Name en Id verwijderen
+- [X] POST /coaches/{id}/skills : Competences naar Skills
+- [X] POST /Course : courseName naar Name en Id verwijderen
 - [] POST /courses/{id}/skills: ReqComp => Skills
 - [] POST /courses/{id}/timeslots: day int => string
 - [] POST /courses/{id}/assign-coach: courseId verwijderen
 
+-[] GET `/coaches`: numberOfCoursesAssignedTo toevoegen, skills verwijderen
+-[] GET `/coaches/{id}`: Toevoegen: "courses": [ { "id": 10, "name": "Advanced C#" }, { "id": 12, "name": "Test-Driven Development" }  ]
+-[] 
+-[]
+-[]
 - [ ] testen van ProblemDetails
 
 # Architectuur: Layered Architecture (Separation of Concerns)

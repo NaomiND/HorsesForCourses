@@ -22,7 +22,7 @@ public class CoursesController : ControllerBase
     public IActionResult CreateCourse([FromBody] CreateCourseDTO dto)
     {
         var period = new PlanningPeriod(dto.StartDate, dto.EndDate);
-        var course = Course.Create(dto.Id, dto.Name, period);
+        var course = Course.Create(dto.Name, period);
 
         _courseRepository.Save(course);
 
@@ -50,12 +50,12 @@ public class CoursesController : ControllerBase
     }
 
     [HttpPost("{id}/skills")]                       // Vervangt de vereiste competenties voor een cursus.
-    public IActionResult UpdateCourseCompetences(int id, [FromBody] UpdateCourseCompetencesDTO dto)
+    public IActionResult UpdateCourseSkills(int id, [FromBody] UpdateCourseSkillsDTO dto)
     {
         var course = _courseRepository.GetById(id);
         if (course is null) return NotFound();
 
-        course.UpdateRequiredCompetences(dto.RequiredCompetences);
+        course.UpdateSkills(dto.Skills);
 
         _courseRepository.Save(course);
 

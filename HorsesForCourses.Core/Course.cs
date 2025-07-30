@@ -6,8 +6,8 @@ public class Course
     public string Name { get; private set; }
     public PlanningPeriod Period { get; private set; }
 
-    private readonly List<string> requiredCompetencies = new();
-    public IReadOnlyCollection<string> RequiredCompetencies => requiredCompetencies.AsReadOnly();
+    private readonly List<string> skills = new();
+    public IReadOnlyCollection<string> Skills => skills.AsReadOnly();
 
     private readonly List<ScheduledTimeSlot> scheduledTimeSlots = new();
     public IReadOnlyCollection<ScheduledTimeSlot> ScheduledTimeSlots => scheduledTimeSlots.AsReadOnly();
@@ -15,51 +15,50 @@ public class Course
     public CourseStatus Status { get; private set; } = CourseStatus.Draft;
     public Coach? AssignedCoach { get; private set; }
 
-    public Course(int id, string course, PlanningPeriod period)
+    public Course(string course, PlanningPeriod period)
     {
-        Id = id;
         Name = course;
         Period = period ?? throw new ArgumentNullException(nameof(period));
     }
 
-    public static Course Create(int id, string name, PlanningPeriod period)
+    public static Course Create(string name, PlanningPeriod period)
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new ArgumentException("Cursusnaam is verplicht.");
 
-        return new Course(0, name, period);
+        return new Course(name, period);
     }
 
-    public void AddRequiredCompetence(string competency)
+    public void AddSkill(string skill)
     {
-        if (string.IsNullOrWhiteSpace(competency))
+        if (string.IsNullOrWhiteSpace(skill))
             throw new ArgumentException("Competentie kan niet leeg zijn.");
 
-        if (requiredCompetencies.Contains(competency.ToLower()))
+        if (skills.Contains(skill.ToLower()))
             throw new InvalidOperationException("Competentie werd reeds toegevoegd.");
 
-        requiredCompetencies.Add(competency.ToLower());
+        skills.Add(skill.ToLower());
     }
 
-    public void RemoveRequiredCompetence(string competency)
+    public void RemoveSkill(string skill)
     {
-        int removed = requiredCompetencies.RemoveAll(c => string.Equals(c, competency.ToLower()));
+        int removed = skills.RemoveAll(c => string.Equals(c, skill.ToLower()));
         if (removed == 0)
-            throw new InvalidOperationException($"Competentie '{competency}' niet gevonden.");
+            throw new InvalidOperationException($"Competentie '{skill}' niet gevonden.");
     }
 
-    public void ClearRequiredCompetences()
+    public void ClearSkills()
     {
-        requiredCompetencies.Clear();
+        skills.Clear();
     }
 
-    public void UpdateRequiredCompetences(IEnumerable<string> newRequiredCompetencies)
+    public void UpdateSkills(IEnumerable<string> newSkills)
     {
-        ClearRequiredCompetences();
+        ClearSkills();
 
-        foreach (var competence in newRequiredCompetencies)
+        foreach (var skill in newSkills)
         {
-            AddRequiredCompetence(competence);
+            AddSkill(skill);
         }
     }
 
@@ -96,7 +95,7 @@ public class Course
         if (Status != CourseStatus.Confirmed)
             throw new InvalidOperationException("Cursus bevestigen voordat je een coach kan toevoegen.");
 
-        if (!coach.HasAllRequiredSkills(requiredCompetencies))
+        if (!coach.HasAllRequiredSkills(skills))
             throw new InvalidOperationException("De coach heeft niet de gewenste competenties voor deze cursus.");
 
         AssignedCoach = coach;

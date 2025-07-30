@@ -7,68 +7,63 @@ public class CourseTests
     public void CreateValidCourse_WithDraftStatus()
     {
         var period = new PlanningPeriod(new DateOnly(2025, 7, 1), new DateOnly(2025, 7, 31));
-        var course = Course.Create(0, "C#", period);
+        var course = Course.Create("C#", period);
 
-        Assert.Equal("C#", course.CourseName);
+        Assert.Equal("C#", course.Name);
         Assert.Equal(CourseStatus.Draft, course.Status);
     }
 
     [Fact]
-    public void AddRequiredCompetence_AddsNewToList()
+    public void AddRequiredSkill_AddsNewToList()
     {
-        var id = 42;
         var period = new PlanningPeriod(new DateOnly(2025, 7, 1), new DateOnly(2025, 7, 31));
-        var course = Course.Create(id, "C#", period);
+        var course = Course.Create("C#", period);
 
-        course.AddRequiredCompetence("Testing");
+        course.AddSkill("Testing");
 
-        Assert.Contains("testing", course.RequiredCompetencies);
+        Assert.Contains("testing", course.Skills);
     }
 
     [Theory]
     [InlineData(null)]
     [InlineData("")]
     [InlineData("   ")]
-    public void AddRequiredCompetency_InvalidInput_ThrowsArgumentException(string invalidCompetency)
+    public void AddRequiredSkill_InvalidInput_ThrowsArgumentException(string invalidSkill)
     {
-        var id = 42;
         var period = new PlanningPeriod(new DateOnly(2025, 7, 1), new DateOnly(2025, 7, 31));
-        var course = Course.Create(id, "C#", period);
+        var course = Course.Create("C#", period);
 
-        Assert.Throws<ArgumentException>(() => course.AddRequiredCompetence(invalidCompetency));
+        Assert.Throws<ArgumentException>(() => course.AddSkill(invalidSkill));
     }
 
     [Fact]
-    public void AddCompetence_ThrowsInvalidOperationExceptionWhenCompetenceAlreadyExists()
+    public void AddSkill_ThrowsInvalidOperationExceptionWhenSkillAlreadyExists()
     {
-        var id = 42;
         var period = new PlanningPeriod(new DateOnly(2025, 7, 1), new DateOnly(2025, 7, 31));
-        var course = Course.Create(id, "C#", period);
-        string competence = "Dutch";
-        course.AddRequiredCompetence(competence);
+        var course = Course.Create("C#", period);
+        string skill = "Dutch";
+        course.AddSkill(skill);
 
-        Assert.Throws<InvalidOperationException>(() => course.AddRequiredCompetence("dutch"));
+        Assert.Throws<InvalidOperationException>(() => course.AddSkill("dutch"));
     }
 
     [Fact]
-    public void RemoveRequiredCompetence_RemovesExistingCompetence()
+    public void RemoveRequiredSkill_RemovesExistingSkill()
     {
-        var id = 42;
         var period = new PlanningPeriod(new DateOnly(2025, 7, 1), new DateOnly(2025, 7, 31));
-        var course = Course.Create(id, "C#", period);
-        course.AddRequiredCompetence("Testing");
+        var course = Course.Create("C#", period);
+        course.AddSkill("Testing");
 
-        course.RemoveRequiredCompetence("testing");
+        course.RemoveSkill("testing");
 
-        Assert.Empty(course.RequiredCompetencies);
+        Assert.Empty(course.Skills);
     }
 
     [Fact]
     public void AddScheduledTimeSlot_Valid_AddsSuccessfully()
     {
-        var id = 42;
         var period = new PlanningPeriod(new DateOnly(2025, 7, 1), new DateOnly(2025, 7, 31));
-        var course = Course.Create(id, "C#", period);
+        var course = Course.Create("C#", period);
         var slot = new ScheduledTimeSlot(WeekDays.Monday, new TimeSlot(new TimeOnly(10, 0), new TimeOnly(12, 0)));
 
         course.AddScheduledTimeSlot(slot);
@@ -79,9 +74,8 @@ public class CourseTests
     [Fact]
     public void Confirm_ChangesStatusToConfirmed()
     {
-        var id = 42;
         var period = new PlanningPeriod(new DateOnly(2025, 7, 1), new DateOnly(2025, 7, 31));
-        var course = Course.Create(id, "C#", period);
+        var course = Course.Create("C#", period);
         var slot = new ScheduledTimeSlot(WeekDays.Monday, new TimeSlot(new TimeOnly(10, 0), new TimeOnly(12, 0)));
 
         course.AddScheduledTimeSlot(slot);
@@ -93,16 +87,15 @@ public class CourseTests
     [Fact]
     public void AssignCoach_Valid_SetCoachChangeStatusToFinalized()
     {
-        var id = 42;
         var period = new PlanningPeriod(new DateOnly(2025, 7, 1), new DateOnly(2025, 7, 31));
-        var course = Course.Create(id, "C#", period);
-        course.AddRequiredCompetence("Unit Testing");
+        var course = Course.Create("C#", period);
+        course.AddSkill("Unit Testing");
         var slot = new ScheduledTimeSlot(WeekDays.Monday, new TimeSlot(new TimeOnly(10, 0), new TimeOnly(12, 0)));
         course.AddScheduledTimeSlot(slot);
         course.Confirm();
 
         var coach = Coach.Create(42, "Coach Test", "test@example.com");
-        coach.AddCompetence("Unit Testing");
+        coach.AddSkill("Unit Testing");
 
         course.AssignCoach(coach);
 

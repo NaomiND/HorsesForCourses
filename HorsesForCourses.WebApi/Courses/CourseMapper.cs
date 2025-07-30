@@ -10,7 +10,7 @@ public static class CourseMapper
         {
             Id = course.Id,
             Name = course.Name.ToString(),
-            RequiredCompetences = course.RequiredCompetencies.ToList(),
+            Skills = course.Skills.ToList(),
             AssignedCoachId = course.AssignedCoach?.Id,
         };
     }

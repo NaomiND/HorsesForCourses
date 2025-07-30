@@ -25,9 +25,9 @@ public class CoachTests
         string name = "Ine De Wit";
         string email = "Ine.dewit@gmail.com";
 
-        Coach coach = Coach.Create(42, "Ine De Wit", "Ine.dewit@gmail.com");
+        Coach coach = Coach.Create(0, "Ine De Wit", "Ine.dewit@gmail.com");
 
-        Assert.Equal(42, coach.Id);
+        Assert.Equal(0, coach.Id);
         Assert.Equal(name, coach.Name.DisplayName);
         Assert.Equal(email, coach.Email.Value);
         Assert.Empty(coach.Skills);
