@@ -2,66 +2,66 @@ namespace HorsesForCourses.Core;
 
 public class Coach
 {
-    public Guid Id { get; private set; }
+    public int Id { get; private set; }                         //Id handmatig instellen
     public FullName Name { get; }                               //validation in class FullName
     public EmailAddress Email { get; }                          //validation in class EmailAddress
 
-    private readonly List<string> competenceList = new();       //lijst van competenties (collection)
-    public IReadOnlyCollection<string> Competences => competenceList.AsReadOnly();
+    private readonly List<string> skills = new();               //lijst van skills (collection)
+    public IReadOnlyCollection<string> Skills => skills.AsReadOnly();
 
-    public Coach(Guid id, FullName name, EmailAddress email)    //constructor
+    public Coach(FullName name, EmailAddress email)             //constructor (bij entity framework wordt ID automatisch gegenereerd door database dus hier te verwijderen)
     {
-        Id = id;
         Name = name;
         Email = email;
     }
 
-    public static Coach Create(string name, string email)       //Factory method
+    public static Coach Create(int id, string name, string email)       //Factory method
     {
         var emailAddress = EmailAddress.From(email);            // string → EmailAddress
         var fullName = FullName.From(name);                     // string → FullName
-        return new Coach(Guid.NewGuid(), fullName, emailAddress);
+        // Id = 0 of default bij aanmaken, database vult aan bij opslaan
+        return new Coach(fullName, emailAddress);
     }
 
-    public void AddCompetence(string competence)
+    public void AddSkill(string skill)
     {
-        if (string.IsNullOrWhiteSpace(competence))
+        if (string.IsNullOrWhiteSpace(skill))
             throw new ArgumentException("Competentie kan niet leeg zijn.");
 
-        if (competenceList.Contains(competence.ToLower()))
+        if (skills.Contains(skill.ToLower()))
             throw new InvalidOperationException("Competentie werd reeds toegevoegd.");
 
-        competenceList.Add(competence.ToLower());
+        skills.Add(skill.ToLower());
     }
 
-    public void RemoveCompetence(string competence)
+    public void RemoveSkill(string skill)
     {
-        int removedCount = competenceList.RemoveAll(c => string.Equals(c, competence.ToLower())); // RemoveAll en StringComparer (hoofdlettergevoelige delete)
+        int removedCount = skills.RemoveAll(c => string.Equals(c, skill.ToLower())); // RemoveAll en StringComparer (hoofdlettergevoelige delete)
         if (removedCount == 0)
-            throw new InvalidOperationException($"Competentie '{competence}' niet gevonden.");
+            throw new InvalidOperationException($"Competentie '{skill}' niet gevonden.");
     }
 
-    public void ClearCompetences()
+    public void ClearSkills()
     {
-        competenceList.Clear();
+        skills.Clear();
     }
 
-    public void UpdateCompetences(IEnumerable<string> newCompetences)
+    public void UpdateSkills(IEnumerable<string> newSkills)
     {
-        ClearCompetences();
+        ClearSkills();
 
-        foreach (var competence in newCompetences)
+        foreach (var skill in newSkills)
         {
-            AddCompetence(competence);
+            AddSkill(skill);
         }
     }
 
-    public bool HasAllRequiredCompetences(IEnumerable<string> requiredCompetences)
+    public bool HasAllRequiredSkills(IEnumerable<string> requiredSkills)
     {
-        List<string> lowerCase = competenceList.Select(x => x.ToLower()).ToList();
-        if (requiredCompetences == null)
-            throw new ArgumentNullException(nameof(requiredCompetences));
+        List<string> lowerCase = skills.Select(x => x.ToLower()).ToList();
+        if (requiredSkills == null)
+            throw new ArgumentNullException(nameof(requiredSkills));
 
-        return requiredCompetences.All(rc => lowerCase.Contains(rc.ToLower()));    //Linq
+        return requiredSkills.All(rc => lowerCase.Contains(rc.ToLower()));    //Linq
     }
 }

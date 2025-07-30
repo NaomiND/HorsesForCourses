@@ -2,6 +2,6 @@ namespace HorsesForCourses.Dtos;
 
 public class AssignCoachDTO
 {
-    public Guid CourseId { get; set; }
-    public Guid CoachId { get; set; }
+    public int CourseId { get; set; }
+    public int CoachId { get; set; }
 }

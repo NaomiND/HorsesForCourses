@@ -16,7 +16,7 @@ builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "horses-for-courses API",
+        Title = "HorsesForCourses API",
         Version = "v1",
         Description = "API voor het beheren van cursussen en coaches"
     });

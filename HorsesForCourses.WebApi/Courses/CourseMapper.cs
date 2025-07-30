@@ -9,7 +9,7 @@ public static class CourseMapper
         return new CourseDTO
         {
             Id = course.Id,
-            CourseName = course.CourseName.ToString(),
+            Name = course.Name.ToString(),
             RequiredCompetences = course.RequiredCompetencies.ToList(),
             AssignedCoachId = course.AssignedCoach?.Id,
         };

@@ -3,9 +3,9 @@ namespace HorsesForCourses.Repository;
 
 public class InMemoryCoachRepository
 {
-    private readonly Dictionary<Guid, Coach> _coaches = new();
+    private readonly Dictionary<int, Coach> _coaches = new();
 
-    public Coach? GetById(Guid id)
+    public Coach? GetById(int id)
     {
         return _coaches.TryGetValue(id, out var coach) ? coach : null;
     }

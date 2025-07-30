@@ -11,7 +11,7 @@ public static class CoachMapper
             Id = coach.Id,
             Name = coach.Name.ToString(),
             Email = coach.Email.Value,
-            Competences = coach.Competences.ToList()
+            Skills = coach.Skills.ToList()
         };
     }
 

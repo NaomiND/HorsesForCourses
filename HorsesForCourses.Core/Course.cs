@@ -2,8 +2,8 @@
 
 public class Course
 {
-    public Guid Id { get; private set; }
-    public string CourseName { get; private set; }
+    public int Id { get; private set; }
+    public string Name { get; private set; }
     public PlanningPeriod Period { get; private set; }
 
     private readonly List<string> requiredCompetencies = new();
@@ -15,19 +15,19 @@ public class Course
     public CourseStatus Status { get; private set; } = CourseStatus.Draft;
     public Coach? AssignedCoach { get; private set; }
 
-    public Course(Guid id, string course, PlanningPeriod period)
+    public Course(int id, string course, PlanningPeriod period)
     {
         Id = id;
-        CourseName = course;
+        Name = course;
         Period = period ?? throw new ArgumentNullException(nameof(period));
     }
 
-    public static Course Create(string name, PlanningPeriod period)
+    public static Course Create(int id, string name, PlanningPeriod period)
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new ArgumentException("Cursusnaam is verplicht.");
 
-        return new Course(Guid.NewGuid(), name, period);
+        return new Course(0, name, period);
     }
 
     public void AddRequiredCompetence(string competency)
@@ -96,7 +96,7 @@ public class Course
         if (Status != CourseStatus.Confirmed)
             throw new InvalidOperationException("Cursus bevestigen voordat je een coach kan toevoegen.");
 
-        if (!coach.HasAllRequiredCompetences(requiredCompetencies))
+        if (!coach.HasAllRequiredSkills(requiredCompetencies))
             throw new InvalidOperationException("De coach heeft niet de gewenste competenties voor deze cursus.");
 
         AssignedCoach = coach;

@@ -22,7 +22,7 @@ public class CoursesController : ControllerBase
     public IActionResult CreateCourse([FromBody] CreateCourseDTO dto)
     {
         var period = new PlanningPeriod(dto.StartDate, dto.EndDate);
-        var course = Course.Create(dto.CourseName, period);
+        var course = Course.Create(dto.Id, dto.Name, period);
 
         _courseRepository.Save(course);
 
@@ -31,7 +31,7 @@ public class CoursesController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public IActionResult GetCourseById(Guid id)
+    public IActionResult GetCourseById(int id)
     {
         var course = _courseRepository.GetById(id);
         if (course is null)
@@ -50,7 +50,7 @@ public class CoursesController : ControllerBase
     }
 
     [HttpPost("{id}/skills")]                       // Vervangt de vereiste competenties voor een cursus.
-    public IActionResult UpdateCourseCompetences(Guid id, [FromBody] UpdateCourseCompetencesDTO dto)
+    public IActionResult UpdateCourseCompetences(int id, [FromBody] UpdateCourseCompetencesDTO dto)
     {
         var course = _courseRepository.GetById(id);
         if (course is null) return NotFound();
@@ -64,7 +64,7 @@ public class CoursesController : ControllerBase
     }
 
     [HttpPost("{id}/timeslots")]
-    public IActionResult UpdateTimeSlots(Guid id, [FromBody] UpdateTimeSlotsDTO dto)
+    public IActionResult UpdateTimeSlots(int id, [FromBody] UpdateTimeSlotsDTO dto)
     {
         var course = _courseRepository.GetById(id);
         if (course is null) return NotFound();
@@ -87,7 +87,7 @@ public class CoursesController : ControllerBase
     }
 
     [HttpPost("{id}/confirm")]                                  // Bevestigt een cursus zodat een coach toegewezen kan worden.
-    public IActionResult ConfirmCourse(Guid id)
+    public IActionResult ConfirmCourse(int id)
     {
         var course = _courseRepository.GetById(id);
         if (course is null) return NotFound();
@@ -99,7 +99,7 @@ public class CoursesController : ControllerBase
     }
 
     [HttpPost("{id}/assign-coach")]                             // Wijst een geschikte coach toe aan een bevestigde cursus.
-    public IActionResult AssignCoach(Guid id, [FromBody] AssignCoachDTO dto)
+    public IActionResult AssignCoach(int id, [FromBody] AssignCoachDTO dto)
     {
         var course = _courseRepository.GetById(id);
         if (course is null) return NotFound($"Cursus met ID {id} niet gevonden.");

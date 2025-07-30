@@ -20,7 +20,7 @@ public class CoachesController : ControllerBase
     [HttpPost]
     public IActionResult RegisterCoach([FromBody] CreateCoachDTO dto)
     {
-        var coach = new Coach(Guid.NewGuid(), FullName.From(dto.Name), EmailAddress.From(dto.Email));
+        var coach = new Coach(FullName.From(dto.Name), EmailAddress.From(dto.Email));
         _coachRepository.Save(coach);
 
         var coachDto = CoachMapper.ToDTO(coach);
@@ -28,13 +28,13 @@ public class CoachesController : ControllerBase
     }
 
     [HttpPost("{id}/skills")]
-    public IActionResult UpdateCoachCompetences([FromBody] UpdateCoachCompetencesDTO dto, Guid id)
+    public IActionResult UpdateCoachSkills([FromBody] UpdateCoachSkillsDTO dto, int id)
     {
         var coach = _coachRepository.GetById(id);
         if (coach is null)
             return NotFound();
 
-        coach.UpdateCompetences(dto.Competences);
+        coach.UpdateSkills(dto.Skills);
 
         _coachRepository.Save(coach);
 
@@ -43,7 +43,7 @@ public class CoachesController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public IActionResult GetCoachById(Guid id)
+    public IActionResult GetCoachById(int id)
     {
         var coach = _coachRepository.GetById(id);
         if (coach is null)

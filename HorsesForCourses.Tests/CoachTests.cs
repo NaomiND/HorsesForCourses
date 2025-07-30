@@ -1,5 +1,6 @@
 using HorsesForCourses.Core;
 using System;
+using System.Data.Common;
 
 namespace HorsesForCourses.Tests;
 
@@ -8,16 +9,14 @@ public class CoachTests
     [Fact]
     public void Coach_Constructor_InitializesPropertiesCorrectly()
     {
-        Guid id = Guid.NewGuid();
         FullName name = new FullName("Ine", "De Wit");
         EmailAddress email = EmailAddress.From("Ine.dewit@gmail.com");
 
-        Coach coach = new Coach(id, name, email);
+        Coach coach = new Coach(name, email);
 
-        Assert.Equal(id, coach.Id);
         Assert.Equal(name, coach.Name);
         Assert.Equal(email, coach.Email);
-        Assert.Empty(coach.Competences);                        // Competenties moeten leeg zijn bij initialisatie
+        Assert.Empty(coach.Skills);                        // Competenties moeten leeg zijn bij initialisatie
     }
 
     [Fact]
@@ -26,133 +25,133 @@ public class CoachTests
         string name = "Ine De Wit";
         string email = "Ine.dewit@gmail.com";
 
-        Coach coach = Coach.Create(name, email);
+        Coach coach = Coach.Create(42, "Ine De Wit", "Ine.dewit@gmail.com");
 
-        Assert.NotEqual(Guid.Empty, coach.Id);                      // ID moet gegenereerd worden
+        Assert.Equal(42, coach.Id);
         Assert.Equal(name, coach.Name.DisplayName);
         Assert.Equal(email, coach.Email.Value);
-        Assert.Empty(coach.Competences);
+        Assert.Empty(coach.Skills);
     }
 
     [Theory]
-    [InlineData("", "test@example.com")]
-    [InlineData("   ", "test@example.com")]
-    [InlineData("Test Coach", null)]
-    [InlineData("Test Coach", "invalid-email")]
-    public void CreateCoach_ThrowsArgumentExceptionForInvalidInput(string name, string email)
+    [InlineData(42, "", "test@example.com")]
+    [InlineData(42, "   ", "test@example.com")]
+    [InlineData(42, "Test Coach", null)]
+    [InlineData(42, "Test Coach", "invalid-email")]
+    public void CreateCoach_ThrowsArgumentExceptionForInvalidInput(int id, string name, string email)
     {
-        Assert.Throws<ArgumentException>(() => Coach.Create(name, email));
+        Assert.Throws<ArgumentException>(() => Coach.Create(id, name, email));
     }
 
     [Fact]
-    public void AddCompetence_AddsNewCompetenceToList()
+    public void AddSkill_AddsNewSkillToList()
     {
         FullName name = new FullName("Test", "Coach");
         EmailAddress email = EmailAddress.From("test@example.com");
-        Coach coach = new Coach(Guid.NewGuid(), name, email);
-        string competence = "c# programming";
+        Coach coach = new Coach(name, email);
+        string skill = "c# programming";
 
-        coach.AddCompetence(competence);
+        coach.AddSkill(skill);
 
-        Assert.Contains(competence, coach.Competences);
-        Assert.Single(coach.Competences);
+        Assert.Contains(skill, coach.Skills);
+        Assert.Single(coach.Skills);
     }
 
     [Theory]
     [InlineData("")]
     [InlineData("   ")]
-    public void AddCompetence_InvalidInput_ThrowsArgumentException(string invalidCompetence)
+    public void AddSkill_InvalidInput_ThrowsArgumentException(string invalidSkill)
     {
         FullName name = new FullName("Test", "Coach");
         EmailAddress email = EmailAddress.From("test@example.com");
-        Coach coach = new Coach(Guid.NewGuid(), name, email);
+        Coach coach = new Coach(name, email);
 
-        Assert.Throws<ArgumentException>(() => coach.AddCompetence(invalidCompetence));
+        Assert.Throws<ArgumentException>(() => coach.AddSkill(invalidSkill));
     }
 
     [Fact]
-    public void AddCompetence_ThrowsInvalidOperationExceptionWhenCompetenceAlreadyExists()
+    public void AddSkill_ThrowsInvalidOperationExceptionWhenSkillAlreadyExists()
     {
         FullName name = new FullName("Test", "Coach");
         EmailAddress email = EmailAddress.From("test@example.com");
-        Coach coach = new Coach(Guid.NewGuid(), name, email);
-        string competence = "Dutch";
-        coach.AddCompetence(competence);
+        Coach coach = new Coach(name, email);
+        string skill = "Dutch";
+        coach.AddSkill(skill);
 
-        Assert.Throws<InvalidOperationException>(() => coach.AddCompetence("dutch"));
+        Assert.Throws<InvalidOperationException>(() => coach.AddSkill("dutch"));
     }
 
     [Fact]
-    public void RemoveCompetence_RemovesExistingCompetence()
+    public void RemoveSkill_RemovesExistingSkill()
     {
         FullName name = new FullName("Test", "Coach");
         EmailAddress email = EmailAddress.From("test@example.com");
-        Coach coach = new Coach(Guid.NewGuid(), name, email);
-        coach.AddCompetence("French");
-        coach.AddCompetence("C# Programming");
+        Coach coach = new Coach(name, email);
+        coach.AddSkill("French");
+        coach.AddSkill("C# Programming");
 
-        coach.RemoveCompetence("french");
+        coach.RemoveSkill("french");
 
-        Assert.DoesNotContain("French", coach.Competences);
-        Assert.Single(coach.Competences);
-        Assert.Contains("c# programming", coach.Competences);
+        Assert.DoesNotContain("French", coach.Skills);
+        Assert.Single(coach.Skills);
+        Assert.Contains("c# programming", coach.Skills);
     }
 
     [Fact]
-    public void RemoveCompetence_ThrowsInvalidOperationExceptionWhenCompetenceNotFound()
+    public void RemoveSkills_ThrowsInvalidOperationExceptionWhenSkillNotFound()
     {
         FullName name = new FullName("Test", "Coach");
         EmailAddress email = EmailAddress.From("test@example.com");
-        Coach coach = new Coach(Guid.NewGuid(), name, email);
-        coach.AddCompetence("C# Programming");
+        Coach coach = new Coach(name, email);
+        coach.AddSkill("C# Programming");
 
-        Assert.Throws<InvalidOperationException>(() => coach.RemoveCompetence("French"));
-        Assert.Contains("c# programming", coach.Competences);
+        Assert.Throws<InvalidOperationException>(() => coach.RemoveSkill("French"));
+        Assert.Contains("c# programming", coach.Skills);
     }
 
     [Fact]
-    public void ClearCompetences_RemovesAllCompetences()
+    public void ClearSkills_RemovesAllSkills()
     {
         FullName name = new FullName("Test", "Coach");
         EmailAddress email = EmailAddress.From("test@example.com");
-        Coach coach = new Coach(Guid.NewGuid(), name, email);
-        coach.AddCompetence("C# Programming");
-        coach.AddCompetence("Dutch");
+        Coach coach = new Coach(name, email);
+        coach.AddSkill("C# Programming");
+        coach.AddSkill("Dutch");
 
-        coach.ClearCompetences();
+        coach.ClearSkills();
 
-        Assert.Empty(coach.Competences);
+        Assert.Empty(coach.Skills);
     }
 
     [Fact]
-    public void HasAllRequiredCompetences_ReturnsTrueWhenOk()
+    public void HasAllRequiredSkills_ReturnsTrueWhenOk()
     {
         FullName name = new FullName("Test", "Coach");
         EmailAddress email = EmailAddress.From("test@example.com");
-        Coach coach = new Coach(Guid.NewGuid(), name, email);
-        coach.AddCompetence("C# Programming");
-        coach.AddCompetence("dutch");
-        coach.AddCompetence("French");
+        Coach coach = new Coach(name, email);
+        coach.AddSkill("C# Programming");
+        coach.AddSkill("dutch");
+        coach.AddSkill("French");
 
-        List<string> requiredCompetences = new List<string> { "C# Programming", "Dutch" };
+        List<string> requiredSkills = new List<string> { "C# Programming", "Dutch" };
 
-        bool result = coach.HasAllRequiredCompetences(requiredCompetences);
+        bool result = coach.HasAllRequiredSkills(requiredSkills);
 
         Assert.True(result);
     }
 
     [Fact]
-    public void HasAllRequiredCompetences_ReturnsFalseWhenOneOrMoreCompetencesAreMissing()
+    public void HasAllRequiredSkills_ReturnsFalseWhenOneOrMoreSkillsAreMissing()
     {
         FullName name = new FullName("Test", "Coach");
         EmailAddress email = EmailAddress.From("test@example.com");
-        Coach coach = new Coach(Guid.NewGuid(), name, email);
-        coach.AddCompetence("C# Programming");
-        coach.AddCompetence("Dutch");
+        Coach coach = new Coach(name, email);
+        coach.AddSkill("C# Programming");
+        coach.AddSkill("Dutch");
 
-        List<string> requiredCompetences = new List<string> { "C# Programming", "French" };
+        List<string> requiredSkills = new List<string> { "C# Programming", "French" };
 
-        bool result = coach.HasAllRequiredCompetences(requiredCompetences);
+        bool result = coach.HasAllRequiredSkills(requiredSkills);
 
         Assert.False(result);
     }

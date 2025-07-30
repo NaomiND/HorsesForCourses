@@ -4,9 +4,9 @@ namespace HorsesForCourses.Repository;
 
 public class InMemoryCourseRepository        //TODO
 {
-    private readonly Dictionary<Guid, Course> _courses = new();
+    private readonly Dictionary<int, Course> _courses = new();
 
-    public Course? GetById(Guid id)
+    public Course? GetById(int id)
     {
         return _courses.TryGetValue(id, out var course) ? course : null;
     }

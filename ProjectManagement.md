@@ -1,32 +1,15 @@
 # TODO
+- [X] Guid Id naar int Id
+- [X] Competences naar Skills
+- [] RequiredCompetences naar Skills
+- [X] POST /coaches
+- [] POST /coaches/{id}/skills : Competences naar Skills
+- [] POST /Course ; courseName naar Name en Id verwijderen
+- [] POST /courses/{id}/skills: ReqComp => Skills
+- [] POST /courses/{id}/timeslots: day int => string
+- [] POST /courses/{id}/assign-coach: courseId verwijderen
 
-- [ ] generic id is beter dan een guid id voor deze opdracht
-- [X] geen domeinobjecten teruggeven ook niet bij ophalen
-- [X] mapper maken voor coach en course
-- [X] [HttpPost("{id}/skills")] - aanpassen
-- [X] try-catch niet in controllers
-- [X] mapstructuur aanpassen
 - [ ] testen van ProblemDetails
-
-### 🧩 Get /coaches         OK   
-**Als** administrator 
-**Wil ik** een lijst van alle coaches kunnen opvragen
-**Zodat** ik een eenvoudig overzicht heb
-
-### 🧩 Get /coaches/{id}    OK
-**Als** administrator
-**Wil ik** een coach per id kunnen opvragen
-**Zodat** deze data beschikbaar is voor weergave en wijziging
-
-### 🧩 Get /courses         OK
-**Als** cursusverantwoordelijke
-**Wil ik** een lijst van alle coaches kunnen opvragen
-**Zodat** ik een eenvoudig overzicht heb
-
-### 🧩 Get /courses/{id}    OK
-**Als** cursusverantwoordelijke
-**Wil ik** een cursus per id kunnen opvragen 
-**Zodat** deze data beschikbaar is voor weergave en wijziging
 
 # Architectuur: Layered Architecture (Separation of Concerns)
     - Presentation Layer: buitenste laag. Verantwoordelijk voor communicatie met de buitenwereld. Voor APIen DTO's.
@@ -120,36 +103,53 @@ Voorzie foutmeldingen bij invalidaties (bv. 422 BadRequest met uitleg)
 **WEBAPI - CONTROLLERS**
 
 ### 🧩 POST /coaches                OK  
-**Als** administrator
-**Wil ik** een coach kunnen registreren met naam en e-mailadres
+**Als** administrator **Wil ik** een coach kunnen registreren met naam en e-mailadres
 **Zodat** deze beschikbaar is voor toekomstige cursussen
 
 ### 🧩 POST /coaches/{id}/skills    OK
-**Als** administrator
-**Wil ik** competenties kunnen toevoegen of verwijderen bij een coach
+**Als** administrator **Wil ik** competenties kunnen toevoegen of verwijderen bij een coach
 **Zodat** zijn of haar geschiktheid aangepast kan worden
 
 ### 🧩 POST /courses                OK  
-**Als** cursusverantwoordelijke
-**Wil ik** een nieuwe cursus kunnen aanmaken met naam en periode
+**Als** cursusverantwoordelijke **Wil ik** een nieuwe cursus kunnen aanmaken met naam en periode
 **Zodat** ik nadien het rooster en de vereisten kan invullen
 
 ### 🧩 POST /courses/{id}/skills    OK
-**Als** cursusverantwoordelijke
-**Wil ik** competenties kunnen toevoegen of verwijderen bij een cursus
+**Als** cursusverantwoordelijke **Wil ik** competenties kunnen toevoegen of verwijderen bij een cursus
 **Zodat** ik kan aangeven wat een coach moet kunnen
 
 ### 🧩 POST /courses/{id}/timeslots OK
-**Als** cursusverantwoordelijke
-**Wil ik** lesmomenten kunnen toevoegen of verwijderen bij een cursus
+**Als** cursusverantwoordelijke **Wil ik** lesmomenten kunnen toevoegen of verwijderen bij een cursus
 **Zodat** ik het rooster kan opstellen
 
 ### ✅ POST /courses/{id}/confirm   OK
-**Als** cursusverantwoordelijke
-**Wil ik** een cursus kunnen bevestigen
+**Als** cursusverantwoordelijke **Wil ik** een cursus kunnen bevestigen
 **Zodat** ik zeker weet dat alles in orde is en een coach toegewezen mag worden
 
 ### 🧩 POST /courses/{id}/assign-coach  OK
-**Als** cursusverantwoordelijke
-**Wil ik** een coach kunnen toewijzen aan een bevestigde cursus
+**Als** cursusverantwoordelijke **Wil ik** een coach kunnen toewijzen aan een bevestigde cursus
 **Zodat** de cursus daadwerkelijk kan doorgaan met een geschikte coach
+
+
+### 🧩 Get /coaches         OK   
+**Als** administrator **Wil ik** een lijst van alle coaches kunnen opvragen
+**Zodat** ik een eenvoudig overzicht heb
+
+### 🧩 Get /coaches/{id}    OK
+**Als** administrator **Wil ik** een coach per id kunnen opvragen
+**Zodat** deze data beschikbaar is voor weergave en wijziging
+
+### 🧩 Get /courses         OK
+**Als** cursusverantwoordelijke **Wil ik** een lijst van alle coaches kunnen opvragen
+**Zodat** ik een eenvoudig overzicht heb
+
+### 🧩 Get /courses/{id}    OK
+**Als** cursusverantwoordelijke **Wil ik** een cursus per id kunnen opvragen 
+**Zodat** deze data beschikbaar is voor weergave en wijziging
+
+- [X] generic id is beter dan een guid id voor deze opdracht
+- [X] geen domeinobjecten teruggeven ook niet bij ophalen
+- [X] mapper maken voor coach en course
+- [X] [HttpPost("{id}/skills")] - aanpassen
+- [X] try-catch niet in controllers
+- [X] mapstructuur aanpassen
