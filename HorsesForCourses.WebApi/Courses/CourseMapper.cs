@@ -10,8 +10,6 @@ public static class CourseMapper
         {
             Id = course.Id,
             Name = course.Name.ToString(),
-            Skills = course.Skills.ToList(),
-            AssignedCoachId = course.AssignedCoach?.Id,
         };
     }
 
@@ -19,4 +17,20 @@ public static class CourseMapper
     {
         return courses.Select(ToDTO);
     }
+
+    public static CourseDetailDTO ToDTO(Course course, IEnumerable<Coach> coaches)
+    {
+        return new CourseDetailDTO
+        {
+            Id = course.Id,
+            Name = course.Name.ToString(),
+            Skills = course.Skills.ToList(),
+            AssignedCoachId = course.AssignedCoach?.Id,
+        };
+    }
 }
+
+
+
+
+

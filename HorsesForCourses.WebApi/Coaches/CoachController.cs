@@ -10,10 +10,12 @@ namespace HorsesForCourses.WebApi.Controllers;
 public class CoachesController : ControllerBase
 {
     private readonly InMemoryCoachRepository _coachRepository;
+    private readonly InMemoryCourseRepository _courseRepository;
 
-    public CoachesController(InMemoryCoachRepository coachrepository)
+    public CoachesController(InMemoryCoachRepository coachrepository, InMemoryCourseRepository courseRepository)
     {
         _coachRepository = coachrepository;
+        _courseRepository = courseRepository;
     }
 
 
@@ -39,7 +41,8 @@ public class CoachesController : ControllerBase
 
         _coachRepository.Save(coach);
 
-        var coachDto = CoachMapper.ToDTO(coach);        //TODO
+        var allCourses = _courseRepository.GetAll();
+        var coachDto = CoachMapper.ToDetailDTO(coach, allCourses);
         return Ok(coachDto);
     }
 
@@ -50,7 +53,8 @@ public class CoachesController : ControllerBase
         if (coach is null)
             return NotFound();
 
-        var coachDto = CoachMapper.ToDTO(coach);        //TODO
+        var allCourses = _courseRepository.GetAll();
+        var coachDto = CoachMapper.ToDetailDTO(coach, allCourses);
         return Ok(coachDto);
     }
 
@@ -58,7 +62,7 @@ public class CoachesController : ControllerBase
     public ActionResult<IEnumerable<CoachDTO>> GetAll()
     {
         var coaches = _coachRepository.GetAll();
-        var allCourses = _courseRepository.GetAll();        //waaaaarommmmm??
+        var allCourses = _courseRepository.GetAll();
         var coachDtos = CoachMapper.ToDTOList(coaches, allCourses);
         return Ok(coachDtos);
     }

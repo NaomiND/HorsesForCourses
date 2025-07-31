@@ -39,8 +39,8 @@ public static class CoachMapper
             Id = coach.Id,
             Name = coach.Name.ToString(),
             Email = coach.Email.Value,
-            Skills = coach.Skills,
-            Courses = assignedCourses   //TODO
+            Skills = coach.Skills.ToList(),
+            Courses = assignedCourses
         };
     }
 }
