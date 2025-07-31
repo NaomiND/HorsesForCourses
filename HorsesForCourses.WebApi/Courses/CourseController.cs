@@ -21,17 +21,18 @@ public class CoursesController : ControllerBase
     [HttpPost]                                  // Maakt een nieuwe cursus aan met een naam en een periode.
     public IActionResult CreateCourse([FromBody] CreateCourseDTO dto)
     {
-        var period = new PlanningPeriod(dto.StartDate, dto.EndDate);
+        var period = new PlanningPeriod(DateOnly.Parse(dto.StartDate), DateOnly.Parse(dto.EndDate));
         var course = Course.Create(dto.Name, period);
 
         _courseRepository.Save(course);
 
-        var courseDto = CourseMapper.ToDTO(course);
-        return CreatedAtAction(nameof(GetCourseById), new { id = course.Id }, courseDto);
+        return Ok(course.Id);
+        // var courseDto = CourseMapper.ToDTO(course);
+        // return CreatedAtAction(nameof(GetCourseById), new { id = course.Id }, courseDto);
     }
 
     [HttpPost("{id}/skills")]                       // Vervangt de vereiste competenties voor een cursus.
-    public IActionResult UpdateCourseSkills(int id, [FromBody] UpdateCourseSkillsDTO dto)
+    public IActionResult UpdateCourseSkills([FromBody] UpdateCourseSkillsDTO dto, int id)
     {
         var course = _courseRepository.GetById(id);
         if (course is null) return NotFound();
@@ -40,12 +41,12 @@ public class CoursesController : ControllerBase
 
         _courseRepository.Save(course);
 
-        var courseDto = CourseMapper.ToDTO(course);
-        return Ok(courseDto);
+        // var courseDto = CourseMapper.ToDTO(course);
+        return Ok(dto);
     }
 
     [HttpPost("{id}/timeslots")]
-    public IActionResult UpdateTimeSlots(int id, [FromBody] UpdateTimeSlotsDTO dto)
+    public IActionResult UpdateTimeSlots([FromBody] UpdateTimeSlotsDTO dto, int id)
     {
         var course = _courseRepository.GetById(id);
         if (course is null) return NotFound();
@@ -58,13 +59,12 @@ public class CoursesController : ControllerBase
 
         foreach (var slotDto in dto.TimeSlots)
         {
-            var timeSlot = new TimeSlot(slotDto.StartTime, slotDto.EndTime);
+            var timeSlot = new TimeSlot(new TimeOnly(slotDto.Start, 0), new TimeOnly(slotDto.End, 0));
             var scheduledSlot = new ScheduledTimeSlot(slotDto.Day, timeSlot);
             course.AddScheduledTimeSlot(scheduledSlot);
         }
-
-        var courseDto = CourseMapper.ToDTO(course);
-        return Ok(courseDto);
+        // var courseDto = CourseMapper.ToDTO(course);
+        return NoContent();
     }
 
     [HttpPost("{id}/confirm")]                                  // Bevestigt een cursus zodat een coach toegewezen kan worden.
@@ -75,8 +75,8 @@ public class CoursesController : ControllerBase
 
         course.Confirm();
 
-        var courseDto = CourseMapper.ToDTO(course);
-        return Ok(courseDto);
+        // var courseDto = CourseMapper.ToDTO(course);
+        return NoContent();
     }
 
     [HttpPost("{id}/assign-coach")]                             // Wijst een geschikte coach toe aan een bevestigde cursus.
@@ -94,6 +94,13 @@ public class CoursesController : ControllerBase
         return Ok(courseDto);
     }
 
+    [HttpGet]
+    public ActionResult<IEnumerable<CourseAssignStatusDTO>> GetAll()
+    {
+        var courses = _courseRepository.GetAll();
+        var courseAssignStatusDTO = CourseMapper.ToAssignmentStatusDTOList(courses);
+        return Ok(courseAssignStatusDTO);
+    }
 
     [HttpGet("{id}")]
     public IActionResult GetCourseById(int id)
@@ -102,15 +109,7 @@ public class CoursesController : ControllerBase
         if (course is null)
             return NotFound();
 
-        var courseDto = CourseMapper.ToDTO(course);
+        var courseDto = CourseMapper.ToGetByIdResponse(course);
         return Ok(courseDto);
-    }
-
-    [HttpGet]
-    public ActionResult<IEnumerable<CourseDTO>> GetAll()
-    {
-        var courses = _courseRepository.GetAll();
-        var courseDtos = CourseMapper.ToDTOList(courses);
-        return Ok(courseDtos);
     }
 }

@@ -4,8 +4,8 @@ namespace HorsesForCourses.Dtos;
 public class ScheduledTimeSlotDTO
 {
     public WeekDays Day { get; set; }
-    public TimeOnly StartTime { get; set; }
-    public TimeOnly EndTime { get; set; }
+    public int Start { get; set; }
+    public int End { get; set; }
 }
 
 public class UpdateTimeSlotsDTO

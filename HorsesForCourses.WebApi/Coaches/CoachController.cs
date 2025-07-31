@@ -18,9 +18,8 @@ public class CoachesController : ControllerBase
         _courseRepository = courseRepository;
     }
 
-
     [HttpPost]
-    public IActionResult RegisterCoach([FromBody] CreateCoachDTO dto)
+    public IActionResult CreateCoach([FromBody] CreateCoachDTO dto)
     {
         var coach = new Coach(FullName.From(dto.Name), EmailAddress.From(dto.Email));
         _coachRepository.Save(coach);
@@ -34,16 +33,23 @@ public class CoachesController : ControllerBase
     public IActionResult UpdateCoachSkills([FromBody] UpdateCoachSkillsDTO dto, int id)
     {
         var coach = _coachRepository.GetById(id);
-        if (coach is null)
-            return NotFound();
+        if (coach is null) return NotFound();
 
         coach.UpdateSkills(dto.Skills);
 
         _coachRepository.Save(coach);
 
+        // var coachDto = CoachMapper.ToDTO(coach);
+        return Ok(dto);
+    }
+
+    [HttpGet]
+    public ActionResult<IEnumerable<CoachDTO>> GetAll()
+    {
+        var coaches = _coachRepository.GetAll();
         var allCourses = _courseRepository.GetAll();
-        var coachDto = CoachMapper.ToDetailDTO(coach, allCourses);
-        return Ok(coachDto);
+        var coachDtos = CoachMapper.ToDTOList(coaches, allCourses);
+        return Ok(coachDtos);
     }
 
     [HttpGet("{id}")]
@@ -56,14 +62,5 @@ public class CoachesController : ControllerBase
         var allCourses = _courseRepository.GetAll();
         var coachDto = CoachMapper.ToDetailDTO(coach, allCourses);
         return Ok(coachDto);
-    }
-
-    [HttpGet]
-    public ActionResult<IEnumerable<CoachDTO>> GetAll()
-    {
-        var coaches = _coachRepository.GetAll();
-        var allCourses = _courseRepository.GetAll();
-        var coachDtos = CoachMapper.ToDTOList(coaches, allCourses);
-        return Ok(coachDtos);
     }
 }

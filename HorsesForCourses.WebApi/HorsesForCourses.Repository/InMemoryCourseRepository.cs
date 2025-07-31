@@ -1,10 +1,12 @@
 using HorsesForCourses.Core;
+using QuickPulse.Show.TimeyWimey;
 
 namespace HorsesForCourses.Repository;
 
 public class InMemoryCourseRepository        //TODO
 {
-    private readonly Dictionary<int, Course> _courses = new();
+    private readonly Dictionary<int, Course> _courses = new Dictionary<int, Course>
+    { {666,new Course("test", new PlanningPeriod(new DateOnly(2025, 12, 4), new DateOnly(2025, 12, 5)))}};
 
     public Course? GetById(int id)
     {
