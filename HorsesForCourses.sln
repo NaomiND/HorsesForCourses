@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HorsesForCourses.Tests", "H
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HorsesForCourses.WebApi", "HorsesForCourses.WebApi\HorsesForCourses.WebApi.csproj", "{9A174D05-53B6-41B1-A231-2A2AB72579A3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HorsesForCourses.Infrastructure", "HorsesForCourses.Infrastructure\HorsesForCourses.Infrastructure.csproj", "{0FAAC17E-B5DD-4FF4-8887-1C694FE27CBE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +28,10 @@ Global
 		{9A174D05-53B6-41B1-A231-2A2AB72579A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9A174D05-53B6-41B1-A231-2A2AB72579A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9A174D05-53B6-41B1-A231-2A2AB72579A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0FAAC17E-B5DD-4FF4-8887-1C694FE27CBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FAAC17E-B5DD-4FF4-8887-1C694FE27CBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FAAC17E-B5DD-4FF4-8887-1C694FE27CBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FAAC17E-B5DD-4FF4-8887-1C694FE27CBE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
