@@ -15,7 +15,10 @@ public class Coach
         Email = email;
     }
 
-    private Coach() { }                                       //voor Entity Framework
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
+    private Coach() { }                                         // Private constructor voor EF Core
+#pragma warning restore CS8618
+
     public static Coach Create(int id, string name, string email)       //Factory method
     {
         var emailAddress = EmailAddress.From(email);            // string → EmailAddress

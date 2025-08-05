@@ -1,16 +1,18 @@
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 using HorsesForCourses.WebApi;
+using HorsesForCourses.Core;
+using HorsesForCourses.Infrastructure;
+using HorsesForCourses.WebApi.Controllers;
 using Serilog;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
-using HorsesForCourses.Repository;
-using HorsesForCourses.WebApi.Controllers;
+using Microsoft.EntityFrameworkCore;
+//using HorsesForCourses.Repository;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
-
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -22,6 +24,9 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlite("Data Source=horses.db"));
+
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
     .Enrich.FromLogContext()
@@ -29,15 +34,17 @@ Log.Logger = new LoggerConfiguration()
 
 builder.Host.UseSerilog();
 
-builder.Services.AddSingleton<InMemoryCourseRepository>();
-builder.Services.AddSingleton<InMemoryCoachRepository>();
+// builder.Services.AddSingleton<InMemoryCourseRepository>();
+// builder.Services.AddSingleton<InMemoryCoachRepository>();
+builder.Services.AddScoped<ICourseRepository, EfCourseRepository>();
+builder.Services.AddScoped<ICoachRepository, EfCoachRepository>();
 builder.Services.AddScoped<Logger>();
-
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
     });
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

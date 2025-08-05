@@ -14,7 +14,11 @@ public class Course
 
     public CourseStatus Status { get; private set; } = CourseStatus.Draft;
     public Coach? AssignedCoach { get; private set; }
-    private Course() { }                                        // EF Core constructor
+
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
+    private Course() { }                                         // Private constructor voor EF Core
+#pragma warning restore CS8618
+
     public Course(string course, PlanningPeriod period)
     {
         Name = course;

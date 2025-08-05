@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using HorsesForCourses.Core;
 using HorsesForCourses.Dtos;
-using HorsesForCourses.Repository;
+using HorsesForCourses.Infrastructure;
 
 namespace HorsesForCourses.WebApi.Controllers;
 
@@ -9,22 +9,25 @@ namespace HorsesForCourses.WebApi.Controllers;
 [Route("courses")]
 public class CoursesController : ControllerBase
 {
-    private readonly InMemoryCourseRepository _courseRepository;
-    private readonly InMemoryCoachRepository _coachRepository;
+    // private readonly InMemoryCourseRepository _courseRepository;
+    // private readonly InMemoryCoachRepository _coachRepository;
+    private readonly ICourseRepository _courseRepository;
+    private readonly ICoachRepository _coachRepository;
 
-    public CoursesController(InMemoryCourseRepository courseRepository, InMemoryCoachRepository coachRepository)
+    public CoursesController(ICourseRepository courseRepository, ICoachRepository coachRepository)
     {
         _courseRepository = courseRepository;
         _coachRepository = coachRepository;
     }
 
     [HttpPost]                                  // Maakt een nieuwe cursus aan met een naam en een periode.
-    public IActionResult CreateCourse([FromBody] CreateCourseDTO dto)
+    public async Task<IActionResult> CreateCourse([FromBody] CreateCourseDTO dto)
     {
         var period = new PlanningPeriod(DateOnly.Parse(dto.StartDate), DateOnly.Parse(dto.EndDate));
         var course = Course.Create(dto.Name, period);
 
-        _courseRepository.Save(course);
+        await _courseRepository.AddAsync(course);
+        await _courseRepository.SaveChangesAsync();
 
         return Ok(course.Id);
         // var courseDto = CourseMapper.ToDTO(course);
@@ -32,23 +35,23 @@ public class CoursesController : ControllerBase
     }
 
     [HttpPost("{id}/skills")]                       // Vervangt de vereiste competenties voor een cursus.
-    public IActionResult UpdateCourseSkills([FromBody] UpdateCourseSkillsDTO dto, int id)
+    public async Task<IActionResult> UpdateCourseSkills([FromBody] UpdateCourseSkillsDTO dto, int id)
     {
-        var course = _courseRepository.GetById(id);
+        var course = await _courseRepository.GetByIdAsync(id);
         if (course is null) return NotFound();
 
         course.UpdateSkills(dto.Skills);
 
-        _courseRepository.Save(course);
+        await _courseRepository.SaveChangesAsync();
 
         // var courseDto = CourseMapper.ToDTO(course);
         return Ok(dto);
     }
 
     [HttpPost("{id}/timeslots")]
-    public IActionResult UpdateTimeSlots([FromBody] UpdateTimeSlotsDTO dto, int id)
+    public async Task<IActionResult> UpdateTimeSlots([FromBody] UpdateTimeSlotsDTO dto, int id)
     {
-        var course = _courseRepository.GetById(id);
+        var course = await _courseRepository.GetByIdAsync(id);
         if (course is null) return NotFound();
 
         var currentSlots = course.ScheduledTimeSlots.ToList();
@@ -63,49 +66,53 @@ public class CoursesController : ControllerBase
             var scheduledSlot = new ScheduledTimeSlot(slotDto.Day, timeSlot);
             course.AddScheduledTimeSlot(scheduledSlot);
         }
+
+        await _courseRepository.SaveChangesAsync();
         // var courseDto = CourseMapper.ToDTO(course);
         return NoContent();
     }
 
     [HttpPost("{id}/confirm")]                                  // Bevestigt een cursus zodat een coach toegewezen kan worden.
-    public IActionResult ConfirmCourse(int id)
+    public async Task<IActionResult> ConfirmCourse(int id)
     {
-        var course = _courseRepository.GetById(id);
+        var course = await _courseRepository.GetByIdAsync(id);
         if (course is null) return NotFound();
 
         course.Confirm();
+        await _courseRepository.SaveChangesAsync();
 
         // var courseDto = CourseMapper.ToDTO(course);
         return NoContent();
     }
 
     [HttpPost("{id}/assign-coach")]                             // Wijst een geschikte coach toe aan een bevestigde cursus.
-    public IActionResult AssignCoach(int id, [FromBody] AssignCoachDTO dto)
+    public async Task<IActionResult> AssignCoach(int id, [FromBody] AssignCoachDTO dto)
     {
-        var course = _courseRepository.GetById(id);
+        var course = await _courseRepository.GetByIdAsync(id);
         if (course is null) return NotFound($"Cursus met ID {id} niet gevonden.");
 
-        var coach = _coachRepository.GetById(dto.CoachId);
+        var coach = await _coachRepository.GetByIdAsync(dto.CoachId);
         if (coach is null) return NotFound($"Coach met ID {dto.CoachId} niet gevonden.");
 
         course.AssignCoach(coach);
+        await _courseRepository.SaveChangesAsync();
 
         var courseDto = CourseMapper.ToDTO(course);
         return Ok(courseDto);
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<CourseAssignStatusDTO>> GetAll()
+    public async Task<ActionResult<IEnumerable<CourseAssignStatusDTO>>> GetAll()
     {
-        var courses = _courseRepository.GetAll();
+        var courses = await _courseRepository.GetAllAsync();
         var courseAssignStatusDTO = CourseMapper.ToAssignmentStatusDTOList(courses);
         return Ok(courseAssignStatusDTO);
     }
 
     [HttpGet("{id}")]
-    public IActionResult GetCourseById(int id)
+    public async Task<IActionResult> GetCourseById(int id)
     {
-        var course = _courseRepository.GetById(id);
+        var course = await _courseRepository.GetByIdAsync(id);
         if (course is null)
             return NotFound();
 

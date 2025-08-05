@@ -37,3 +37,76 @@ public class AppDbContext : DbContext
     }
 }
 
+/*// --- Course Configuratie ---
+        var courseBuilder = modelBuilder.Entity<Course>();
+        courseBuilder.HasKey(c => c.Id);
+        courseBuilder.Property(c => c.Id).ValueGeneratedOnAdd();
+
+        courseBuilder.Property(c => c.Name).IsRequired().HasMaxLength(150);
+        
+        // Enum als string opslaan
+        courseBuilder.Property(c => c.Status).HasConversion<string>();
+
+        // Value Object: PlanningPeriod
+        courseBuilder.OwnsOne(c => c.Period, periodBuilder =>
+        {
+            periodBuilder.Property(p => p.StartDate).HasColumnName("Period_StartDate");
+            periodBuilder.Property(p => p.EndDate).HasColumnName("Period_EndDate");
+        });
+        
+        // Relatie: Een cursus heeft één (optionele) coach
+        courseBuilder.HasOne(c => c.AssignedCoach)
+                     .WithMany() // Een Coach heeft geen collectie van Courses, dus dit is eenrichtingsverkeer
+                     .HasForeignKey("AssignedCoachId")
+                     .IsRequired(false); // Een coach is niet verplicht bij aanmaak
+
+        // Owned Collection: ScheduledTimeSlots (wordt een aparte tabel)
+        courseBuilder.OwnsMany(c => c.ScheduledTimeSlots, slotBuilder =>
+        {
+            slotBuilder.WithOwner().HasForeignKey("CourseId");
+            slotBuilder.Property(s => s.Day).HasConversion<string>();
+            // TimeSlot is ook een Value Object, binnen een ander value object.
+            slotBuilder.OwnsOne(s => s.TimeSlot, timeBuilder =>
+            {
+                timeBuilder.Property(t => t.StartTime).HasColumnName("StartTime");
+                timeBuilder.Property(t => t.EndTime).HasColumnName("EndTime");
+            });
+        });
+
+        // Private field: _skills, net als bij Coach
+        courseBuilder.Property(c => c.Skills)
+            .HasField("skills")
+            .UsePropertyAccessMode(PropertyAccessMode.Field)
+            .HasConversion(
+                v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
+                v => JsonSerializer.Deserialize<List<string>>(v, (JsonSerializerOptions)null) ?? new List<string>()
+            );
+    }*/
+
+/*
+ // Course mapping
+        modelBuilder.Entity<Course>(entity =>
+        {
+            entity.HasKey(c => c.Id);
+            entity.Property(c => c.Name).IsRequired().HasMaxLength(100);
+            entity.Property(c => c.Status);
+
+            entity.OwnsOne(c => c.Period, p =>
+            {
+                p.Property(pp => pp.StartDate).HasColumnName("StartDate");
+                p.Property(pp => pp.EndDate).HasColumnName("EndDate");
+            });
+
+            entity
+                .Property(typeof(List<string>), "skills")
+                .HasField("skills");
+
+            entity
+                .Property(typeof(List<ScheduledTimeSlot>), "scheduledTimeSlots")
+                .HasField("scheduledTimeSlots");
+
+            entity.HasOne(c => c.AssignedCoach);
+
+            // Je kan eventueel ScheduledTimeSlot als owned type instellen
+        });
+*/
