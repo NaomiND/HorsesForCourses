@@ -14,7 +14,7 @@ public class Course
 
     public CourseStatus Status { get; private set; } = CourseStatus.Draft;
     public Coach? AssignedCoach { get; private set; }
-
+    private Course() { }                                        // EF Core constructor
     public Course(string course, PlanningPeriod period)
     {
         Name = course;

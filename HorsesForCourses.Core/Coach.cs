@@ -15,6 +15,7 @@ public class Coach
         Email = email;
     }
 
+    private Coach() { }                                       //voor Entity Framework
     public static Coach Create(int id, string name, string email)       //Factory method
     {
         var emailAddress = EmailAddress.From(email);            // string → EmailAddress

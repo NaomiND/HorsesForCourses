@@ -6,7 +6,7 @@ public class TimeSlot
     Beide zijn **readonly properties** → je stelt ze alleen in via de constructor. */
     public TimeOnly StartTime { get; }
     public TimeOnly EndTime { get; }
-
+    private TimeSlot() { }                                  // voor EF Core
     public TimeSlot(TimeOnly startTime, TimeOnly endTime)
     {
         if (startTime >= endTime)                           // er moet een start en eind uur zijn

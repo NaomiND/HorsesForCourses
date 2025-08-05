@@ -1,21 +1,8 @@
-# TODO
-- [X] Guid Id naar int Id
-- [X] Competences naar Skills
-- [X] RequiredCompetences naar Skills
-- [X] POST /coaches : return enkel id; verwijder naam, e-mail, skills
-- [X] POST /coaches/{id}/skills : Competences naar Skills
-- [X] POST /Course : courseName naar Name en Id verwijderen
-- [X] POST /courses/{id}/skills : ReqComp => Skills
-- [X] POST /courses/{id}/timeslots : day int => string, tijd naar uur ipv uur en minuten?
-- [X] POST /courses/{id}/confirm
-- [X] POST /courses/{id}/assign-coach : courseId verwijderen
+## Implementeren EF Core
+- [X] Omgeving opzetten voor EF Core : Infrastructure map + nodige packages installeren
+- [] Repository interfaces aanmaken
+- [] DbContext aanmaken
 
--[X] GET /coaches: numberOfCoursesAssignedTo toevoegen, skills verwijderen
--[X] GET /coaches/{id} : Toevoegen: "courses": [ { "id": 10, "name": "Advanced C#" }, { "id": 12, "name": "Test-Driven Development" }  ]
--[X] GET /courses : verwijderen: period (enkel start en end), skills, timeslots, IsConfirmed => hasSchedule, assignedCoachId;   
-toevoegen: hasCoach : false
--[X] GET /courses/{id} : verwijderen period (enkel start en end), isConfirmed; aanpassen: ScheduledTimeSlots, assignedcoach => coach (met id en naam) 
-- [ ] testen van ProblemDetails
 
 # Architectuur: Layered Architecture (Separation of Concerns)
     - Presentation Layer: buitenste laag. Verantwoordelijk voor communicatie met de buitenwereld. Voor APIen DTO's.
@@ -153,9 +140,28 @@ Voorzie foutmeldingen bij invalidaties (bv. 422 BadRequest met uitleg)
 **Als** cursusverantwoordelijke **Wil ik** een cursus per id kunnen opvragen 
 **Zodat** deze data beschikbaar is voor weergave en wijziging
 
+
+# TODO
 - [X] generic id is beter dan een guid id voor deze opdracht
 - [X] geen domeinobjecten teruggeven ook niet bij ophalen
 - [X] mapper maken voor coach en course
 - [X] [HttpPost("{id}/skills")] - aanpassen
 - [X] try-catch niet in controllers
 - [X] mapstructuur aanpassen
+
+- [X] Guid Id naar int Id
+- [X] Competences naar Skills
+- [X] RequiredCompetences naar Skills
+- [X] POST /coaches : return enkel id; verwijder naam, e-mail, skills
+- [X] POST /coaches/{id}/skills : Competences naar Skills
+- [X] POST /Course : courseName naar Name en Id verwijderen
+- [X] POST /courses/{id}/skills : ReqComp => Skills
+- [X] POST /courses/{id}/timeslots : day int => string, tijd naar uur ipv uur en minuten?
+- [X] POST /courses/{id}/confirm
+- [X] POST /courses/{id}/assign-coach : courseId verwijderen
+
+-[X] GET /coaches: numberOfCoursesAssignedTo toevoegen, skills verwijderen
+-[X] GET /coaches/{id} : Toevoegen: "courses": [ { "id": 10, "name": "Advanced C#" }, { "id": 12, "name": "Test-Driven Development" }  ]
+-[X] GET /courses : verwijderen: period (enkel start en end), skills, timeslots, IsConfirmed => hasSchedule, assignedCoachId;   
+toevoegen: hasCoach : false
+-[X] GET /courses/{id} : verwijderen period (enkel start en end), isConfirmed; aanpassen: ScheduledTimeSlots, assignedcoach => coach (met id en naam) 

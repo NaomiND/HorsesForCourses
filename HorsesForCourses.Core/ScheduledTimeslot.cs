@@ -4,7 +4,7 @@ public class ScheduledTimeSlot                      //lesmoment
 {
     public WeekDays Day { get; }                    //enum WeekDays
     public TimeSlot TimeSlot { get; }
-
+    private ScheduledTimeSlot() { }                //voor EF Core
     public ScheduledTimeSlot(WeekDays day, TimeSlot timeSlot)
     {
         if (!Enum.IsDefined(typeof(WeekDays), day))                                                 // Extra veiligheid indien ooit WeekDays enum wordt uitgebreid
