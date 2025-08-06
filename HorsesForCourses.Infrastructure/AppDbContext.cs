@@ -31,8 +31,8 @@ public class AppDbContext : DbContext
         coachBuilder.Property(c => c.Skills).HasField("skills")                     // Private field: skills, opgeslagen als JSON array
             .UsePropertyAccessMode(PropertyAccessMode.Field)
             .HasConversion(
-                v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null) ?? "[]",  // Serialize skills to JSON
-                v => JsonSerializer.Deserialize<List<string>>(v, (JsonSerializerOptions)null) ?? new List<string>()
+                v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),  // Serialize skills to JSON
+                v => JsonSerializer.Deserialize<List<string>>(v, (JsonSerializerOptions)null)
             );
 
         var courseBuilder = modelBuilder.Entity<Course>();                          //course mapping
