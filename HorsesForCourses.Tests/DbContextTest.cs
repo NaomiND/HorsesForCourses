@@ -22,7 +22,7 @@ public class CoachPersistancyTests
 
         using (var context = new AppDbContext(options))
         {
-            context.Coaches.Add(new Coach(FullName.From("naam"), EmailAddress.From("email")));
+            context.Coaches.Add(new Coach(FullName.From("Test Tester"), EmailAddress.From("email@test.com")));
             await context.SaveChangesAsync();
         }
 
@@ -31,8 +31,8 @@ public class CoachPersistancyTests
             var coach = await context.Coaches.FindAsync(1);
 
             Assert.NotNull(coach);
-            Assert.Equal("naam", coach.Name.ToString());
-            Assert.Equal("email", coach.Email.Value);
+            Assert.Equal("Test Tester", coach.Name.DisplayName);
+            Assert.Equal("email@test.com", coach.Email.Value);
         }
     }
 }

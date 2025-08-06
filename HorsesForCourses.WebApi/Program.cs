@@ -36,7 +36,7 @@ builder.Host.UseSerilog();
 
 // builder.Services.AddSingleton<InMemoryCourseRepository>();
 // builder.Services.AddSingleton<InMemoryCoachRepository>();
-builder.Services.AddScoped<ICourseRepository, EfCourseRepository>();
+builder.Services.AddScoped<ICourseRepository, EfCourseRepository>();        //Voor elke unieke HTTP-request wordt er één AppDbContext-instantie gemaakt.
 builder.Services.AddScoped<ICoachRepository, EfCoachRepository>();
 builder.Services.AddScoped<Logger>();
 builder.Services.AddControllers()
