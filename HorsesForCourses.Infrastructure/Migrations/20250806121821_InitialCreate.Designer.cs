@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HorsesForCourses.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250806101456_InitialCreate")]
+    [Migration("20250806121821_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

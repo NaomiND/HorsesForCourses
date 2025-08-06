@@ -25,7 +25,6 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite("Data Source=horses.db"));
 
-
 // var options = new DbContextOptionsBuilder<AppDbContext>()
 //     .UseSqlite("Data Source=../HorsesForCourses.WebApi/horses.db")
 //     .Options;
