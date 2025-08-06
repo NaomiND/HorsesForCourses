@@ -1,13 +1,13 @@
 ## Implementeren EF Core
 - [X] Omgeving opzetten voor EF Core : Infrastructure map + nodige packages installeren
 - [X] DbContext aanmaken voor coach
-- [bezig] DbContext aanmaken voor course
+- [X] DbContext aanmaken voor course
 - [X] Repository interfaces aanmaken in .core : coach
 - [x] Repository interfaces aanmaken in .core : course
 - [X] EfRepository aanmaken in .infrastructure : coach
 - [X] EfRepository aanmaken in .infrastructure : course
 - [X] Configureer EF in Program.cs (UseSqlite)
-- [bezig] Pas controllers aan (async) om EF repositories te gebruiken: coach + course
+- [X] Pas controllers aan (async) om EF repositories te gebruiken: coach + course
 - [] Run migratie
 
 

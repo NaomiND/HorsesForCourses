@@ -7,8 +7,6 @@ using Serilog;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
-//using HorsesForCourses.Repository;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,15 +25,16 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite("Data Source=horses.db"));
 
-Log.Logger = new LoggerConfiguration()
-    .WriteTo.Console()
-    .Enrich.FromLogContext()
-    .CreateLogger();
 
-builder.Host.UseSerilog();
+// var options = new DbContextOptionsBuilder<AppDbContext>()
+//     .UseSqlite("Data Source=../HorsesForCourses.WebApi/horses.db")
+//     .Options;
 
-// builder.Services.AddSingleton<InMemoryCourseRepository>();
-// builder.Services.AddSingleton<InMemoryCoachRepository>();
+// using var context = new AppDbContext(options);
+
+// Zorg dat de database en tabellen worden aangemaakt
+// context.Database.Migrate();
+
 builder.Services.AddScoped<ICourseRepository, EfCourseRepository>();        //Voor elke unieke HTTP-request wordt er één AppDbContext-instantie gemaakt.
 builder.Services.AddScoped<ICoachRepository, EfCoachRepository>();
 builder.Services.AddScoped<Logger>();
@@ -44,6 +43,13 @@ builder.Services.AddControllers()
     {
         options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
     });
+
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .Enrich.FromLogContext()
+    .CreateLogger();
+
+builder.Host.UseSerilog();
 
 var app = builder.Build();
 
@@ -76,7 +82,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
 app.MapControllers();
 
