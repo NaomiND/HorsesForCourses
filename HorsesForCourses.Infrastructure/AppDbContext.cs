@@ -1,6 +1,7 @@
 ﻿using HorsesForCourses.Core;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace HorsesForCourses.Infrastructure;
 
@@ -28,12 +29,30 @@ public class AppDbContext : DbContext
         coachBuilder.Property(c => c.Email).HasConversion(email => email.Value, value => EmailAddress.From(value)).HasColumnName("Email").IsRequired().HasMaxLength(200);   // EmailAddress als string opslaan
         coachBuilder.HasIndex(c => c.Email).IsUnique();                             // Unieke index op Email
 
-        coachBuilder.Property(c => c.Skills).HasField("skills")                     // Private field: skills, opgeslagen als JSON array
+        // -----------------------------------------------------------
+        // OLD MAPPING
+        // --
+        // coachBuilder.Property(c => c.Skills).HasField("skills")                     // Private field: skills, opgeslagen als JSON array
+        //     .UsePropertyAccessMode(PropertyAccessMode.Field)
+        //     .HasConversion(
+        //         v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),  // Serialize skills to JSON
+        //         v => JsonSerializer.Deserialize<List<string>>(v, (JsonSerializerOptions)null)
+        //     );
+        // -----------------------------------------------------------
+        // NEW MAPPINGj
+        // --
+        coachBuilder
+            .Property<List<string>>("skills")
             .UsePropertyAccessMode(PropertyAccessMode.Field)
             .HasConversion(
-                v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),  // Serialize skills to JSON
+                v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
                 v => JsonSerializer.Deserialize<List<string>>(v, (JsonSerializerOptions)null)
-            );
+            )
+            .Metadata.SetValueComparer(new ValueComparer<List<string>>(
+                (c1, c2) => c1.SequenceEqual(c2),
+                c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+                c => c.ToList()
+            ));
 
         var courseBuilder = modelBuilder.Entity<Course>();                          //course mapping
         courseBuilder.HasKey(c => c.Id);
@@ -49,13 +68,17 @@ public class AppDbContext : DbContext
             periodBuilder.Property(p => p.EndDate).HasColumnName("End date");
         });
 
-        courseBuilder.Property(c => c.Skills)                                       // Private field: skills, opgeslagen als JSON array
-            .HasField("skills")
+        courseBuilder.Property<List<string>>("skills")                                      // Private field: skills, opgeslagen als JSON array
             .UsePropertyAccessMode(PropertyAccessMode.Field)
             .HasConversion(
                 v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
                 v => JsonSerializer.Deserialize<List<string>>(v, (JsonSerializerOptions)null) ?? new List<string>()
-            );
+            )
+                     .Metadata.SetValueComparer(new ValueComparer<List<string>>(
+                (c1, c2) => c1.SequenceEqual(c2),
+                c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+                c => c.ToList()
+            ));
         // courseBuilder.Property(typeof(List<string>), "skills").HasField("skills");
 
         courseBuilder.HasOne(c => c.AssignedCoach)                                  // Relatie: Een cursus heeft één (optionele) coach

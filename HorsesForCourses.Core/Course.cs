@@ -6,7 +6,7 @@ public class Course
     public string Name { get; private set; }
     public PlanningPeriod Period { get; private set; }
 
-    private readonly List<string> skills = new();
+    private List<string> skills = new();
     public IReadOnlyCollection<string> Skills => skills.AsReadOnly();
 
     private readonly List<ScheduledTimeSlot> scheduledTimeSlots = new();

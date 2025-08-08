@@ -8,14 +8,15 @@
 - [X] EfRepository aanmaken in .infrastructure : course
 - [X] Configureer EF in Program.cs (UseSqlite)
 - [X] Pas controllers aan (async) om EF repositories te gebruiken: coach + course
-- [] Run migratie
+- [X] Run migratie
+- [] Wat is het probleem met de skills (zowel bij course als coach)
 
 
 # Architectuur: Layered Architecture (Separation of Concerns)
     - Presentation Layer: buitenste laag. Verantwoordelijk voor communicatie met de buitenwereld. Voor APIen DTO's.
     - Application Layer: De regisseur. De nodige stappen om een taak uit te voeren, zoals ophalen van domeinobject, uitvoeren van een actie, opslaan resultaat. Deze laag bevat Services die de use cases implementeren. Deze services gebruiken de domeinobjecten. Ze praten niet rechtstreeks met de database, maar gebruiken Repository Interfaces.
     - Domain Layer: Het hart. Complexe businesslogica, regels en kernelementen van het systeem (klassen). Volledig onafhankelijk van de andere lagen. Principes van DDD (Domain Driven Design)
-    - Infrastructure Layer: De technicus. Implementeert vb database-toegang, communicatie met externe systemen. (voorlopig niet nodig).
+    - Infrastructure Layer: De technicus. Implementeert vb database-toegang, communicatie met externe systemen.
 
 **DOMAIN LAYER** ok
 - coach: entity & aggregate root
@@ -56,7 +57,7 @@
                 IsCoachAvailableForCourse(coach, Course): Deze service haalt alle andere opleidingen op waar de coach al aan toegewezen is en controleert of de lesmomenten van de nieuwe Course overlappen met de lesmomenten van de bestaande opleidingen.
 
 
-**INFRASTRUCTURE LAYER**  -  momenteel IN Memory storage. Reeds onafhankelijk voor koppeling met database. 
+**INFRASTRUCTURE LAYER** 
 Repositories: Concrete implementaties van de repository interfaces uit de Application Layer (bv. EntityFrameworkCoachRepository die met een database praat). Of een tijdelijke opslag via InMemory. 
 Hier komt de code die de database connectie, tabellen, etc. beheert.
 
