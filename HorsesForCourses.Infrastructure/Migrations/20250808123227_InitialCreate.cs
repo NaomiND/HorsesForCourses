@@ -20,7 +20,7 @@ namespace HorsesForCourses.Infrastructure.Migrations
                     Firstname = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
                     Lastname = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
                     Email = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
-                    Skills = table.Column<string>(type: "TEXT", nullable: false)
+                    skills = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -36,9 +36,10 @@ namespace HorsesForCourses.Infrastructure.Migrations
                     Cursus = table.Column<string>(type: "TEXT", maxLength: 150, nullable: false),
                     Startdate = table.Column<DateOnly>(name: "Start date", type: "TEXT", nullable: false),
                     Enddate = table.Column<DateOnly>(name: "End date", type: "TEXT", nullable: false),
-                    Skills = table.Column<string>(type: "TEXT", nullable: false),
+                    ScheduledTimeSlots = table.Column<string>(type: "TEXT", nullable: false),
                     Status = table.Column<string>(type: "TEXT", nullable: false),
-                    AssignedCoachId = table.Column<int>(type: "INTEGER", nullable: true)
+                    AssignedCoachId = table.Column<int>(type: "INTEGER", nullable: true),
+                    skills = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -48,27 +49,6 @@ namespace HorsesForCourses.Infrastructure.Migrations
                         column: x => x.AssignedCoachId,
                         principalTable: "Coaches",
                         principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ScheduledTimeSlot",
-                columns: table => new
-                {
-                    CourseId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Id = table.Column<int>(type: "INTEGER", nullable: false),
-                    Day = table.Column<string>(type: "TEXT", nullable: false),
-                    Starttime = table.Column<TimeOnly>(name: "Start time", type: "TEXT", nullable: false),
-                    Endtime = table.Column<TimeOnly>(name: "End time", type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ScheduledTimeSlot", x => new { x.CourseId, x.Id });
-                    table.ForeignKey(
-                        name: "FK_ScheduledTimeSlot_Courses_CourseId",
-                        column: x => x.CourseId,
-                        principalTable: "Courses",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -86,9 +66,6 @@ namespace HorsesForCourses.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "ScheduledTimeSlot");
-
             migrationBuilder.DropTable(
                 name: "Courses");
 

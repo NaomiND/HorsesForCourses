@@ -61,8 +61,8 @@ public static class CourseMapper
                                 .Select(slot => new TimeSlotJasonDTO
                                 {
                                     Day = slot.Day,                         // Cast Day naar WeekDays
-                                    Start = slot.TimeSlot.StartTime.Hour,   // toegang tot TimeSlot, dan StartTime, dan Hour
-                                    End = slot.TimeSlot.EndTime.Hour        // toegang tot TimeSlot, dan EndTime, dan Hour
+                                    Start = slot.TimeSlot.StartTime,   // toegang tot TimeSlot, dan StartTime, dan Hour (.hour verwijderd voor int)
+                                    End = slot.TimeSlot.EndTime        // toegang tot TimeSlot, dan EndTime, dan Hour
                                 })
                                 .ToList(),
 

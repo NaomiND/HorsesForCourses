@@ -60,9 +60,9 @@ public class CoursesController : ControllerBase
             course.RemoveScheduledTimeSlot(slot);
         }
 
-        foreach (var slotDto in dto.TimeSlots)
+        foreach (var slotDto in dto.TimeSlots)                      // int starttime en endtime ipv TimeOnly
         {
-            var timeSlot = new TimeSlot(new TimeOnly(slotDto.Start, 0), new TimeOnly(slotDto.End, 0));
+            var timeSlot = new TimeSlot(slotDto.Start, slotDto.End);                //timeslot.create (voor TimeOnly)
             var scheduledSlot = new ScheduledTimeSlot(slotDto.Day, timeSlot);
             course.AddScheduledTimeSlot(scheduledSlot);
         }
@@ -120,3 +120,5 @@ public class CoursesController : ControllerBase
         return Ok(courseDto);
     }
 }
+
+

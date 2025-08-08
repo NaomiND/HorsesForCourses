@@ -45,8 +45,12 @@ public class AppDbContext : DbContext
             .Property<List<string>>("skills")
             .UsePropertyAccessMode(PropertyAccessMode.Field)
             .HasConversion(
-                v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
-                v => JsonSerializer.Deserialize<List<string>>(v, (JsonSerializerOptions)null)
+                        // v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
+                        // v => JsonSerializer.Deserialize<List<string>>(v, (JsonSerializerOptions)null)
+                        v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
+                        v => string.IsNullOrWhiteSpace(v)
+                        ? new List<string>()
+                        : JsonSerializer.Deserialize<List<string>>(v, (JsonSerializerOptions)null) ?? new List<string>()
             )
             .Metadata.SetValueComparer(new ValueComparer<List<string>>(
                 (c1, c2) => c1.SequenceEqual(c2),
@@ -79,25 +83,36 @@ public class AppDbContext : DbContext
                 c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
                 c => c.ToList()
             ));
-        // courseBuilder.Property(typeof(List<string>), "skills").HasField("skills");
 
         courseBuilder.HasOne(c => c.AssignedCoach)                                  // Relatie: Een cursus heeft één (optionele) coach
-                     .WithMany() // Een Coach heeft geen collectie van Courses, dus dit is eenrichtingsverkeer
+                     .WithMany()                                                    // Een Coach heeft geen collectie van Courses, dus dit is eenrichtingsverkeer
                      .HasForeignKey("AssignedCoachId")
                      .IsRequired(false);                                            // Een coach is niet verplicht bij aanmaak
 
         // courseBuilder.Property(typeof(List<ScheduledTimeSlot>), "scheduledTimeSlots")
         //              .HasField("scheduledTimeSlots");
 
-        courseBuilder.OwnsMany(c => c.ScheduledTimeSlots, slotBuilder =>            // Owned Collection: ScheduledTimeSlots (wordt een aparte tabel)
-                    {
-                        slotBuilder.WithOwner().HasForeignKey("CourseId");
-                        slotBuilder.Property(s => s.Day).HasConversion<string>();
-                        slotBuilder.OwnsOne(s => s.TimeSlot, timeBuilder =>         // TimeSlot is ook een Value Object, binnen een ander value object.
-                        {
-                            timeBuilder.Property(t => t.StartTime).HasColumnName("Start time");
-                            timeBuilder.Property(t => t.EndTime).HasColumnName("End time");
-                        });
-                    });
+        // Correct mapping for ScheduledTimeSlots as a JSON column
+        courseBuilder.Property(c => c.ScheduledTimeSlots)
+            .HasConversion(
+                v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
+                v => v == null
+                    ? new List<ScheduledTimeSlot>()
+                    : JsonSerializer.Deserialize<List<ScheduledTimeSlot>>(v, (JsonSerializerOptions)null) ?? new List<ScheduledTimeSlot>()
+            );
     }
+
+    // courseBuilder
+    //     .Property<List<string>>("scheduledTimeSlot")                                      // Private field: skills, opgeslagen als JSON array
+    //     .UsePropertyAccessMode(PropertyAccessMode.Field)
+    //     .HasColumnName("Time")
+    //     .HasConversion(
+    //         v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
+    //         v => JsonSerializer.Deserialize<List<string>>(v, (JsonSerializerOptions)null) ?? new List<string>()
+    //     )
+    // .Metadata.SetValueComparer(new ValueComparer<List<string>>(
+    // (c1, c2) => c1.SequenceEqual(c2),
+    //     c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+    //     c => c.ToList()
+    // ));
 }

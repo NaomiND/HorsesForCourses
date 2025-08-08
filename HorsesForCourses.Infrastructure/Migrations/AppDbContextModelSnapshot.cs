@@ -56,6 +56,10 @@ namespace HorsesForCourses.Infrastructure.Migrations
                         .HasColumnType("TEXT")
                         .HasColumnName("Cursus");
 
+                    b.Property<string>("ScheduledTimeSlots")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -129,60 +133,10 @@ namespace HorsesForCourses.Infrastructure.Migrations
                                 .HasForeignKey("CourseId");
                         });
 
-                    b.OwnsMany("HorsesForCourses.Core.ScheduledTimeSlot", "ScheduledTimeSlots", b1 =>
-                        {
-                            b1.Property<int>("CourseId")
-                                .HasColumnType("INTEGER");
-
-                            b1.Property<int>("Id")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("INTEGER");
-
-                            b1.Property<string>("Day")
-                                .IsRequired()
-                                .HasColumnType("TEXT");
-
-                            b1.HasKey("CourseId", "Id");
-
-                            b1.ToTable("ScheduledTimeSlot");
-
-                            b1.WithOwner()
-                                .HasForeignKey("CourseId");
-
-                            b1.OwnsOne("HorsesForCourses.Core.TimeSlot", "TimeSlot", b2 =>
-                                {
-                                    b2.Property<int>("ScheduledTimeSlotCourseId")
-                                        .HasColumnType("INTEGER");
-
-                                    b2.Property<int>("ScheduledTimeSlotId")
-                                        .HasColumnType("INTEGER");
-
-                                    b2.Property<TimeOnly>("EndTime")
-                                        .HasColumnType("TEXT")
-                                        .HasColumnName("End time");
-
-                                    b2.Property<TimeOnly>("StartTime")
-                                        .HasColumnType("TEXT")
-                                        .HasColumnName("Start time");
-
-                                    b2.HasKey("ScheduledTimeSlotCourseId", "ScheduledTimeSlotId");
-
-                                    b2.ToTable("ScheduledTimeSlot");
-
-                                    b2.WithOwner()
-                                        .HasForeignKey("ScheduledTimeSlotCourseId", "ScheduledTimeSlotId");
-                                });
-
-                            b1.Navigation("TimeSlot")
-                                .IsRequired();
-                        });
-
                     b.Navigation("AssignedCoach");
 
                     b.Navigation("Period")
                         .IsRequired();
-
-                    b.Navigation("ScheduledTimeSlots");
                 });
 #pragma warning restore 612, 618
         }

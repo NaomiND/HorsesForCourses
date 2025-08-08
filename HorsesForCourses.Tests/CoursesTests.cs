@@ -64,7 +64,8 @@ public class CourseTests
     {
         var period = new PlanningPeriod(new DateOnly(2025, 7, 1), new DateOnly(2025, 7, 31));
         var course = Course.Create("C#", period);
-        var slot = new ScheduledTimeSlot(WeekDays.Monday, new TimeSlot(new TimeOnly(10, 0), new TimeOnly(12, 0)));
+        var slot = new ScheduledTimeSlot(WeekDays.Monday, new TimeSlot(10, 12));
+        // var slot = new ScheduledTimeSlot(WeekDays.Monday, new TimeSlot(new TimeOnly(10, 0), new TimeOnly(12, 0))); // Voor TimeOnly, maar nu met int start en end time
 
         course.AddScheduledTimeSlot(slot);
 
@@ -76,7 +77,7 @@ public class CourseTests
     {
         var period = new PlanningPeriod(new DateOnly(2025, 7, 1), new DateOnly(2025, 7, 31));
         var course = Course.Create("C#", period);
-        var slot = new ScheduledTimeSlot(WeekDays.Monday, new TimeSlot(new TimeOnly(10, 0), new TimeOnly(12, 0)));
+        var slot = new ScheduledTimeSlot(WeekDays.Monday, new TimeSlot(10, 12));
 
         course.AddScheduledTimeSlot(slot);
         course.Confirm();
@@ -90,7 +91,7 @@ public class CourseTests
         var period = new PlanningPeriod(new DateOnly(2025, 7, 1), new DateOnly(2025, 7, 31));
         var course = Course.Create("C#", period);
         course.AddSkill("Unit Testing");
-        var slot = new ScheduledTimeSlot(WeekDays.Monday, new TimeSlot(new TimeOnly(10, 0), new TimeOnly(12, 0)));
+        var slot = new ScheduledTimeSlot(WeekDays.Monday, new TimeSlot(10, 12));
         course.AddScheduledTimeSlot(slot);
         course.Confirm();
 
