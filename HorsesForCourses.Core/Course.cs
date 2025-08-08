@@ -9,7 +9,7 @@ public class Course
     private List<string> skills = new();
     public IReadOnlyCollection<string> Skills => skills.AsReadOnly();
 
-    private readonly List<ScheduledTimeSlot> scheduledTimeSlots = new();
+    private List<ScheduledTimeSlot> scheduledTimeSlots = new();
     public IReadOnlyCollection<ScheduledTimeSlot> ScheduledTimeSlots => scheduledTimeSlots.AsReadOnly();
 
     public CourseStatus Status { get; private set; } = CourseStatus.Draft;

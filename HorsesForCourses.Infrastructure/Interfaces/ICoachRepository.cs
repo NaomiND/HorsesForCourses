@@ -1,10 +1,11 @@
-namespace HorsesForCourses.Core;
+using HorsesForCourses.Core;
+namespace HorsesForCourses.Infrastructure;
 
-public interface ICourseRepository
+public interface ICoachRepository
 {
-    Task<Course?> GetByIdAsync(int id);
-    Task<IEnumerable<Course>> GetAllAsync();
-    Task AddAsync(Course course);
+    Task<Coach?> GetByIdAsync(int id);
+    Task<IEnumerable<Coach>> GetAllAsync();
+    Task AddAsync(Coach coach);
     Task SaveChangesAsync();
 }
 

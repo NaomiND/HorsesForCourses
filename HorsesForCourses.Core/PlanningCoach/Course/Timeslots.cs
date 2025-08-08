@@ -26,7 +26,7 @@ public record TimeSlot                               //record gemaakt ipv class 
         EndTime = endTime;
     }
 
-    public TimeSlot() : this(default, default) { }
+    public TimeSlot() { }
     public bool OverlapsWith(TimeSlot other)
     {
         return StartTime < other.EndTime && EndTime > other.StartTime;

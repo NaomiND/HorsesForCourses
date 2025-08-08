@@ -92,27 +92,49 @@ public class AppDbContext : DbContext
         // courseBuilder.Property(typeof(List<ScheduledTimeSlot>), "scheduledTimeSlots")
         //              .HasField("scheduledTimeSlots");
 
-        // Correct mapping for ScheduledTimeSlots as a JSON column
-        courseBuilder.Property(c => c.ScheduledTimeSlots)
-            .HasConversion(
-                v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
-                v => v == null
-                    ? new List<ScheduledTimeSlot>()
-                    : JsonSerializer.Deserialize<List<ScheduledTimeSlot>>(v, (JsonSerializerOptions)null) ?? new List<ScheduledTimeSlot>()
-            );
-    }
+        //     courseBuilder.Property(c => c.ScheduledTimeSlots)
+        //         .HasConversion(
+        //             v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
+        //             v => v == null
+        //                 ? new List<ScheduledTimeSlot>()
+        //                 : JsonSerializer.Deserialize<List<ScheduledTimeSlot>>(v, (JsonSerializerOptions)null) ?? new List<ScheduledTimeSlot>()
+        //         );
+        // }
 
-    // courseBuilder
-    //     .Property<List<string>>("scheduledTimeSlot")                                      // Private field: skills, opgeslagen als JSON array
-    //     .UsePropertyAccessMode(PropertyAccessMode.Field)
-    //     .HasColumnName("Time")
-    //     .HasConversion(
-    //         v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
-    //         v => JsonSerializer.Deserialize<List<string>>(v, (JsonSerializerOptions)null) ?? new List<string>()
-    //     )
-    // .Metadata.SetValueComparer(new ValueComparer<List<string>>(
-    // (c1, c2) => c1.SequenceEqual(c2),
-    //     c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
-    //     c => c.ToList()
-    // ));
+        courseBuilder.OwnsMany(c => c.ScheduledTimeSlots, ts =>
+            {
+                ts.HasKey("Id");
+                ts.WithOwner().HasForeignKey("CourseId");
+
+                ts.Property(t => t.Day)
+                    .HasConversion(
+                        v => v.ToString(),
+                        v => Enum.Parse<WeekDays>(v))
+                    .HasColumnName("Day");
+                ts.OwnsOne(a => a.TimeSlot, timeSlotBuilder =>
+                {
+                    timeSlotBuilder.Property(t => t.StartTime).IsRequired();
+                    timeSlotBuilder.Property(t => t.EndTime).IsRequired();
+                });
+
+
+                // ts.Property(t => t.StartTime);//.HasColumnName("Start");
+                // ts.Property(t => t.EndTime);//.HasColumnName("End");
+            });
+        // courseBuilder
+        // .OwnsMany(c => c.ScheduledTimeSlots, scheduledTimeSlotBuilder =>
+        //     courseBuilder.Property<List<ScheduledTimeSlot>>("scheduledTimeSlots")                       // Private field: scheduledTimeSlots, opgeslagen als JSON array
+        //                                                                                                 // .Property<List<ScheduledTimeSlot>>("scheduledTimeSlots")                                // Private field: skills, opgeslagen als JSON array
+        //     .UsePropertyAccessMode(PropertyAccessMode.Field)
+        //     .HasColumnName("Time")
+        //     .HasConversion(
+        //         v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
+        //         v => JsonSerializer.Deserialize<List<ScheduledTimeSlot>>(v, (JsonSerializerOptions)null) ?? new List<ScheduledTimeSlot>()
+        //     )
+        // .Metadata.SetValueComparer(new ValueComparer<List<ScheduledTimeSlot>>(
+        // (c1, c2) => c1.SequenceEqual(c2),
+        //     c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+        //     c => c.ToList()
+        // )));
+    }
 }

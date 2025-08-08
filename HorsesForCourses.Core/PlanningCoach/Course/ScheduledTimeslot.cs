@@ -13,7 +13,7 @@ public record ScheduledTimeSlot                             //lesmoment (record 
         TimeSlot = timeSlot;
     }
 
-    public ScheduledTimeSlot() : this(default, null!) { }       //private const voor EF/ parameterloze constructor
+    public ScheduledTimeSlot() { }       //private const voor EF/ parameterloze constructor
 
     public bool OverlapsWith(ScheduledTimeSlot other)
     {

@@ -9,8 +9,10 @@
 - [X] Configureer EF in Program.cs (UseSqlite)
 - [X] Pas controllers aan (async) om EF repositories te gebruiken: coach + course
 - [X] Run migratie
-- [] Wat is het probleem met de skills (zowel bij course als coach)
-
+- [X] Wat is het probleem met de skills (zowel bij course als coach)
+- [] Controle of de nieuwe course overlapt met een coach en een bestaande course (methode nog te maken en implementeren)
+- [] Testen controllers
+- [] Testen EF
 
 # Architectuur: Layered Architecture (Separation of Concerns)
     - Presentation Layer: buitenste laag. Verantwoordelijk voor communicatie met de buitenwereld. Voor APIen DTO's.
