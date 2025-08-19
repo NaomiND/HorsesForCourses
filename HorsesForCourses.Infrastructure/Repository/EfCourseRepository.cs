@@ -1,5 +1,5 @@
 using HorsesForCourses.Core;
-using HorsesForCourses.infrastructure;
+using HorsesForCourses.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
 namespace HorsesForCourses.Infrastructure;

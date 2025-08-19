@@ -1,5 +1,5 @@
 using HorsesForCourses.Core;
-namespace HorsesForCourses.infrastructure;
+namespace HorsesForCourses.Infrastructure;
 
 public interface ICourseRepository
 {

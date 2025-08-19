@@ -48,7 +48,7 @@ public class CoursesController : ControllerBase
         return Ok(dto);
     }
 
-    [HttpPost("{id}/timeslots")]
+    [HttpPost("{id}/timeslots")]        //moet compacter
     public async Task<IActionResult> UpdateTimeSlots([FromBody] UpdateTimeSlotsDTO dto, int id)
     {
         var course = await _courseRepository.GetByIdAsync(id);
@@ -63,8 +63,8 @@ public class CoursesController : ControllerBase
         foreach (var slotDto in dto.TimeSlots)                      // int starttime en endtime ipv TimeOnly
         {
             var timeSlot = new TimeSlot(slotDto.Start, slotDto.End);                //timeslot.create (voor TimeOnly)
-            var scheduledSlot = new ScheduledTimeSlot(slotDto.Day, timeSlot);
-            course.AddScheduledTimeSlot(scheduledSlot);
+            var scheduledSlot = new ScheduledTimeSlot(slotDto.Day, timeSlot);           //lijsten maken van timeslot en sched slot daarna 
+            course.AddScheduledTimeSlot(scheduledSlot);                                 //course.replace met .select van linq
         }
 
         await _courseRepository.SaveChangesAsync();
