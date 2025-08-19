@@ -1,6 +1,6 @@
 using HorsesForCourses.Core;
-using HorsesForCourses.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using HorsesForCourses.WebApi;
 
 namespace HorsesForCourses.Infrastructure;
 
@@ -13,6 +13,23 @@ public class EfCourseRepository : ICourseRepository
         _context = context;
     }
 
+    // public async Task<PagedResult<CourseAssignStatusDTO>> GetAllPagedAsync(PageRequest request)
+    // {
+    //     var query = _context.Courses
+    //         .AsNoTracking()
+    //         .OrderBy(c => c.Name) // 1. Sorteren
+    //         .Select(c => new CourseAssignStatusDTO // 2. Projecteren
+    //         {
+    //             Id = c.Id,
+    //             Name = c.Name,
+    //             StartDate = c.Period.StartDate.ToString(),
+    //             EndDate = c.Period.EndDate.ToString(),
+    //             HasSchedule = c.ScheduledTimeSlots.Any(),
+    //             HasCoach = c.AssignedCoach != null
+    //         });
+
+    //     return await query.ToPagedResultAsync(request); // 3. Paging
+    // }
     public async Task<Course?> GetByIdAsync(int id)
     {
         // Gebruik Include om gerelateerde data (de coach) mee te laden.

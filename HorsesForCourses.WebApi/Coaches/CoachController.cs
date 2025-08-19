@@ -56,6 +56,14 @@ public class CoachesController : ControllerBase
         return Ok(coachDtos);
     }
 
+    // [HttpGet]   // De methode accepteert nu PageRequest uit de query string 
+
+    // public async Task<ActionResult<PagedResult<CoachDTO>>> GetAll([FromQuery] PageRequest request)
+    // {
+    //     var pagedCoaches = await _coachRepository.GetAllPagedAsync(request);
+    //     return Ok(pagedCoaches);
+    // }
+
     [HttpGet("{id}")]
     public async Task<IActionResult> GetCoachById(int id)
     {

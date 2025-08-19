@@ -1,10 +1,12 @@
 using HorsesForCourses.Core;
+using HorsesForCourses.WebApi;
 namespace HorsesForCourses.Infrastructure;
 
 public interface ICourseRepository
 {
     Task<Course?> GetByIdAsync(int id);
     Task<IEnumerable<Course>> GetAllAsync();
+    // Task<PagedResult<CourseAssignStatusDTO>> GetAllPagedAsync(PageRequest request); //TODO
     Task AddAsync(Course course);
     Task SaveChangesAsync();
 }

@@ -9,8 +9,6 @@ namespace HorsesForCourses.WebApi.Controllers;
 [Route("courses")]
 public class CoursesController : ControllerBase
 {
-    // private readonly InMemoryCourseRepository _courseRepository;
-    // private readonly InMemoryCoachRepository _coachRepository;
     private readonly ICourseRepository _courseRepository;
     private readonly ICoachRepository _coachRepository;
 
@@ -108,6 +106,13 @@ public class CoursesController : ControllerBase
         var courseAssignStatusDTO = CourseMapper.ToAssignmentStatusDTOList(courses);
         return Ok(courseAssignStatusDTO);
     }
+
+    //  [HttpGet]
+    // public async Task<ActionResult<PagedResult<CourseAssignStatusDTO>>> GetAll([FromQuery] PageRequest request)
+    // {
+    //     var pagedCourses = await _courseRepository.GetAllPagedAsync(request);
+    //     return Ok(pagedCourses);
+    // }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetCourseById(int id)

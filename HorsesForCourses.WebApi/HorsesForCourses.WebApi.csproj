@@ -22,8 +22,8 @@
   <ItemGroup>
     <ProjectReference Include="..\HorsesForCourses.Core\HorsesForCourses.Core.csproj" />
     <ProjectReference Include="..\HorsesForCourses.Infrastructure\HorsesForCourses.Infrastructure.csproj" />
+    <ProjectReference Include="..\HorsesForCourses.Service\HorsesForCourses.Service.csproj" />
     <InternalsVisibleTo Include="HorsesForCourses.Tests" />
-
   </ItemGroup>
 
 </Project>

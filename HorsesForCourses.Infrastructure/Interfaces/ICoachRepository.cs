@@ -1,10 +1,14 @@
 using HorsesForCourses.Core;
+using HorsesForCourses.WebApi;
+
+
 namespace HorsesForCourses.Infrastructure;
 
 public interface ICoachRepository
 {
     Task<Coach?> GetByIdAsync(int id);
     Task<IEnumerable<Coach>> GetAllAsync();
+    // Task<PagedResult<CoachDTO>> GetAllPagedAsync(PageRequest request); //TODO
     Task AddAsync(Coach coach);
     Task SaveChangesAsync();
 }
