@@ -2,6 +2,7 @@ using HorsesForCourses.Core;
 using HorsesForCourses.Application;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+
 namespace HorsesForCourses.Tests;
 
 public class CoachPersistancyTests

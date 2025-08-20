@@ -1,21 +1,16 @@
-## Implementeren EF Core
-- [X] Omgeving opzetten voor EF Core : Infrastructure map + nodige packages installeren
-- [X] DbContext aanmaken voor coach
-- [X] DbContext aanmaken voor course
-- [X] Repository interfaces aanmaken in .core : coach
-- [x] Repository interfaces aanmaken in .core : course
-- [X] EfRepository aanmaken in .infrastructure : coach
-- [X] EfRepository aanmaken in .infrastructure : course
-- [X] Configureer EF in Program.cs (UseSqlite)
-- [X] Pas controllers aan (async) om EF repositories te gebruiken: coach + course
-- [X] Run migratie
-- [X] Wat is het probleem met de skills (zowel bij course als coach)
+## ToDo
 - [] Controle of de nieuwe course overlapt met een coach en een bestaande course (methode nog te maken en implementeren)
-- [] Testen controllers
-- [] Testen EF
+- [] 
+- [] 
+- [] 
+- [] 
+- [] 
+- [] 
+- [] 
+- [] 
 
 # Architectuur: Layered Architecture (Separation of Concerns)
-    - Presentation Layer: buitenste laag. Verantwoordelijk voor communicatie met de buitenwereld. Voor APIen DTO's.
+    - Presentation Layer: buitenste laag. Verantwoordelijk voor communicatie met de buitenwereld. Voor API en DTO's.
     - Application Layer: De regisseur. De nodige stappen om een taak uit te voeren, zoals ophalen van domeinobject, uitvoeren van een actie, opslaan resultaat. Deze laag bevat Services die de use cases implementeren. Deze services gebruiken de domeinobjecten. Ze praten niet rechtstreeks met de database, maar gebruiken Repository Interfaces.
     - Domain Layer: Het hart. Complexe businesslogica, regels en kernelementen van het systeem (klassen). Volledig onafhankelijk van de andere lagen. Principes van DDD (Domain Driven Design)
     - Infrastructure Layer: De technicus. Implementeert vb database-toegang, communicatie met externe systemen.
@@ -38,7 +33,7 @@
     └── TimeSlot: StartTime en EndTime. ( met logica + validatie bv min 1u)
     └── ScheduledTimeSlot: Combineert een Weekday (Enum) (bv. maandag) met een TimeSlot. Met validatie: weekdagen, kantooruren, geen overlap
 
-**APPLICATION LAYER**  - Enkel met service beginnen als de opdracht te groot wordt. 
+**APPLICATION LAYER**  
 - CoachService
     └── RegisterCoach(name, email): nieuw Coach object aanmaken, vragen aan de repository om het op te slaan.
     └── Add/RemoveCompetencyToCoach(coachId, competency): Haalt de Coach op via de repository, roept de Add/Remove methode op Coach aan, en slaat de gewijzigde Coach weer op.
@@ -150,6 +145,18 @@ Voorzie foutmeldingen bij invalidaties (bv. 422 BadRequest met uitleg)
 **Als** cursusverantwoordelijke **Wil ik** een cursus per id kunnen opvragen 
 **Zodat** deze data beschikbaar is voor weergave en wijziging
 
+## Implementeren EF Core
+- [X] Omgeving opzetten voor EF Core : Infrastructure map + nodige packages installeren
+- [X] DbContext aanmaken voor coach
+- [X] DbContext aanmaken voor course
+- [X] Repository interfaces aanmaken in .core : coach
+- [x] Repository interfaces aanmaken in .core : course
+- [X] EfRepository aanmaken in .infrastructure : coach
+- [X] EfRepository aanmaken in .infrastructure : course
+- [X] Configureer EF in Program.cs (UseSqlite)
+- [X] Pas controllers aan (async) om EF repositories te gebruiken: coach + course
+- [X] Run migratie
+- [X] Wat is het probleem met de skills (zowel bij course als coach)
 
 # TODO
 - [X] generic id is beter dan een guid id voor deze opdracht
