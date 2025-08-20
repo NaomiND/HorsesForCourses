@@ -1,6 +1,7 @@
 using HorsesForCourses.Core;
 using Microsoft.EntityFrameworkCore;
-using HorsesForCourses.WebApi;
+using HorsesForCourses.Application;
+using HorsesForCourses.Infrastructure.Extensions;
 
 namespace HorsesForCourses.Infrastructure;
 
@@ -13,23 +14,23 @@ public class EfCourseRepository : ICourseRepository
         _context = context;
     }
 
-    // public async Task<PagedResult<CourseAssignStatusDTO>> GetAllPagedAsync(PageRequest request)
-    // {
-    //     var query = _context.Courses
-    //         .AsNoTracking()
-    //         .OrderBy(c => c.Name) // 1. Sorteren
-    //         .Select(c => new CourseAssignStatusDTO // 2. Projecteren
-    //         {
-    //             Id = c.Id,
-    //             Name = c.Name,
-    //             StartDate = c.Period.StartDate.ToString(),
-    //             EndDate = c.Period.EndDate.ToString(),
-    //             HasSchedule = c.ScheduledTimeSlots.Any(),
-    //             HasCoach = c.AssignedCoach != null
-    //         });
+    public async Task<PagedResult<CourseAssignStatusDTOPaging>> GetAllPagedAsync(PageRequest request)
+    {
+        var query = _context.Courses
+            .AsNoTracking()
+            .OrderBy(c => c.Name)                           //Sorteren
+            .Select(c => new CourseAssignStatusDTOPaging          //Projecteren
+            {
+                Id = c.Id,
+                Name = c.Name,
+                StartDate = c.Period.StartDate.ToString(),
+                EndDate = c.Period.EndDate.ToString(),
+                HasSchedule = c.ScheduledTimeSlots.Any(),
+                HasCoach = c.AssignedCoach != null
+            });
 
-    //     return await query.ToPagedResultAsync(request); // 3. Paging
-    // }
+        return await query.ToPagedResultAsync(request);     //Paging
+    }
     public async Task<Course?> GetByIdAsync(int id)
     {
         // Gebruik Include om gerelateerde data (de coach) mee te laden.

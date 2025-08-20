@@ -1,7 +1,7 @@
 ﻿using HorsesForCourses.Core;
 using Microsoft.EntityFrameworkCore;
-using System.Text.Json;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System.Text.Json;
 
 namespace HorsesForCourses.Application;
 
