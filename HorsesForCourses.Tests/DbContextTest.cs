@@ -1,6 +1,5 @@
 using HorsesForCourses.Core;
 using HorsesForCourses.Application;
-using HorsesForCourses.Infrastructure;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 namespace HorsesForCourses.Tests;

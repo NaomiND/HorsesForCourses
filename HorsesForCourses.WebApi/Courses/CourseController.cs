@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using HorsesForCourses.Dtos;
 using HorsesForCourses.Infrastructure;
 using HorsesForCourses.Core;
+using HorsesForCourses.Application;
 
 namespace HorsesForCourses.WebApi.Controllers;
 
@@ -99,20 +100,20 @@ public class CoursesController : ControllerBase
         return Ok(courseDto);
     }
 
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<CourseAssignStatusDTO>>> GetAll()
-    {
-        var courses = await _courseRepository.GetAllAsync();
-        var courseAssignStatusDTO = CourseMapper.ToAssignmentStatusDTOList(courses);
-        return Ok(courseAssignStatusDTO);
-    }
-
-    //  [HttpGet]
-    // public async Task<ActionResult<PagedResult<CourseAssignStatusDTO>>> GetAll([FromQuery] PageRequest request)
+    // [HttpGet] //no paging
+    // public async Task<ActionResult<IEnumerable<CourseAssignStatusDTO>>> GetAll()
     // {
-    //     var pagedCourses = await _courseRepository.GetAllPagedAsync(request);
-    //     return Ok(pagedCourses);
+    //     var courses = await _courseRepository.GetAllAsync();
+    //     var courseAssignStatusDTO = CourseMapper.ToAssignmentStatusDTOList(courses);
+    //     return Ok(courseAssignStatusDTO);
     // }
+
+    [HttpGet] //paging
+    public async Task<ActionResult<PagedResult<CourseAssignStatusDTOPaging>>> GetAll([FromQuery] PageRequest request)
+    {
+        var pagedCourses = await _courseRepository.GetAllPagedAsync(request);
+        return Ok(pagedCourses);
+    }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetCourseById(int id)

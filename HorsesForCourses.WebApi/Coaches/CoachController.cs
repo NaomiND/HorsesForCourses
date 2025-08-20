@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using HorsesForCourses.Core;
 using HorsesForCourses.Dtos;
-using HorsesForCourses.Repository;
+using HorsesForCourses.Application;
 using HorsesForCourses.Infrastructure;
 
 namespace HorsesForCourses.WebApi.Controllers;
@@ -10,8 +10,6 @@ namespace HorsesForCourses.WebApi.Controllers;
 [Route("coaches")]
 public class CoachesController : ControllerBase
 {
-    // private readonly InMemoryCoachRepository _coachRepository;
-    // private readonly InMemoryCourseRepository _courseRepository;
     private readonly ICoachRepository _coachRepository;
     private readonly ICourseRepository _courseRepository;
     public CoachesController(ICoachRepository coachrepository, ICourseRepository courseRepository)
@@ -47,22 +45,22 @@ public class CoachesController : ControllerBase
         return Ok(dto);
     }
 
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<CoachDTO>>> GetAll()
-    {
-        var coaches = await _coachRepository.GetAllAsync();
-        var allCourses = await _courseRepository.GetAllAsync();
-        var coachDtos = CoachMapper.ToDTOList(coaches, allCourses);
-        return Ok(coachDtos);
-    }
-
-    // [HttpGet]   // De methode accepteert nu PageRequest uit de query string 
-
-    // public async Task<ActionResult<PagedResult<CoachDTO>>> GetAll([FromQuery] PageRequest request)
+    // [HttpGet]  //no paging
+    // public async Task<ActionResult<IEnumerable<CoachDTO>>> GetAll()
     // {
-    //     var pagedCoaches = await _coachRepository.GetAllPagedAsync(request);
-    //     return Ok(pagedCoaches);
+    //     var coaches = await _coachRepository.GetAllAsync();
+    //     var allCourses = await _courseRepository.GetAllAsync();
+    //     var coachDtos = CoachMapper.ToDTOList(coaches, allCourses);
+    //     return Ok(coachDtos);
     // }
+
+    [HttpGet]   //Paging
+
+    public async Task<ActionResult<PagedResult<CoachDTOPaging>>> GetAll([FromQuery] PageRequest request)
+    {
+        var pagedCoaches = await _coachRepository.GetAllPagedAsync(request);
+        return Ok(pagedCoaches);
+    }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetCoachById(int id)
