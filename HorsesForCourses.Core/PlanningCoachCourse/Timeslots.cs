@@ -1,4 +1,5 @@
 namespace HorsesForCourses.Core;
+
 /* `StartTime` en `EndTime` zijn van het type `TimeOnly` (vanaf .NET 6), bedoeld om enkel kloktijden (zonder datum) te representeren.
 Beide zijn **readonly properties** → je stelt ze alleen in via de constructor. Nu gebruik ik INT */
 

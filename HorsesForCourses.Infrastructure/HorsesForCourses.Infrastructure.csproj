@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\HorsesForCourses.Service\HorsesForCourses.Service.csproj" />
+    <ProjectReference Include="..\HorsesForCourses.Application\HorsesForCourses.Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>

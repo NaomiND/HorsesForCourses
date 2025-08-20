@@ -1,8 +1,8 @@
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 using HorsesForCourses.WebApi;
-using HorsesForCourses.Core;
-using HorsesForCourses.Infrastructure;
 using HorsesForCourses.WebApi.Controllers;
+using HorsesForCourses.Infrastructure;
+using HorsesForCourses.Application;
 using Serilog;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;

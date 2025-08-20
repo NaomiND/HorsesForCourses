@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace HorsesForCourses.Infrastructure;
+namespace HorsesForCourses.Application;
 
 public class AppDbContext : DbContext
 {

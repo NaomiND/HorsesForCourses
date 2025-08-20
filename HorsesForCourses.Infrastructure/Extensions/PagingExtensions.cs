@@ -1,4 +1,4 @@
-using HorsesForCourses.Service;
+using HorsesForCourses.Application;
 using Microsoft.EntityFrameworkCore;
 
 namespace HorsesForCourses.Infrastructure.Extensions;

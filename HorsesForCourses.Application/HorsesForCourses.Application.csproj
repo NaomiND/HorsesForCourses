@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\HorsesForCourses.Core\HorsesForCourses.Core.csproj" />
+  </ItemGroup>
+
 </Project>

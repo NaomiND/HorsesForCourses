@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
-namespace HorsesForCourses.Infrastructure;
+namespace HorsesForCourses.Application;
 
 public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
 {

@@ -1,4 +1,4 @@
-namespace HorsesForCourses.Service
+namespace HorsesForCourses.Application
 {
     public sealed record PageRequest(int PageNumber = 1, int PageSize = 20)
     {

@@ -1,7 +1,7 @@
 using HorsesForCourses.Core;
 using Microsoft.EntityFrameworkCore;
-using HorsesForCourses.Infrastructure.Extensions;
-using HorsesForCourses.WebApi;
+using HorsesForCourses.Application;
+
 
 namespace HorsesForCourses.Infrastructure;
 
