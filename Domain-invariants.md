@@ -8,4 +8,28 @@
 Een geldig e-mailadres mag niet leeg of 'null' zijn en kan enkel via de 'create()'-methode worden aangemaakt.
 De structuur van het e-mailadres wort gevalideerd met 'System.Net.Mail.MailAddress'. Deze klasse controleert of een e-mailadres syntactisch juist is volgens een eenvoudige subset van de e-mailstandaarden (niet volledig RFC 5322). 
 
-[E-mailvalidatie tests](HorsesForCourses.Tests/CoachRegistrationTests.cs)Aan
+[E-mailvalidatie tests](HorsesForCourses.Tests/Tests/CoachRegistration/EmailAdressTest.cs)
+
+
+## FullName
+De voor- en achternaam mogen niet leeg of 'null' zijn en zijn 'immutable'. De volledige naam moet minstens uit twee delen bestaan.
+'From(string)' accepteert alleen strings met minstens twee niet-lege delen. DisplayName en ToString() geven altijd "FirstName LastName" terug.
+
+[Naam validatie tests](HorsesForCourses.Tests/Tests/CoachRegistration/FullNameTest.cs)
+
+
+## PlanningPeriod
+Invariant: De einddatum moet na de startdatum liggen.
+
+
+## ScheduledTimeslot
+Invariant: Een lesmoment mag enkel op werkdagen zijn (maandag t.e.m. vrijdag).
+
+
+## Timeslots
+Invarianten: De starttijd moet voor de eindtijd liggen. De les moet minstens 1 uur duren. Het tijdslot moet tussen 09:00 en 17:00 vallen.
+
+
+## Coach
+Invarianten: Een competentie kan niet leeg zijn en mag niet dubbel toegevoegd worden. Een competentie moet aanwezig zijn om te worden verwijderd.
+
