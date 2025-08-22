@@ -21,7 +21,7 @@ public class Coach
 
     public static Coach Create(int id, string name, string email)       //Factory method
     {
-        var emailAddress = EmailAddress.From(email);            // string → EmailAddress
+        var emailAddress = EmailAddress.Create(email);            // string → EmailAddress
         var fullName = FullName.From(name);                     // string → FullName
         // Id = 0 of default bij aanmaken, database vult aan bij opslaan
         return new Coach(fullName, emailAddress);

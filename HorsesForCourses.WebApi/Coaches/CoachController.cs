@@ -21,7 +21,7 @@ public class CoachesController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateCoach([FromBody] CreateCoachDTO dto)
     {
-        var coach = new Coach(FullName.From(dto.Name), EmailAddress.From(dto.Email));
+        var coach = new Coach(FullName.From(dto.Name), EmailAddress.Create(dto.Email));
         await _coachRepository.AddAsync(coach);
         await _coachRepository.SaveChangesAsync();
 

@@ -13,7 +13,7 @@ namespace HorsesForCourses.Tests
             for (int i = 1; i <= 25; i++)                                       //db met 25 coaches
             {
                 var name = FullName.From($"Coach {i:D2}");
-                var email = EmailAddress.From($"coach{i:D2}@test.com");
+                var email = EmailAddress.Create($"coach{i:D2}@test.com");
                 _context.Coaches.Add(new Coach(name, email));
             }
             await _context.SaveChangesAsync();

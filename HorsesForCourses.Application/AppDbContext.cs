@@ -26,7 +26,7 @@ public class AppDbContext : DbContext
             namebuilder.Property(n => n.LastName).HasColumnName("Lastname").IsRequired().HasMaxLength(100);
         });
 
-        coachBuilder.Property(c => c.Email).HasConversion(email => email.Value, value => EmailAddress.From(value)).HasColumnName("Email").IsRequired().HasMaxLength(200);   // EmailAddress als string opslaan
+        coachBuilder.Property(c => c.Email).HasConversion(email => email.Value, value => EmailAddress.Create(value)).HasColumnName("Email").IsRequired().HasMaxLength(200);   // EmailAddress als string opslaan
         coachBuilder.HasIndex(c => c.Email).IsUnique();                             // Unieke index op Email
 
         // -----------------------------------------------------------

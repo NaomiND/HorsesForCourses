@@ -23,7 +23,7 @@ public class CoachPersistancyTests
 
         using (var context = new AppDbContext(options))
         {
-            context.Coaches.Add(new Coach(FullName.From("Test Tester"), EmailAddress.From("email@test.com")));
+            context.Coaches.Add(new Coach(FullName.From("Test Tester"), EmailAddress.Create("email@test.com")));
             await context.SaveChangesAsync();
         }
 

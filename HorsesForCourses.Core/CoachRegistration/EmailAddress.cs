@@ -1,18 +1,26 @@
+using System.Net.Mail;
+
 namespace HorsesForCourses.Core;
 
-public record EmailAddress
+public record EmailAddress(string Value)
 {
-    public string Value { get; }
+    public static bool IsValidEmail(string value) => EmailHelper.IsValidEmail(value);
 
-    private EmailAddress(string value) => Value = value;
-
-    public static EmailAddress From(string value)
+    public static EmailAddress Create(string value)
     {
-        if (string.IsNullOrWhiteSpace(value))
-            throw new ArgumentException("Email mag niet leeg zijn.");
-        if (!value.Contains("@"))
-            throw new ArgumentException("Ongeldig emailformaat.");
+        if (!IsValidEmail(value))
+            throw new ArgumentException("Ongeldig e-mailadres", nameof(value));
+
         return new EmailAddress(value);
     }
+
     public override string ToString() => Value;
+}
+
+public static class EmailHelper
+{
+    public static bool IsValidEmail(string email) =>
+        !string.IsNullOrWhiteSpace(email) &&
+        MailAddress.TryCreate(email, out var addr) &&
+        addr.Address == email;
 }

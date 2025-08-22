@@ -1,6 +1,4 @@
 using HorsesForCourses.Core;
-using System;
-using System.Data.Common;
 
 namespace HorsesForCourses.Tests;
 
@@ -10,7 +8,7 @@ public class CoachTests
     public void Coach_Constructor_InitializesPropertiesCorrectly()
     {
         FullName name = new FullName("Ine", "De Wit");
-        EmailAddress email = EmailAddress.From("Ine.dewit@gmail.com");
+        EmailAddress email = EmailAddress.Create("Ine.dewit@gmail.com");
 
         Coach coach = new Coach(name, email);
 
@@ -47,7 +45,7 @@ public class CoachTests
     public void AddSkill_AddsNewSkillToList()
     {
         FullName name = new FullName("Test", "Coach");
-        EmailAddress email = EmailAddress.From("test@example.com");
+        EmailAddress email = EmailAddress.Create("test@example.com");
         Coach coach = new Coach(name, email);
         string skill = "c# programming";
 
@@ -63,7 +61,7 @@ public class CoachTests
     public void AddSkill_InvalidInput_ThrowsArgumentException(string invalidSkill)
     {
         FullName name = new FullName("Test", "Coach");
-        EmailAddress email = EmailAddress.From("test@example.com");
+        EmailAddress email = EmailAddress.Create("test@example.com");
         Coach coach = new Coach(name, email);
 
         Assert.Throws<ArgumentException>(() => coach.AddSkill(invalidSkill));
@@ -73,7 +71,7 @@ public class CoachTests
     public void AddSkill_ThrowsInvalidOperationExceptionWhenSkillAlreadyExists()
     {
         FullName name = new FullName("Test", "Coach");
-        EmailAddress email = EmailAddress.From("test@example.com");
+        EmailAddress email = EmailAddress.Create("test@example.com");
         Coach coach = new Coach(name, email);
         string skill = "Dutch";
         coach.AddSkill(skill);
@@ -85,7 +83,7 @@ public class CoachTests
     public void RemoveSkill_RemovesExistingSkill()
     {
         FullName name = new FullName("Test", "Coach");
-        EmailAddress email = EmailAddress.From("test@example.com");
+        EmailAddress email = EmailAddress.Create("test@example.com");
         Coach coach = new Coach(name, email);
         coach.AddSkill("French");
         coach.AddSkill("C# Programming");
@@ -101,7 +99,7 @@ public class CoachTests
     public void RemoveSkills_ThrowsInvalidOperationExceptionWhenSkillNotFound()
     {
         FullName name = new FullName("Test", "Coach");
-        EmailAddress email = EmailAddress.From("test@example.com");
+        EmailAddress email = EmailAddress.Create("test@example.com");
         Coach coach = new Coach(name, email);
         coach.AddSkill("C# Programming");
 
@@ -113,7 +111,7 @@ public class CoachTests
     public void ClearSkills_RemovesAllSkills()
     {
         FullName name = new FullName("Test", "Coach");
-        EmailAddress email = EmailAddress.From("test@example.com");
+        EmailAddress email = EmailAddress.Create("test@example.com");
         Coach coach = new Coach(name, email);
         coach.AddSkill("C# Programming");
         coach.AddSkill("Dutch");
@@ -127,7 +125,7 @@ public class CoachTests
     public void HasAllRequiredSkills_ReturnsTrueWhenOk()
     {
         FullName name = new FullName("Test", "Coach");
-        EmailAddress email = EmailAddress.From("test@example.com");
+        EmailAddress email = EmailAddress.Create("test@example.com");
         Coach coach = new Coach(name, email);
         coach.AddSkill("C# Programming");
         coach.AddSkill("dutch");
@@ -144,7 +142,7 @@ public class CoachTests
     public void HasAllRequiredSkills_ReturnsFalseWhenOneOrMoreSkillsAreMissing()
     {
         FullName name = new FullName("Test", "Coach");
-        EmailAddress email = EmailAddress.From("test@example.com");
+        EmailAddress email = EmailAddress.Create("test@example.com");
         Coach coach = new Coach(name, email);
         coach.AddSkill("C# Programming");
         coach.AddSkill("Dutch");

@@ -10,7 +10,7 @@ public class AppDbContextTests : DbContextTestBase
     {
         // Arrange
         var fullName = FullName.From("Jan De Tester");
-        var email = EmailAddress.From("jan.tester@example.com");
+        var email = EmailAddress.Create("jan.tester@example.com");
         var newCoach = new Coach(fullName, email);
         newCoach.AddSkill("C#");
         newCoach.AddSkill("Testing");
@@ -34,7 +34,7 @@ public class AppDbContextTests : DbContextTestBase
     public async Task Coach_SavingDuplicateEmail_ThrowsDbUpdateException()
     {
         // Arrange
-        var email = EmailAddress.From("duplicate@example.com");
+        var email = EmailAddress.Create("duplicate@example.com");
         var coach1 = new Coach(FullName.From("Coach Een"), email);
         var coach2 = new Coach(FullName.From("Coach Twee"), email);
 
