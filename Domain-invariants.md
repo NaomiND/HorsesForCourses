@@ -4,6 +4,8 @@
      - link(s) naar de test code
 
 # Invariants
+In dit document staan de voorwaarden beschreven die altijd waar moeten zijn voor een object, ongeacht de staat ervan. Bij elk object vind je een link naar de testfile die deze voorwaarden implementeert. 
+
 ## EmailAddress
 Een geldig e-mailadres mag niet leeg of 'null' zijn en kan enkel via de 'create()'-methode worden aangemaakt.
 De structuur van het e-mailadres wort gevalideerd met 'System.Net.Mail.MailAddress'. Deze klasse controleert of een e-mailadres syntactisch juist is volgens een eenvoudige subset van de e-mailstandaarden (niet volledig RFC 5322). 
@@ -19,20 +21,32 @@ De voor- en achternaam mogen niet leeg of 'null' zijn en zijn 'immutable'. De vo
 
 
 ## PlanningPeriod
-Invariant: De einddatum moet na de startdatum liggen.
+Het PlanningPeriod object vertegenwoordigt een geldige eendagperiode of meerdagenperiode. 
+- De einddatum mag niet voor de startdatum liggen. 
+- Een datum in de planningsperiode ligt na/is gelijk aan de startdatum en ligt voor/is gelijk aan de einddatum.
+
+[PlanningPeriod validatie tests](HorsesForCourses.Tests/Tests/Planning/PlanningPeriod.cs)
+
+
+## Timeslots
+Een Timeslot object is geldig wanneer het aan volgende voorwaarden voldoet:
+- De starttijd moet voor de eindtijd liggen.
+- Een tijdslot moet minstens 60 minuten lang zijn. 
+- Een tijslot moet binnen de kantooruren vallen (9:00 - 17:00)
+
+[Timeslots validatie tests](HorsesForCourses.Tests/Tests/Planning/Timeslot.cs)
 
 
 ## ScheduledTimeslot
 
+TimeSlot kan niet null zijn moet altijd ee ngeldige instantie zijn.
+Day en TimeSlot zijn immutable. 
 📌 Samenvatting: Invariants van ScheduledTimeSlot
 Invariant	Omschrijving
 Enum.IsDefined(typeof(WeekDays), Day)	Day moet een geldige waarde zijn van de WeekDays enum (bijv. Maandag–Vrijdag).
 TimeSlot != null	TimeSlot moet altijd een geldige instantie zijn.
 Day en TimeSlot zijn immutable	Na initialisatie zijn de properties niet wijzigbaar (init-only).
 OverlapsWith vereist Day == other.Day	Alleen als dagen gelijk zijn, wordt TimeSlot.OverlapsWith uitgevoerd.
-
-## Timeslots
-Invarianten: De starttijd moet voor de eindtijd liggen. De les moet minstens 1 uur duren. Het tijdslot moet tussen 09:00 en 17:00 vallen.
 
 
 ## Coach

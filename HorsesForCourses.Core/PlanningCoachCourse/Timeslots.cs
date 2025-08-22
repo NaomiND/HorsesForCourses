@@ -10,7 +10,7 @@ public record TimeSlot                               //record gemaakt ipv class 
     public TimeSlot(int startTime, int endTime)
     {
         if (startTime >= endTime)
-            throw new ArgumentException("Start moet vroeger zijn dan het einde.");
+            throw new ArgumentException("Startuur moet voor het einduur liggen.");
 
         if (endTime - startTime < 1)
             throw new ArgumentException("Een les moet minstens 1 uur lang zijn.");
