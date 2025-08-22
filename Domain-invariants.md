@@ -25,28 +25,25 @@ Het PlanningPeriod object vertegenwoordigt een geldige eendagperiode of meerdage
 - De einddatum mag niet voor de startdatum liggen. 
 - Een datum in de planningsperiode ligt na/is gelijk aan de startdatum en ligt voor/is gelijk aan de einddatum.
 
-[PlanningPeriod validatie tests](HorsesForCourses.Tests/Tests/Planning/PlanningPeriod.cs)
+[PlanningPeriod validatie tests](HorsesForCourses.Tests/Tests/Planning/PlanningPeriodTests.cs)
 
 
 ## Timeslots
 Een Timeslot object is geldig wanneer het aan volgende voorwaarden voldoet:
 - De starttijd moet voor de eindtijd liggen.
 - Een tijdslot moet minstens 60 minuten lang zijn. 
-- Een tijslot moet binnen de kantooruren vallen (9:00 - 17:00)
+- Een tijslot moet binnen de kantooruren vallen (9:00 - 17:00).
 
-[Timeslots validatie tests](HorsesForCourses.Tests/Tests/Planning/Timeslot.cs)
+[Timeslots validatie tests](HorsesForCourses.Tests/Tests/Planning/TimeslotTests.cs)
 
 
 ## ScheduledTimeslot
+In dit object kijken we of het gekozen tijdslot geldig is, op een weekdag doorgaat en eventueel overlapt met een ander tijdslot. 
+- Een tijdslot kan enkel geboekt worden op werkdagen (maandag - vrijdag).  
+- Timeslot moet altijd geldig zijn, de validatie hiervoor gebeurd in het object Timeslots. 
+- Een tijdslot kan enkel overlappen met een ander tijdslot als ze op dezelfde dag plaatsvinden. 
 
-TimeSlot kan niet null zijn moet altijd ee ngeldige instantie zijn.
-Day en TimeSlot zijn immutable. 
-📌 Samenvatting: Invariants van ScheduledTimeSlot
-Invariant	Omschrijving
-Enum.IsDefined(typeof(WeekDays), Day)	Day moet een geldige waarde zijn van de WeekDays enum (bijv. Maandag–Vrijdag).
-TimeSlot != null	TimeSlot moet altijd een geldige instantie zijn.
-Day en TimeSlot zijn immutable	Na initialisatie zijn de properties niet wijzigbaar (init-only).
-OverlapsWith vereist Day == other.Day	Alleen als dagen gelijk zijn, wordt TimeSlot.OverlapsWith uitgevoerd.
+[ScheduledTimeslot validatie tests](HorsesForCourses.Tests/Tests/Planning/ScheduledTimeSlotTests.cs)
 
 
 ## Coach
