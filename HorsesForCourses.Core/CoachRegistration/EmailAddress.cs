@@ -2,10 +2,11 @@ using System.Net.Mail;
 
 namespace HorsesForCourses.Core;
 
-public record EmailAddress(string Value)
+public record EmailAddress
 {
+    public string Value { get; }
+    private EmailAddress(string value) => Value = value;
     public static bool IsValidEmail(string value) => EmailHelper.IsValidEmail(value);
-
     public static EmailAddress Create(string value)
     {
         if (!IsValidEmail(value))

@@ -6,6 +6,7 @@ namespace HorsesForCourses.Tests
     {
         [Theory]
         [InlineData("test@example.com")]
+        [InlineData("user@test.example.com")]
         [InlineData("a@b.co")]
         [InlineData("test.example@uk.co")]
         public void IsValidEmail_ValidEmails_ReturnsTrue(string email)
@@ -18,8 +19,12 @@ namespace HorsesForCourses.Tests
         [InlineData("")]
         [InlineData("   ")]
         [InlineData("user")]
-        [InlineData("@user.com")]
         [InlineData("user.com")]
+        [InlineData("@user.com")]
+        [InlineData("user@@example.com")]
+        [InlineData("user test@example.com")]
+        [InlineData("user,@example.com")]
+
         public void IsValidEmail_InvalidEmails_ReturnsFalse(string email)
         {
             Assert.False(EmailHelper.IsValidEmail(email));
