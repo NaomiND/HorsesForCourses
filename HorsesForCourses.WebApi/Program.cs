@@ -1,4 +1,5 @@
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+using HorsesForCourses.Core;
 using HorsesForCourses.WebApi;
 using HorsesForCourses.WebApi.Controllers;
 using HorsesForCourses.Infrastructure;
@@ -25,15 +26,7 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite("Data Source=horses.db"));
 
-// var options = new DbContextOptionsBuilder<AppDbContext>()
-//     .UseSqlite("Data Source=../HorsesForCourses.WebApi/horses.db")
-//     .Options;
-
-// using var context = new AppDbContext(options);
-
-// Zorg dat de database en tabellen worden aangemaakt
-// context.Database.Migrate();
-
+builder.Services.AddScoped<CoachAvailabilityService>();
 builder.Services.AddScoped<ICourseRepository, EfCourseRepository>();        //Voor elke unieke HTTP-request wordt er één AppDbContext-instantie gemaakt.
 builder.Services.AddScoped<ICoachRepository, EfCoachRepository>();
 builder.Services.AddScoped<Logger>();

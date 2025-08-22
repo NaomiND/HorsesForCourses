@@ -14,6 +14,8 @@ public class Course
 
     public CourseStatus Status { get; private set; } = CourseStatus.Draft;
     public Coach? AssignedCoach { get; private set; }
+    private readonly CoachAvailabilityService coachAvailabilityService;
+    private readonly IEnumerable<Course> allCourses;// = new List<Course>();
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
     private Course() { }                                         // Private constructor voor EF Core
@@ -102,6 +104,10 @@ public class Course
         if (!coach.HasAllRequiredSkills(skills))
             throw new InvalidOperationException("De coach heeft niet de gewenste competenties voor deze cursus.");
 
+        if (!coachAvailabilityService.IsCoachAvailableForCourse(coach, this, allCourses))
+        {
+            throw new InvalidOperationException("De coach is niet beschikbaar op de ingeplande momenten van deze cursus.");
+        }
         AssignedCoach = coach;
         Status = CourseStatus.Finalized;
     }

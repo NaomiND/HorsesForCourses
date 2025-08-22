@@ -8,7 +8,7 @@
 Een geldig e-mailadres mag niet leeg of 'null' zijn en kan enkel via de 'create()'-methode worden aangemaakt.
 De structuur van het e-mailadres wort gevalideerd met 'System.Net.Mail.MailAddress'. Deze klasse controleert of een e-mailadres syntactisch juist is volgens een eenvoudige subset van de e-mailstandaarden (niet volledig RFC 5322). 
 
-[E-mailvalidatie tests](HorsesForCourses.Tests/Tests/CoachRegistration/EmailAdressTest.cs)
+[E-mail validatie tests](HorsesForCourses.Tests/Tests/CoachRegistration/EmailAdressTest.cs)
 
 
 ## FullName
@@ -23,8 +23,13 @@ Invariant: De einddatum moet na de startdatum liggen.
 
 
 ## ScheduledTimeslot
-Invariant: Een lesmoment mag enkel op werkdagen zijn (maandag t.e.m. vrijdag).
 
+📌 Samenvatting: Invariants van ScheduledTimeSlot
+Invariant	Omschrijving
+Enum.IsDefined(typeof(WeekDays), Day)	Day moet een geldige waarde zijn van de WeekDays enum (bijv. Maandag–Vrijdag).
+TimeSlot != null	TimeSlot moet altijd een geldige instantie zijn.
+Day en TimeSlot zijn immutable	Na initialisatie zijn de properties niet wijzigbaar (init-only).
+OverlapsWith vereist Day == other.Day	Alleen als dagen gelijk zijn, wordt TimeSlot.OverlapsWith uitgevoerd.
 
 ## Timeslots
 Invarianten: De starttijd moet voor de eindtijd liggen. De les moet minstens 1 uur duren. Het tijdslot moet tussen 09:00 en 17:00 vallen.

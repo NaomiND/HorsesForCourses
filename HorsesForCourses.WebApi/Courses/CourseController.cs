@@ -12,11 +12,13 @@ public class CoursesController : ControllerBase
 {
     private readonly ICourseRepository _courseRepository;
     private readonly ICoachRepository _coachRepository;
+    private readonly CoachAvailabilityService _coachAvailabilityService;
 
-    public CoursesController(ICourseRepository courseRepository, ICoachRepository coachRepository)
+    public CoursesController(ICourseRepository courseRepository, ICoachRepository coachRepository, CoachAvailabilityService coachAvailabilityService)
     {
         _courseRepository = courseRepository;
         _coachRepository = coachRepository;
+        _coachAvailabilityService = coachAvailabilityService;
     }
 
     [HttpPost]                                  // Maakt een nieuwe cursus aan met een naam en een periode.
@@ -29,8 +31,6 @@ public class CoursesController : ControllerBase
         await _courseRepository.SaveChangesAsync();
 
         return Ok(course.Id);
-        // var courseDto = CourseMapper.ToDTO(course);
-        // return CreatedAtAction(nameof(GetCourseById), new { id = course.Id }, courseDto);
     }
 
     [HttpPost("{id}/skills")]                       // Vervangt de vereiste competenties voor een cursus.
@@ -43,7 +43,6 @@ public class CoursesController : ControllerBase
 
         await _courseRepository.SaveChangesAsync();
 
-        // var courseDto = CourseMapper.ToDTO(course);
         return Ok(dto);
     }
 
@@ -67,7 +66,7 @@ public class CoursesController : ControllerBase
         }
 
         await _courseRepository.SaveChangesAsync();
-        // var courseDto = CourseMapper.ToDTO(course);
+
         return NoContent();
     }
 
@@ -80,7 +79,6 @@ public class CoursesController : ControllerBase
         course.Confirm();
         await _courseRepository.SaveChangesAsync();
 
-        // var courseDto = CourseMapper.ToDTO(course);
         return NoContent();
     }
 
@@ -92,6 +90,10 @@ public class CoursesController : ControllerBase
 
         var coach = await _coachRepository.GetByIdAsync(dto.CoachId);
         if (coach is null) return NotFound($"Coach met ID {dto.CoachId} niet gevonden.");
+
+        var allCourses = await _courseRepository.GetAllAsync();
+        if (!_coachAvailabilityService.IsCoachAvailableForCourse(coach, course, allCourses))
+            throw new DomainException("Deze coach is niet beschikbaar op de ingeplande momenten van deze cursus.");
 
         course.AssignCoach(coach);
         await _courseRepository.SaveChangesAsync();
