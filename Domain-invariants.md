@@ -53,4 +53,14 @@ In dit object kijken we of het gekozen tijdslot geldig is, op een weekdag doorga
 - De openbare Skills eigenschap is een alleen-lezen verzameling (IReadOnlyCollection).
 
 ## Course
-
+- Een cursus kan enkel via een 'create()'-methode aangemaakt worden. 
+- Een cursus moet altijd een naam en een geldige planningsperiode hebben.
+- Een cursus heeft een verzameling van unieke competenties (skills).
+- Een competentie (skill) kan niet leeg zijn.
+- Competenties kunnen alleen worden verwijderd als ze bestaan in de lijst.
+- Lesmomenten (ScheduledTimeSlots) kunnen alleen worden toegevoegd of verwijderd zolang de cursus de status 'Draft' heeft.
+- Een lesmoment mag niet overlappen met een ander lesmoment binnen dezelfde cursus.
+- Een cursus kan alleen de status 'Confirmed' krijgen als er minstens één lesmoment is toegevoegd.
+- Een coach kan alleen worden toegewezen als de cursus de status Confirmed heeft.
+- Een toegewezen coach moet alle vereiste competenties van de cursus bezitten.
+- Een toegewezen coach moet beschikbaar zijn en mag geen overlappende cursussen hebben.
