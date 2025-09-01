@@ -10,7 +10,7 @@ somewhere in a unit test and run it.
 
 ## Interne links in je repository
 
-Je kunt een interne link maken naar een ander bestand in je repository door de relatieve padnaam te gebruiken tussen rechte haken en haakjes:
+Je kunt een interne link maken naar een ander bestand in je repository door de relatieve padnaam te gebruiken tussen rechte haken en haakjes: 
 
 ```markdown
 [Linktekst](pad/naar/bestand.md)
@@ -18,3 +18,4 @@ Je kunt een interne link maken naar een ander bestand in je repository door de r
 
 Voorbeeld:  
 [Lees meer over invarianten](../1.TheStables/readme.md)
+Of door naar je bestandsmap te gaan, file te kopieëren en met SHIFT te plakken, plak je een link. 

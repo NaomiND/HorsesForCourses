@@ -1,7 +1,6 @@
 using HorsesForCourses.Core;
-using QuickPulse.Show.TimeyWimey;
 
-namespace HorsesForCourses.Repository;
+namespace HorsesForCourses.Infrastructure;
 
 public class InMemoryCourseRepository        //TODO
 {

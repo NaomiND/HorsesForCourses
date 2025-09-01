@@ -1,5 +1,5 @@
 using HorsesForCourses.Core;
-namespace HorsesForCourses.Repository;
+namespace HorsesForCourses.Infrastructure;
 
 public class InMemoryCoachRepository
 {

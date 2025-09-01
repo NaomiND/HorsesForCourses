@@ -1,5 +1,4 @@
 ## ToDo
-- [] Controle of de nieuwe course overlapt met een coach en een bestaande course (methode nog te maken en implementeren)
 - [] 
 - [] 
 - [] 
@@ -58,7 +57,8 @@
 Repositories: Concrete implementaties van de repository interfaces uit de Application Layer (bv. EntityFrameworkCoachRepository die met een database praat). Of een tijdelijke opslag via InMemory. 
 Hier komt de code die de database connectie, tabellen, etc. beheert.
 
-**PRESENTATION LAYER (Web API)**
+**PRESENTATION LAYER (Web API + MVC)**
+
 Controllers: Coachesontroller, CourseController.
 DTOs (Data Transfer Objects): Data van en naar de API te sturen: CreateCoachDTO, CourseDetailsDto. 
 De controllers vertalen de DTOs naar commando's voor de Application Layer en vertalen de resultaten (of fouten) terug naar HTTP-responses.
@@ -177,8 +177,9 @@ Voorzie foutmeldingen bij invalidaties (bv. 422 BadRequest met uitleg)
 - [X] POST /courses/{id}/confirm
 - [X] POST /courses/{id}/assign-coach : courseId verwijderen
 
--[X] GET /coaches: numberOfCoursesAssignedTo toevoegen, skills verwijderen
--[X] GET /coaches/{id} : Toevoegen: "courses": [ { "id": 10, "name": "Advanced C#" }, { "id": 12, "name": "Test-Driven Development" }  ]
--[X] GET /courses : verwijderen: period (enkel start en end), skills, timeslots, IsConfirmed => hasSchedule, assignedCoachId;   
+- [X] GET /coaches: numberOfCoursesAssignedTo toevoegen, skills verwijderen
+- [X] GET /coaches/{id} : Toevoegen: "courses": [ { "id": 10, "name": "Advanced C#" }, { "id": 12, "name": "Test-Driven Development" }  ]
+- [X] GET /courses : verwijderen: period (enkel start en end), skills, timeslots, IsConfirmed => hasSchedule, assignedCoachId;   
 toevoegen: hasCoach : false
--[X] GET /courses/{id} : verwijderen period (enkel start en end), isConfirmed; aanpassen: ScheduledTimeSlots, assignedcoach => coach (met id en naam) 
+- [X] GET /courses/{id} : verwijderen period (enkel start en end), isConfirmed; aanpassen: ScheduledTimeSlots, assignedcoach => coach (met id en naam) 
+- [X] Controle of de nieuwe course overlapt met een coach en een bestaande course (methode nog te maken en implementeren)
