@@ -1,4 +1,4 @@
-@using HorsesForCourses.Application
+@using HorsesForCourses.Application // imports for PagedResult<> and CoachSummary.
 @using HorsesForCourses.Infrastructure
 @model PagedResult<CoachDTOPaging>
 
@@ -6,29 +6,33 @@
     ViewData["Title"] = "Coaches Overzicht";
 }
 
-<h1>@ViewData["Title"]</h1>
+    <h1>@ViewData["Title"]</h1>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Naam</th>
-            <th>Email</th>
-            <th>Aantal Cursussen</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var coach in Model.Items)
-        {
+    <h2>Coaches</h2>
+
+    <table class="table table-striped">
+        <thead>
             <tr>
-                <td>@coach.Name</td>
-                <td>@coach.Email</td>
-                <td>@coach.NumberOfCoursesAssignedTo</td>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th># Courses Assigned</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var coach in Model.Items)
+            {
+                <tr>
+                    <td>@coach.Id</td>
+                    <td>@coach.Name</td>
+                    <td>@coach.Email</td>
+                    <td>@coach.NumberOfCoursesAssignedTo</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 
-<div>
+@* <div>
     <span>Pagina @Model.PageNumber van @Model.TotalPages</span>
     <div class="btn-group" role="group">
         @if (Model.HasPrevious)
@@ -46,4 +50,4 @@
             </a>
         }
     </div>
-</div>
+</div> *@

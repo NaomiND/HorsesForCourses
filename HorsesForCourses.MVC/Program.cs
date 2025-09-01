@@ -2,13 +2,20 @@ using HorsesForCourses.Core;
 using HorsesForCourses.Infrastructure;
 using HorsesForCourses.Application;
 using Microsoft.EntityFrameworkCore;
+using QuickPulse.Show;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+// builder.Services.AddDbContext<AppDbContext>(options =>
+//     options.UseSqlite("Data Source=horses.db"));
+
+var padAPI = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, @"../../../../HorsesForCourses.WebApi/")); //AppContext.BaseDirectory geeft map waar program wordt uitgevoerd
+var dbPath = Path.Combine(padAPI, "horses.db");
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite("Data Source=horses.db"));
+    options.UseSqlite($"Data Source={dbPath.PulseToLog()}"));
+
 
 builder.Services.AddScoped<CoachAvailabilityService>();
 builder.Services.AddScoped<ICourseRepository, EfCourseRepository>();

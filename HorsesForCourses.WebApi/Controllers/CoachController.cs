@@ -18,6 +18,24 @@ public class CoachesController : ControllerBase
         _courseRepository = courseRepository;
     }
 
+    [HttpGet]   //Paging
+    public async Task<ActionResult<PagedResult<CoachDTOPaging>>> GetAll([FromQuery] PageRequest request)
+    {
+        var pagedCoaches = await _coachRepository.GetAllPagedAsync(request);
+        return Ok(pagedCoaches);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetCoachById(int id)
+    {
+        var coach = await _coachRepository.GetByIdAsync(id);
+        if (coach is null) return NotFound();
+
+        var allCourses = await _courseRepository.GetAllAsync();
+        var coachDto = CoachMapper.ToDetailDTO(coach, allCourses);
+        return Ok(coachDto);
+    }
+
     [HttpPost]
     public async Task<IActionResult> CreateCoach([FromBody] CreateCoachDTO dto)
     {
@@ -54,21 +72,4 @@ public class CoachesController : ControllerBase
     //     return Ok(coachDtos);
     // }
 
-    [HttpGet]   //Paging
-    public async Task<ActionResult<PagedResult<CoachDTOPaging>>> GetAll([FromQuery] PageRequest request)
-    {
-        var pagedCoaches = await _coachRepository.GetAllPagedAsync(request);
-        return Ok(pagedCoaches);
-    }
-
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetCoachById(int id)
-    {
-        var coach = await _coachRepository.GetByIdAsync(id);
-        if (coach is null) return NotFound();
-
-        var allCourses = await _courseRepository.GetAllAsync();
-        var coachDto = CoachMapper.ToDetailDTO(coach, allCourses);
-        return Ok(coachDto);
-    }
 }
