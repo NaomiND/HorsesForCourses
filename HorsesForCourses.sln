@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HorsesForCourses.WebApi", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HorsesForCourses.Application", "HorsesForCourses.Application\HorsesForCourses.Application.csproj", "{B4A71EAA-BC9F-4753-91BD-F8F90CEA9126}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HorsesForCourses.MVC", "HorsesForCourses.MVC\HorsesForCourses.MVC.csproj", "{9529416D-D7D5-4059-A82F-D4F270A9DAF3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +40,10 @@ Global
 		{B4A71EAA-BC9F-4753-91BD-F8F90CEA9126}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B4A71EAA-BC9F-4753-91BD-F8F90CEA9126}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B4A71EAA-BC9F-4753-91BD-F8F90CEA9126}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9529416D-D7D5-4059-A82F-D4F270A9DAF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9529416D-D7D5-4059-A82F-D4F270A9DAF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9529416D-D7D5-4059-A82F-D4F270A9DAF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9529416D-D7D5-4059-A82F-D4F270A9DAF3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

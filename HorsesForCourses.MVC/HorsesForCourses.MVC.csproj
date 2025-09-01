@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <ItemGroup>
+    <ProjectReference Include="..\HorsesForCourses.Application\HorsesForCourses.Application.csproj" />
+    <ProjectReference Include="..\HorsesForCourses.Core\HorsesForCourses.Core.csproj" />
+    <ProjectReference Include="..\HorsesForCourses.Infrastructure\HorsesForCourses.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+</Project>

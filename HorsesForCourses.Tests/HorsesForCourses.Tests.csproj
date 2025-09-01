@@ -28,6 +28,8 @@
     <ProjectReference Include="..\HorsesForCourses.Core\HorsesForCourses.Core.csproj" />
     <ProjectReference Include="..\HorsesForCourses.WebApi\HorsesForCourses.WebApi.csproj" />
     <ProjectReference Include="..\HorsesForCourses.Infrastructure/HorsesForCourses.Infrastructure.csproj" />
+    <ProjectReference Include="..\HorsesForCourses.Application/HorsesForCourses.Application.csproj" />
+    <ProjectReference Include="..\HorsesForCourses.MVC\HorsesForCourses.MVC.csproj" />
   </ItemGroup>
 
 </Project>
