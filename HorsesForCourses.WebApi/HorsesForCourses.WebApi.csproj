@@ -20,7 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HorsesForCourses.Core\HorsesForCourses.Core.csproj" />
     <ProjectReference Include="..\HorsesForCourses.Infrastructure\HorsesForCourses.Infrastructure.csproj" />
     <ProjectReference Include="..\HorsesForCourses.Application\HorsesForCourses.Application.csproj" />
     <InternalsVisibleTo Include="HorsesForCourses.Tests" />

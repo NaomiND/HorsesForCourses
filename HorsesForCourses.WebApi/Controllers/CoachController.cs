@@ -55,7 +55,6 @@ public class CoachesController : ControllerBase
     // }
 
     [HttpGet]   //Paging
-
     public async Task<ActionResult<PagedResult<CoachDTOPaging>>> GetAll([FromQuery] PageRequest request)
     {
         var pagedCoaches = await _coachRepository.GetAllPagedAsync(request);

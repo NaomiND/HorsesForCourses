@@ -1,0 +1,49 @@
+@using HorsesForCourses.Application
+@using HorsesForCourses.Infrastructure
+@model PagedResult<CoachDTOPaging>
+
+@{
+    ViewData["Title"] = "Coaches Overzicht";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Naam</th>
+            <th>Email</th>
+            <th>Aantal Cursussen</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var coach in Model.Items)
+        {
+            <tr>
+                <td>@coach.Name</td>
+                <td>@coach.Email</td>
+                <td>@coach.NumberOfCoursesAssignedTo</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div>
+    <span>Pagina @Model.PageNumber van @Model.TotalPages</span>
+    <div class="btn-group" role="group">
+        @if (Model.HasPrevious)
+        {
+            <a href="@Url.Action("Index", new { pageNumber = Model.PageNumber - 1, pageSize = Model.PageSize })"
+                class="btn btn-primary">
+                Vorige
+            </a>
+        }
+        @if (Model.HasNext)
+        {
+            <a href="@Url.Action("Index", new { pageNumber = Model.PageNumber + 1, pageSize = Model.PageSize })"
+                class="btn btn-primary">
+                Volgende
+            </a>
+        }
+    </div>
+</div>

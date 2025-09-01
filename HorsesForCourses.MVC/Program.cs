@@ -11,7 +11,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite("Data Source=horses.db"));
 
 builder.Services.AddScoped<CoachAvailabilityService>();
-builder.Services.AddScoped<ICourseRepository, EfCourseRepository>();        //Voor elke unieke HTTP-request wordt er één AppDbContext-instantie gemaakt.
+builder.Services.AddScoped<ICourseRepository, EfCourseRepository>();
 builder.Services.AddScoped<ICoachRepository, EfCoachRepository>();
 builder.Services.AddControllers()
     .AddJsonOptions(options =>

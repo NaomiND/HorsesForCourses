@@ -35,3 +35,6 @@ public static class PagingExecution
         return new PagedResult<T>(pageItems, total, request.Page, request.Size);
     }
 }
+
+//We splitsen Add en Save op. 
+//Dit is een veelgebruikt patroon (Unit of Work) waarbij je meerdere wijzigingen kunt groeperen en in één transactie kunt opslaan door SaveChangesAsync aan te roepen.

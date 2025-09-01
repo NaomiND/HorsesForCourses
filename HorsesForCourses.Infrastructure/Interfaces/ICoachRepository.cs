@@ -1,5 +1,6 @@
 using HorsesForCourses.Core;
 using HorsesForCourses.Application;
+using HorsesForCourses.Dtos;
 
 namespace HorsesForCourses.Infrastructure;
 
@@ -10,15 +11,6 @@ public interface ICoachRepository
     Task<PagedResult<CoachDTOPaging>> GetAllPagedAsync(PageRequest request); //TODO
     Task AddAsync(Coach coach);
     Task SaveChangesAsync();
-}
-
-public class CoachDTOPaging
-{
-    public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public string Email { get; set; }
-    public int NumberOfCoursesAssignedTo { get; set; }              //nodig om aantal courses/coach te tonen
-
 }
 
 //We splitsen Add en Save op. 
