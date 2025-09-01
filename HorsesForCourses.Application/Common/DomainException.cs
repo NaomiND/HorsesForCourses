@@ -1,4 +1,4 @@
-namespace HorsesForCourses.WebApi.Controllers;
+namespace HorsesForCourses.Application.common;
 
 public class DomainException : Exception
 {
