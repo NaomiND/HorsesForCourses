@@ -1,4 +1,3 @@
-using HorsesForCourses.Core;
 namespace HorsesForCourses.Dtos;
 
 public class CourseAssignStatusDTO

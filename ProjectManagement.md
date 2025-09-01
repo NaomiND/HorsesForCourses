@@ -8,7 +8,7 @@
 - [] 
 - [] 
 
-# Architectuur: Layered Architecture (Separation of Concerns)
+# Architectuur: Layered Architecture (Separation of Concerns)  => meer naar clean architecture (onion architecture)
     - Presentation Layer: buitenste laag. Verantwoordelijk voor communicatie met de buitenwereld. Voor API en DTO's.
     - Application Layer: De regisseur. De nodige stappen om een taak uit te voeren, zoals ophalen van domeinobject, uitvoeren van een actie, opslaan resultaat. Deze laag bevat Services die de use cases implementeren. Deze services gebruiken de domeinobjecten. Ze praten niet rechtstreeks met de database, maar gebruiken Repository Interfaces.
     - Domain Layer: Het hart. Complexe businesslogica, regels en kernelementen van het systeem (klassen). Volledig onafhankelijk van de andere lagen. Principes van DDD (Domain Driven Design)

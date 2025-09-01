@@ -1,5 +1,4 @@
 using HorsesForCourses.Core;
-using System.Linq;
 
 namespace HorsesForCourses.Dtos;
 
