@@ -2,6 +2,7 @@ using HorsesForCourses.Application.Paging;
 using HorsesForCourses.MVC.ViewModels;
 using HorsesForCourses.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
+using HorsesForCourses.Application.dtos;
 
 namespace HorsesForCourses.MVC
 {
@@ -19,20 +20,23 @@ namespace HorsesForCourses.MVC
             _courseRepository = courseRepository;
         }
 
-        // [HttpGet]
-        // public async Task<IActionResult> Index([FromQuery] PageRequest request)
-        // {
-        //     var pagedCoaches = await _coachRepository.GetAllPagedAsync(request ?? new PageRequest(1, 20));
-        //     var viewModel = new CoachIndexViewModel { PagedCoaches = pagedCoaches };
-        //     return View(viewModel);
-        // }
-
         [HttpGet]
         public async Task<IActionResult> Index(int page = 1)
         {
             var request = new PageRequest { PageNumber = page, PageSize = 20 };
             var pagedCoaches = await _coachRepository.GetAllPagedAsync(request);
             return View(pagedCoaches); // View: Views/Coaches/Index.cshtml
+        }
+
+        [HttpGet("details/{id}")]
+        public async Task<IActionResult> Details(int id)
+        {
+            var coach = await _coachRepository.GetByIdAsync(id);
+            if (coach == null) return NotFound();
+
+            var allCourses = await _courseRepository.GetAllAsync();
+            var coachDetailDto = CoachMapper.ToDetailDTO(coach, allCourses);
+            return View(coachDetailDto);
         }
     }
 }

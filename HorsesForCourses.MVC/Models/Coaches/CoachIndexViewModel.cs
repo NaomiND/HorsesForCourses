@@ -8,4 +8,3 @@ public class CoachIndexViewModel
 {
     public PagedResult<CoachDTOPaging>? PagedCoaches { get; set; }
 }
-

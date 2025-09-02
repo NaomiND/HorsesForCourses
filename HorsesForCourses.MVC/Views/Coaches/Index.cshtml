@@ -7,12 +7,10 @@
 @model PagedResult<CoachDTOPaging>
 
 @{
-    ViewData["Title"] = "Coaches Overzicht";
+    ViewData["Title"] = "Coaches summary";
 }
 
-<h1>@ViewData["Title"]</h1>
-
-<h2>Coaches</h2>
+<h2>@ViewData["Title"]</h2>
 
 <table class="table table-striped">
     <thead>
@@ -20,7 +18,7 @@
             <th>Id</th>
             <th>Name</th>
             <th>Email</th>
-            <th># Courses Assigned</th>
+            <th># of assigned courses</th>
         </tr>
     </thead>
     <tbody>
@@ -31,6 +29,10 @@
                 <td>@coach.Name</td>
                 <td>@coach.Email</td>
                 <td>@coach.NumberOfCoursesAssignedTo</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@coach.Id">Details</a> |
+                    <a asp-action="EditSkills" asp-route-id="@coach.Id">Edit skills</a>
+                </td>
             </tr>
         }
     </tbody>
@@ -40,21 +42,22 @@
     <a asp-action="Create" class="btn btn-success">Create new coach</a>
 </p>
 
+<!-- Paging -->
 <div>
-    <span>Pagina @Model.PageNumber van @Model.TotalPages</span>
+    <span>Page @Model.PageNumber of @Model.TotalPages</span>
     <div class="btn-group" role="group">
         @if (Model.HasPrevious)
         {
             <a href="@Url.Action("Index", new { page = Model.PageNumber - 1, pageSize = Model.PageSize })"
                 class="btn btn-primary">
-                Vorige
+                Previous
             </a>
         }
         @if (Model.HasNext)
         {
             <a href="@Url.Action("Index", new { pageNumber = Model.PageNumber + 1, pageSize = Model.PageSize })"
                 class="btn btn-primary">
-                Volgende
+                Next
             </a>
         }
     </div>
