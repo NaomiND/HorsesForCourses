@@ -1,7 +1,7 @@
 ## ToDo
-- [] 
-- [] 
-- [] 
+- [] Projectmanagement aanvullen
+- [] create/edit nakijken ivm validaties, alles werkt maar via try catch id controller niet ok en wss niet nodig 
+- [] integratietests, setup aanpassen want nu werkt het niet. Vraag aan Mark. 
 - [] 
 - [] 
 - [] 
