@@ -1,6 +1,7 @@
 @using HorsesForCourses.Application // imports for PagedResult<> and CoachSummary.
 @using HorsesForCourses.Infrastructure
-@model PagedResult<CoachDTOPaging>
+@using HorsesForCourses.MVC
+@model PagedResults<ModelPagedResult> //dit is een modelview, geen dto
 
 @{
     ViewData["Title"] = "Coaches Overzicht";

@@ -1,4 +1,4 @@
-using HorsesForCourses.Application;
+using HorsesForCourses.Application.Paging;
 using HorsesForCourses.Core;
 using HorsesForCourses.Dtos;
 using HorsesForCourses.Infrastructure;

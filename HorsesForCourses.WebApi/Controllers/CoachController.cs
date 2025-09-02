@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using HorsesForCourses.Core;
 using HorsesForCourses.Dtos;
-using HorsesForCourses.Application;
+using HorsesForCourses.Application.Paging;
 using HorsesForCourses.Infrastructure;
 
 namespace HorsesForCourses.WebApi.Controllers;
