@@ -1,13 +1,18 @@
-// using HorsesForCourses.Application;
-// using HorsesForCourses.Dtos;
+// using HorsesForCourses.Application.dtos;
 // using HorsesForCourses.MVC;
+// using HorsesForCourses.Application.Paging;
+// using HorsesForCourses.Infrastructure;
+// using Microsoft.AspNetCore.Mvc;
+
+
+
 
 // public class GetCoachesMVC : CoachesMVCControllerTests
 // {
 //     [Fact]
 //     public async Task GetCoaches_uses_the_query_object()
 //     {
-//         var result = await CoachesController.Index();
+//         var result = await CoachController.Index();
 //         GetAllPagedAsync.Verify(a => a.All(It.Is<PageRequest>(a => a.Page == 1 && a.PageSize == 25)));
 //     }
 
