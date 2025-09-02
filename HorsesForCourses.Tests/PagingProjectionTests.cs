@@ -1,6 +1,6 @@
 using HorsesForCourses.Core;
 using HorsesForCourses.Infrastructure;
-using HorsesForCourses.Application;
+using HorsesForCourses.Application.Paging;
 using System.Linq;
 
 namespace HorsesForCourses.Tests

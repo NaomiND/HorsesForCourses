@@ -1,14 +1,14 @@
 using HorsesForCourses.Core;
 
-namespace HorsesForCourses.Dtos;
+namespace HorsesForCourses.Application.dtos;
 
 public static class CoachMapper
 {
-    public static CoachDTO ToDTO(Coach coach, IEnumerable<Course> allCourses)                       // GET Coaches
+    public static CoachDTOPaging ToDTO(Coach coach, IEnumerable<Course> allCourses)                       // GET Coaches
     {
         int coursesAssigned = allCourses.Count(Courses => Courses.AssignedCoach?.Id == coach.Id);   //tel cursussen waar deze coach is toegewezen
 
-        return new CoachDTO
+        return new CoachDTOPaging
         {
             Id = coach.Id,
             Name = coach.Name.ToString(),
@@ -17,7 +17,7 @@ public static class CoachMapper
         };
     }
 
-    public static IEnumerable<CoachDTO> ToDTOList(IEnumerable<Coach> coaches, IEnumerable<Course> allCourses)
+    public static IEnumerable<CoachDTOPaging> ToDTOList(IEnumerable<Coach> coaches, IEnumerable<Course> allCourses)
     {
         return coaches.Select(coach => ToDTO(coach, allCourses)).ToList();
     }

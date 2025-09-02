@@ -2,7 +2,8 @@ using HorsesForCourses.Core;
 using Microsoft.EntityFrameworkCore;
 using HorsesForCourses.Application;
 using HorsesForCourses.Application.Paging;
-using HorsesForCourses.Dtos;
+using HorsesForCourses.Application.dtos;
+
 
 namespace HorsesForCourses.Infrastructure;
 

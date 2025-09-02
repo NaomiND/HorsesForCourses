@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using HorsesForCourses.Core;
-using HorsesForCourses.Dtos;
+using HorsesForCourses.Application.dtos;
 using HorsesForCourses.Application.Paging;
 using HorsesForCourses.Infrastructure;
 

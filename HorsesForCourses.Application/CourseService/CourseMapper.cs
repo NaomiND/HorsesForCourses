@@ -1,7 +1,7 @@
 using HorsesForCourses.Core;
-using HorsesForCourses.WebApi.Courses;
 
-namespace HorsesForCourses.Dtos;
+namespace HorsesForCourses.Application.dtos;
+
 
 public static class CourseMapper
 {

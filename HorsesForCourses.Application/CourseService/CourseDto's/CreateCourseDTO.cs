@@ -1,4 +1,4 @@
-namespace HorsesForCourses.Dtos;
+namespace HorsesForCourses.Application.dtos;
 
 public class CreateCourseDTO               //Meestal get; set;: standaard en meest flexibele benadering voor DTO's, vanwege serialisatie/deserialisatie.
 {

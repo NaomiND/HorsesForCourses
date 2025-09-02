@@ -1,4 +1,4 @@
-using HorsesForCourses.Dtos;
+using HorsesForCourses.Application.dtos;
 using HorsesForCourses.Application.Paging;
 
 namespace HorsesForCourses.MVC.ViewModels;
@@ -8,3 +8,4 @@ public class CoachIndexViewModel
 {
     public PagedResult<CoachDTOPaging>? PagedCoaches { get; set; }
 }
+

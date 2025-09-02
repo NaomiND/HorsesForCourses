@@ -1,4 +1,4 @@
-namespace HorsesForCourses.Dtos;
+namespace HorsesForCourses.Application.dtos;
 
 public class UpdateCourseSkillsDTO
 {

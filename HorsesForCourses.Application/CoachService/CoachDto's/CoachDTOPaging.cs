@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace HorsesForCourses.Dtos;
+namespace HorsesForCourses.Application.dtos;
 
-public class CoachDTOPaging
+public class CoachDTOPaging //zelfde als coachdto ondertussen verwijderd
 {
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;

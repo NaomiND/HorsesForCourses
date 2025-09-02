@@ -1,6 +1,5 @@
 using HorsesForCourses.Application.Paging;
-using HorsesForCourses.Core;
-using HorsesForCourses.Dtos;
+using HorsesForCourses.MVC.ViewModels;
 using HorsesForCourses.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,15 +19,24 @@ namespace HorsesForCourses.MVC
             _courseRepository = courseRepository;
         }
 
-        public async Task<IActionResult> Index(int page = 1, int pageSize = 20)
+        // [HttpGet]
+        // public async Task<IActionResult> Index([FromQuery] PageRequest request)
+        // {
+        //     var pagedCoaches = await _coachRepository.GetAllPagedAsync(request ?? new PageRequest(1, 20));
+        //     var viewModel = new CoachIndexViewModel { PagedCoaches = pagedCoaches };
+        //     return View(viewModel);
+        // }
+
+        [HttpGet]
+        public async Task<IActionResult> Index(int page = 1)
         {
-            var request = new PageRequest(page, pageSize);
+            var request = new PageRequest { PageNumber = page, PageSize = 20 };
             var pagedCoaches = await _coachRepository.GetAllPagedAsync(request);
             return View(pagedCoaches); // View: Views/Coaches/Index.cshtml
         }
 
         // [HttpGet]
-        // public async Task<IActionResult> IndexCoach(int page = 1, int pageSize = 20)        // toon gepagineerde lijst van coaches
+        // public async Task<IActionResult> Index(int page = 1, int pageSize = 20)        // toon gepagineerde lijst van coaches
         // => View(await _coachRepository.GetAllPagedAsync(new PageRequest(page, pageSize)));
 
     }

@@ -1,37 +1,71 @@
-@using HorsesForCourses.Application // imports for PagedResult<> and CoachSummary.
+@using HorsesForCourses.Application
+@using HorsesForCourses.Application.Paging;
+@using HorsesForCourses.Application.dtos
 @using HorsesForCourses.Infrastructure
 @using HorsesForCourses.MVC
-@model PagedResults<ModelPagedResult> //dit is een modelview, geen dto
+@using HorsesForCourses.MVC.ViewModels;
+@* @model CoachIndexViewModel; *@
+@model PagedResult<CoachDTOPaging>
 
 @{
     ViewData["Title"] = "Coaches Overzicht";
 }
 
-    <h1>@ViewData["Title"]</h1>
+<h1>@ViewData["Title"]</h1>
 
-    <h2>Coaches</h2>
+<h2>Coaches</h2>
 
-    <table class="table table-striped">
-        <thead>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th># Courses Assigned</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var coach in Model.Items)
+        {
             <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th># Courses Assigned</th>
+                <td>@coach.Id</td>
+                <td>@coach.Name</td>
+                <td>@coach.Email</td>
+                <td>@coach.NumberOfCoursesAssignedTo</td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach (var coach in Model.Items)
-            {
-                <tr>
-                    <td>@coach.Id</td>
-                    <td>@coach.Name</td>
-                    <td>@coach.Email</td>
-                    <td>@coach.NumberOfCoursesAssignedTo</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+        }
+    </tbody>
+</table>
+@* 
+
+
+<p>
+    <a asp-action="Create" class="btn btn-success">Nieuwe Coach Aanmaken</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Naam</th>
+            <th>Email</th>
+            <th>Aantal Cursussen</th>
+            <th>Acties</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var coach in Model.PagedCoaches.Items)
+        {
+            <tr>
+                <td>@coach.Name</td>
+                <td>@coach.Email</td>
+                <td>@coach.NumberOfCoursesAssignedTo</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@coach.Id" class="btn btn-info btn-sm">Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table> *@
 
 @* <div>
     <span>Pagina @Model.PageNumber van @Model.TotalPages</span>

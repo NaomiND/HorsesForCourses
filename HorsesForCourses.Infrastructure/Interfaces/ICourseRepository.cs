@@ -1,6 +1,6 @@
 using HorsesForCourses.Core;
 using HorsesForCourses.Application.Paging;
-using HorsesForCourses.Dtos;
+using HorsesForCourses.Application.dtos;
 
 namespace HorsesForCourses.Infrastructure;
 

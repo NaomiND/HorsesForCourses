@@ -1,5 +1,6 @@
 using HorsesForCourses.Core;
-namespace HorsesForCourses.Dtos;
+namespace HorsesForCourses.Application.dtos;
+
 
 public class ScheduledTimeSlotDTO
 {

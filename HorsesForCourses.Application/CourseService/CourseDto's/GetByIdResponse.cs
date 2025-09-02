@@ -1,6 +1,5 @@
-using HorsesForCourses.Dtos;
+namespace HorsesForCourses.Application.dtos;
 
-namespace HorsesForCourses.WebApi.Courses;
 
 public class GetByIdResponse
 {
