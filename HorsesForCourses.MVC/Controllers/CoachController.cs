@@ -6,7 +6,6 @@ using HorsesForCourses.Core;
 
 namespace HorsesForCourses.MVC
 {
-
     [Controller]
     [Route("coaches")]
     public class CoachesController : Controller
@@ -62,6 +61,55 @@ namespace HorsesForCourses.MVC
                     ModelState.AddModelError("", $"Fout bij aanmaken coach: {ex.Message}");
                 }
             }
+            return View(dto);
+        }
+
+        [HttpGet("editskills/{id}")]
+        public async Task<IActionResult> EditSkills(int id)
+        {
+            var coach = await _coachRepository.GetByIdAsync(id);
+            if (coach == null)
+            {
+                return NotFound();
+            }
+            var dto = new UpdateCoachSkillsDTO
+            {
+                Id = coach.Id,
+                Skills = coach.Skills.ToList()
+            };
+            ViewBag.CoachName = coach.Name.DisplayName;
+            return View(dto);
+        }
+
+        [HttpPost("editskills/{id}")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditSkills(int id, [Bind("Id,Skills")] UpdateCoachSkillsDTO dto)
+        {
+            if (id != dto.Id)
+            {
+                return BadRequest();
+            }
+
+            var coachToUpdate = await _coachRepository.GetByIdAsync(id);
+            if (coachToUpdate == null)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                // TODO De Skills-lijst kan via de form binding komen als een enkele string. We splitsen die. //dit lijkt wel niet te werken
+                var skillsList = Request.Form["Skills"].ToString()
+                    .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(s => s.Trim())
+                    .ToList();
+
+                coachToUpdate.UpdateSkills(skillsList);
+                await _coachRepository.SaveChangesAsync();
+                return RedirectToAction(nameof(Details), new { id = dto.Id });
+            }
+
+            ViewBag.CoachName = coachToUpdate.Name.DisplayName;
             return View(dto);
         }
     }
