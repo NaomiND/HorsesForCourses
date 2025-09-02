@@ -1,8 +1,8 @@
 using HorsesForCourses.Application.Paging;
-using HorsesForCourses.MVC.ViewModels;
+using HorsesForCourses.Application.dtos;
 using HorsesForCourses.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
-using HorsesForCourses.Application.dtos;
+using HorsesForCourses.Core;
 
 namespace HorsesForCourses.MVC
 {
@@ -37,6 +37,32 @@ namespace HorsesForCourses.MVC
             var allCourses = await _courseRepository.GetAllAsync();
             var coachDetailDto = CoachMapper.ToDetailDTO(coach, allCourses);
             return View(coachDetailDto);
+        }
+        [HttpGet("create")]     // je hebt get nodig om een post te maken (formulier aanvragen dan invullen en posten)
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost("create")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("Name,Email")] CreateCoachDTO dto)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var coach = new Coach(FullName.From(dto.Name), EmailAddress.Create(dto.Email));
+                    await _coachRepository.AddAsync(coach);
+                    await _coachRepository.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (ArgumentException ex)
+                {
+                    ModelState.AddModelError("", $"Fout bij aanmaken coach: {ex.Message}");
+                }
+            }
+            return View(dto);
         }
     }
 }
