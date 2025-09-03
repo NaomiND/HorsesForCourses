@@ -1,4 +1,5 @@
 using HorsesForCourses.Application.dtos;
+using HorsesForCourses.Core;
 
 namespace HorsesForCourses.Tests.Mvc;
 
@@ -16,6 +17,8 @@ public class Helper
             Name = CoachName,
             Email = CoachEmail
         };
+        public static FullName FullName => FullName.From(CoachName);
+        public static EmailAddress EmailAddress => EmailAddress.Create(CoachEmail);
     }
 
 }

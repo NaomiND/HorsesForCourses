@@ -91,10 +91,7 @@ namespace HorsesForCourses.MVC
             }
 
             var coachToUpdate = await _coachRepository.GetByIdAsync(id);
-            if (coachToUpdate == null)
-            {
-                return NotFound();
-            }
+            if (coachToUpdate == null) return NotFound();
 
             if (ModelState.IsValid)
             {
