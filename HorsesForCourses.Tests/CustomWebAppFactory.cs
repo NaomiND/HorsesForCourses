@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 
 namespace HorsesForCourses.Tests;
 
-internal class CustomWebAppFactory : WebApplicationFactory<Program>
+public class CustomWebAppFactory : WebApplicationFactory<Program>
 {
     // Usually not needed, here yes, because of weird setup. 
     // Everything is in one .proj, namespaces and folders messed up ...
