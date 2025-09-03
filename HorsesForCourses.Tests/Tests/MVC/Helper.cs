@@ -1,3 +1,5 @@
+using HorsesForCourses.Application.dtos;
+
 namespace HorsesForCourses.Tests.Mvc;
 
 public class Helper
@@ -7,6 +9,13 @@ public class Helper
         public static string CoachName => "Ine De Wit";
         public static string CoachEmail => "Ine.dewit@gmail.com";
         public static List<string> CoachSkills => new List<string> { "C#", "Testing" };
-
+        public static CreateCoachDTO RegisterCoach() => new()
+        //toegevoegd voor createcoach - te gebruiken voor live coding? 
+        // Tester aanvullen en dan in test gebruiken om herbruikbaarheid te tonen
+        {
+            Name = CoachName,
+            Email = CoachEmail
+        };
     }
+
 }

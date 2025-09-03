@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace HorsesForCourses.Application.dtos;
 
-public class CoachDTOPaging //zelfde als coachdto ondertussen verwijderd
+public class CoachDTOPaging
 {
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;

@@ -5,7 +5,7 @@
 - [X] Story 2: Coaches *Index* (lijst) (First Steps)
 - [] Story 3: *Register Coach* (GET/POST, validatie, anti-forgery)
 - [] Story 3: Fout bij aanmaken coach: Naam moet een voor- en achternaam bevatten. (Parameter 'fullName') : parametertekst wil ik weg, geen prioriteit.
-- [] Story 4: *Coach Detail* (read-only)
+- [X] Story 4: *Coach Detail* (read-only)
 - [] Story 5: *Update Skills* (GET/POST)
 - [X] Story 6: *Paging op Index*
 - [] Story 7: *Foutafhandeling & UX-polish*

@@ -36,7 +36,7 @@ public class GetCoachesMVC
     }
 
     [Fact]
-    public async Task GetCoaches_Passes_The_List_To_The_View()
+    public async Task GetCoaches_ReturnsListToView()
     {
         var paged = new PagedResult<CoachDTOPaging>(
             new List<CoachDTOPaging>
