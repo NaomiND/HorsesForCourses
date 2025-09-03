@@ -98,7 +98,7 @@ namespace HorsesForCourses.MVC
 
             if (ModelState.IsValid)
             {
-                // TODO De Skills-lijst kan via de form binding komen als een enkele string. We splitsen die. //dit lijkt wel niet te werken
+                // TODO De Skills-lijst komt via de form binding als enkele string, die splitsen we. //dit is wel niet praktisch voor een echte gebruiker
                 var skillsList = Request.Form["Skills"].ToString()
                     .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(s => s.Trim())

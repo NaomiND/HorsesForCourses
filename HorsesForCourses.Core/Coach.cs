@@ -23,7 +23,6 @@ public class Coach
     {
         var emailAddress = EmailAddress.Create(email);            // string → EmailAddress
         var fullName = FullName.From(name);                     // string → FullName
-        // Id = 0 of default bij aanmaken, database vult aan bij opslaan
         return new Coach(fullName, emailAddress);
     }
 

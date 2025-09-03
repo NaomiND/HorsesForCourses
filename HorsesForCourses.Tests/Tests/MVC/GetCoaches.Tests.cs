@@ -4,18 +4,15 @@ using HorsesForCourses.Infrastructure;
 using Moq;
 using HorsesForCourses.Application.dtos;
 using Microsoft.AspNetCore.Mvc;
+using static HorsesForCourses.Tests.Mvc.Helper;
+
+namespace HorsesForCourses.Tests.Mvc;
 
 public class GetCoachesMVC
 {
     private readonly Mock<ICoachRepository> coachRepository;
     private readonly Mock<ICourseRepository> courseRepository;
     private readonly CoachesController coachController;
-
-    public static class TheTester
-    {
-        public static string CoachName => "Ine De Wit";
-        public static string CoachEmail => "Ine.dewit@gmail.com";
-    }
 
     public GetCoachesMVC()
     {
