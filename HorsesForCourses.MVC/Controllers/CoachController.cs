@@ -20,9 +20,9 @@ namespace HorsesForCourses.MVC
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(int page = 1)
+        public async Task<IActionResult> Index(int page = 1, int pageSize = 10)
         {
-            var request = new PageRequest { PageNumber = page, PageSize = 20 };
+            var request = new PageRequest { PageNumber = page, PageSize = pageSize };
             var pagedCoaches = await _coachRepository.GetAllPagedAsync(request);
             return View(pagedCoaches); // View: Views/Coaches/Index.cshtml
         }

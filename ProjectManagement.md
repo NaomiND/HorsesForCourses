@@ -1,12 +1,16 @@
 ## ToDo
 - [] Projectmanagement aanvullen
 - [] create/edit nakijken ivm validaties, alles werkt maar via try catch id controller niet ok en wss niet nodig 
-- [] integratietests, setup aanpassen want nu werkt het niet. Vraag aan Mark. 
-- [] 
-- [] 
-- [] 
-- [] 
-- [] 
+- []  
+- [X] Story 1: Project & DI sanity
+- [] Story 2: Coaches *Index* (lijst) (First Steps)
+- [] Story 3: *Register Coach* (GET/POST, validatie, anti-forgery)
+- [] Story 4: *Coach Detail* (read-only)
+- [] Story 5: *Update Skills* (GET/POST)
+- [X] Story 6: *Paging op Index*
+- [] Story 7: *Foutafhandeling & UX-polish*
+
+[Stories](Documentation\MVC_make_a_plan.md)
 
 # Architectuur: Layered Architecture (Separation of Concerns)  => meer naar clean architecture (onion architecture)
     - Presentation Layer: buitenste laag. Verantwoordelijk voor communicatie met de buitenwereld. Voor API en DTO's.
@@ -68,7 +72,7 @@ Controllers praten alleen via de Application Layer
 Duidelijke scheiding van HTTP-laag en domeinlogica
 Voorzie foutmeldingen bij invalidaties (bv. 422 BadRequest met uitleg)
 
-# TO DO
+# TODO fase 1 CORE
 ## Opleidingen
 [X] Heeft een naam.
 [X] wordt ingepland over een bepaalde periode met een start- en einddatum.
@@ -98,7 +102,7 @@ Voorzie foutmeldingen bij invalidaties (bv. 422 BadRequest met uitleg)
 [X] Coach toewijzen: wijs een coach toe, enkel indien de cursus bevestigd is en de coach geschikt én beschikbaar is.
 [x] Denk bij elk van deze stappen aan geldige foutmeldingen, domeinvalidaties en het garanderen van een consistente toestand.
 
-## WEBAPI - CONTROLLERS
+# TODO - fase 2 WEBAPI - CONTROLLERS
 
 ### 🧩 POST /coaches                OK  
 **Als** administrator **Wil ik** een coach kunnen registreren met naam en e-mailadres
@@ -158,7 +162,7 @@ Voorzie foutmeldingen bij invalidaties (bv. 422 BadRequest met uitleg)
 - [X] Run migratie
 - [X] Wat is het probleem met de skills (zowel bij course als coach)
 
-# TODO
+# TODO fase 3
 - [X] generic id is beter dan een guid id voor deze opdracht
 - [X] geen domeinobjecten teruggeven ook niet bij ophalen
 - [X] mapper maken voor coach en course
