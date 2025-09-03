@@ -55,7 +55,7 @@
         }
         @if (Model.HasNext)
         {
-            <a href="@Url.Action("Index", new { pageNumber = Model.PageNumber + 1, pageSize = Model.PageSize })"
+            <a href="@Url.Action("Index", new { page = Model.PageNumber + 1, pageSize = Model.PageSize })"
                 class="btn btn-primary">
                 Next
             </a>

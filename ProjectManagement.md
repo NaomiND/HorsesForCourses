@@ -1,9 +1,8 @@
 ## ToDo
-- [] Projectmanagement aanvullen
 - [] create/edit nakijken ivm validaties, alles werkt maar via try catch id controller niet ok en wss niet nodig 
-- []  
+- [] Testen
 - [X] Story 1: Project & DI sanity
-- [] Story 2: Coaches *Index* (lijst) (First Steps)
+- [X] Story 2: Coaches *Index* (lijst) (First Steps)
 - [] Story 3: *Register Coach* (GET/POST, validatie, anti-forgery)
 - [] Story 4: *Coach Detail* (read-only)
 - [] Story 5: *Update Skills* (GET/POST)
