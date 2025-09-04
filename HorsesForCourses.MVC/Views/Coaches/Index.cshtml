@@ -10,6 +10,13 @@
     ViewData["Title"] = "Coaches summary";
 }
 
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
 <h2>@ViewData["Title"]</h2>
 
 <table class="table table-striped">

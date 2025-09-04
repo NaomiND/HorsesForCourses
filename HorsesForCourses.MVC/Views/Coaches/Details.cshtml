@@ -10,6 +10,13 @@
     ViewData["Title"] = "Coach Details";
 }
 
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
 <h3>Coachdetails for @Model.Name</h3>
 
 <div>

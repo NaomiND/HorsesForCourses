@@ -5,6 +5,7 @@ using Moq;
 using HorsesForCourses.Application.dtos;
 using Microsoft.AspNetCore.Mvc;
 using static HorsesForCourses.Tests.Mvc.Helper;
+using HorsesForCourses.MVC.CoachController;
 
 namespace HorsesForCourses.Tests.Mvc;
 

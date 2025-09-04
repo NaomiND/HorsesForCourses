@@ -4,7 +4,7 @@ using HorsesForCourses.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using HorsesForCourses.Core;
 
-namespace HorsesForCourses.MVC
+namespace HorsesForCourses.MVC.CoachController
 {
     [Controller]
     [Route("coaches")]
@@ -59,11 +59,12 @@ namespace HorsesForCourses.MVC
                     await _coachRepository.AddAsync(coach);
                     await _coachRepository.SaveChangesAsync();
 
+                    TempData["SuccessMessage"] = "Coach is succesvol aangemaakt."; //toegevoegd voor UX-Polish
                     return RedirectToAction(nameof(Index));
                 }
                 catch (ArgumentException ex)
                 {
-                    ModelState.AddModelError("", $"Fout bij aanmaken coach: {ex.Message}");
+                    ModelState.AddModelError(string.Empty, ex.Message);
                 }
             }
             return View(dto);
@@ -113,6 +114,7 @@ namespace HorsesForCourses.MVC
 
                 coachToUpdate.UpdateSkills(skillsList);  // Deze methode kan een exception gooien vanuit de domeinlaag
                 await _coachRepository.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Skills zijn succesvol bijgewerkt.";  //UX-Polish
                 return RedirectToAction(nameof(Details), new { id = dto.Id });
             }
 

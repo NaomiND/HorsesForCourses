@@ -2,15 +2,14 @@
 - [X] Story 1: Project & DI sanity
 - [X] Story 2: Coaches *Index* (lijst) (First Steps)
 - [X] Story 3: *Register Coach* (GET/POST, validatie, anti-forgery)
-- [] Story 3: Fout bij aanmaken coach: Naam moet een voor- en achternaam bevatten. (Parameter 'fullName') : parametertekst wil ik weg, geen prioriteit.
 - [X] Story 4: *Coach Detail* (read-only)
-- [] Story 5: *Update Skills* (GET/POST) => validatie wordt nog niet getoond, enkel crash 
-- [] create/edit nakijken ivm validaties, alles werkt maar via try catch id controller niet ok(logica verboden) 
-- [] Story 5: comma seperated skills aan te passen die userfriendly is. zie Abigail : met aparte modelview, en hierbij kan partial view gebruikt worden, geen prioriteit
+- [X] Story 5: *Update Skills* (GET/POST)
 - [X] Story 6: *Paging op Index*
-- [] Story 7: *Foutafhandeling & UX-polish*
-
-[Stories](Documentation\MVC_make_a_plan.md)
+- [X] Story 7: *Foutafhandeling & UX-polish*
+# geen prioriteit
+- [] Fout bij aanmaken coach: Naam moet een voor- en achternaam bevatten. (Parameter 'fullName') : parametertekst wil ik weg
+- [] Story 5: comma seperated skills aan te passen die userfriendly is. zie Abigail : met aparte modelview, en hierbij kan partial view gebruikt worden
+- [X] Foutafhandeling voor domein-validaties geïmplementeerd in controllers via try-catch, wat de correcte aanpak is voor het retourneren van een view met ModelState.
 
 # Architectuur: Layered Architecture (Separation of Concerns)  => meer naar clean architecture (onion architecture)
     - Presentation Layer: buitenste laag. Verantwoordelijk voor communicatie met de buitenwereld. Voor API en DTO's.
@@ -187,3 +186,14 @@ Voorzie foutmeldingen bij invalidaties (bv. 422 BadRequest met uitleg)
 toevoegen: hasCoach : false
 - [X] GET /courses/{id} : verwijderen period (enkel start en end), isConfirmed; aanpassen: ScheduledTimeSlots, assignedcoach => coach (met id en naam) 
 - [X] Controle of de nieuwe course overlapt met een coach en een bestaande course (methode nog te maken en implementeren)
+
+# ToDO MVC implementatie Coach
+- [X] Story 1: Project & DI sanity
+- [X] Story 2: Coaches *Index* (lijst) (First Steps)
+- [X] Story 3: *Register Coach* (GET/POST, validatie, anti-forgery)
+- [X] Story 4: *Coach Detail* (read-only)
+- [X] Story 5: *Update Skills* (GET/POST)
+- [X] Story 6: *Paging op Index*
+- [X] Story 7: *Foutafhandeling & UX-polish*
+
+[Stories](Documentation\MVC_make_a_plan.md)

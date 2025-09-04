@@ -23,7 +23,7 @@ public class CoachTests
         string name = "Ine De Wit";
         string email = "Ine.dewit@gmail.com";
 
-        Coach coach = Coach.Create(0, "Ine De Wit", "Ine.dewit@gmail.com");
+        Coach coach = Coach.Create("Ine De Wit", "Ine.dewit@gmail.com");
 
         Assert.Equal(0, coach.Id);
         Assert.Equal(name, coach.Name.DisplayName);
@@ -38,7 +38,7 @@ public class CoachTests
     [InlineData(42, "Test Coach", "invalid-email")]
     public void CreateCoach_ThrowsArgumentExceptionForInvalidInput(int id, string name, string email)
     {
-        Assert.Throws<ArgumentException>(() => Coach.Create(id, name, email));
+        Assert.Throws<ArgumentException>(() => Coach.Create(name, email));
     }
 
     [Fact]
