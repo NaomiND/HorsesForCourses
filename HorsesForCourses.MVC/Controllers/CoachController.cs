@@ -37,6 +37,7 @@ namespace HorsesForCourses.MVC
             var coachDetailDto = CoachMapper.ToDetailDTO(coach, allCourses);
             return View(coachDetailDto);
         }
+
         [HttpGet("create")]     // je hebt get nodig om een post te maken (formulier aanvragen dan invullen en posten)
         public IActionResult Create()
         {
@@ -47,13 +48,25 @@ namespace HorsesForCourses.MVC
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Name,Email")] CreateCoachDTO dto)
         {
-            if (!ModelState.IsValid) return View(dto);
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    if (!ModelState.IsValid)
+                        return View(dto);
 
-            var coach = new Coach(FullName.From(dto.Name), EmailAddress.Create(dto.Email));
-            await _coachRepository.AddAsync(coach);
-            await _coachRepository.SaveChangesAsync();
+                    var coach = new Coach(FullName.From(dto.Name), EmailAddress.Create(dto.Email));
+                    await _coachRepository.AddAsync(coach);
+                    await _coachRepository.SaveChangesAsync();
 
-            return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (ArgumentException ex)
+                {
+                    ModelState.AddModelError("", $"Fout bij aanmaken coach: {ex.Message}");
+                }
+            }
+            return View(dto);
         }
 
         [HttpGet("editskills/{id}")]
@@ -78,14 +91,19 @@ namespace HorsesForCourses.MVC
         public async Task<IActionResult> EditSkills(int id, [Bind("Id,Skills")] UpdateCoachSkillsDTO dto)
         {
             if (id != dto.Id)
-            {
                 return BadRequest();
-            }
 
             var coachToUpdate = await _coachRepository.GetByIdAsync(id);
-            if (coachToUpdate == null) return NotFound();
+            if (coachToUpdate == null)
+                return NotFound();
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+            {
+                ViewBag.CoachName = coachToUpdate.Name.DisplayName;
+                return View(dto);
+            }
+
+            try
             {
                 // TODO De Skills-lijst komt via de form binding als enkele string, die splitsen we. //dit is wel niet praktisch voor een echte gebruiker
                 var skillsList = Request.Form["Skills"].ToString()
@@ -93,13 +111,17 @@ namespace HorsesForCourses.MVC
                     .Select(s => s.Trim())
                     .ToList();
 
-                coachToUpdate.UpdateSkills(skillsList);
+                coachToUpdate.UpdateSkills(skillsList);  // Deze methode kan een exception gooien vanuit de domeinlaag
                 await _coachRepository.SaveChangesAsync();
                 return RedirectToAction(nameof(Details), new { id = dto.Id });
             }
 
-            ViewBag.CoachName = coachToUpdate.Name.DisplayName;
-            return View(dto);
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+                ViewBag.CoachName = coachToUpdate.Name.DisplayName;
+                return View(dto);
+            }
         }
     }
 }

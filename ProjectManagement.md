@@ -4,7 +4,7 @@
 - [X] Story 3: *Register Coach* (GET/POST, validatie, anti-forgery)
 - [] Story 3: Fout bij aanmaken coach: Naam moet een voor- en achternaam bevatten. (Parameter 'fullName') : parametertekst wil ik weg, geen prioriteit.
 - [X] Story 4: *Coach Detail* (read-only)
-- [] Story 5: *Update Skills* (GET/POST) => validatie wordt nog niet getoond, enkel crash fout 500
+- [] Story 5: *Update Skills* (GET/POST) => validatie wordt nog niet getoond, enkel crash 
 - [] create/edit nakijken ivm validaties, alles werkt maar via try catch id controller niet ok(logica verboden) 
 - [] Story 5: comma seperated skills aan te passen die userfriendly is. zie Abigail : met aparte modelview, en hierbij kan partial view gebruikt worden, geen prioriteit
 - [X] Story 6: *Paging op Index*

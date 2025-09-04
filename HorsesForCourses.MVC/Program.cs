@@ -3,6 +3,9 @@ using HorsesForCourses.Infrastructure;
 using HorsesForCourses.Application;
 using Microsoft.EntityFrameworkCore;
 using QuickPulse.Show;
+using Microsoft.AspNetCore.Mvc;
+using HorsesForCourses.Application.common;
+using HorsesForCourses.MVC;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +17,6 @@ var dbPath = Path.Combine(padAPI, "horses.db");
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite($"Data Source={dbPath}"));   //loggen :     options.UseSqlite($"Data Source={dbPath.PulseToLog()}"));
 
-
 builder.Services.AddScoped<CoachAvailabilityService>();
 builder.Services.AddScoped<ICourseRepository, EfCourseRepository>();
 builder.Services.AddScoped<ICoachRepository, EfCoachRepository>();
@@ -23,6 +25,12 @@ builder.Services.AddControllers()
     {
         options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
     });
+
+// builder.Services.AddScoped<DomainExceptionFilter>();
+// builder.Services.AddControllersWithViews(options =>
+// {
+//     options.Filters.Add<DomainExceptionFilter>(); // <- use the filter, not the exception type
+// });
 
 var app = builder.Build();
 

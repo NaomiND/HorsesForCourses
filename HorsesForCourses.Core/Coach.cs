@@ -18,7 +18,7 @@ public class Coach
     private Coach() { }                                         // Private constructor voor EF Core
 #pragma warning restore CS8618
 
-    public static Coach Create(int id, string name, string email)       //Factory method
+    public static Coach Create(string name, string email)       //Factory method
     {
         var emailAddress = EmailAddress.Create(email);            // string → EmailAddress
         var fullName = FullName.From(name);                     // string → FullName

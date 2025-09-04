@@ -13,6 +13,7 @@
 <h2>@ViewData["Title"]</h2>
 
 <table class="table table-striped">
+
     <thead>
         <tr>
             <th>Id</th>
@@ -30,8 +31,8 @@
                 <td>@coach.Email</td>
                 <td>@coach.NumberOfCoursesAssignedTo</td>
                 <td>
-                    <a asp-action="Details" asp-route-id="@coach.Id">Details</a> |
-                    <a asp-action="EditSkills" asp-route-id="@coach.Id">Edit skills</a>
+                    <a asp-action="Details" asp-route-id="@coach.Id" class="btn btn-warning">Details</a>
+                    <a asp-action="EditSkills" asp-route-id="@coach.Id" class="btn btn-secondary">Edit skills</a>
                 </td>
             </tr>
         }
