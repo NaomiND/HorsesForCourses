@@ -5,7 +5,6 @@ public class Coach
     public int Id { get; private set; }                         //Id handmatig instellen
     public FullName Name { get; }                               //validation in class FullName
     public EmailAddress Email { get; }                          //validation in class EmailAddress
-
     private List<string> skills = new();                        //lijst van skills (collection), geen readonly hier(ef kan die niet vullen)
     public IReadOnlyCollection<string> Skills => skills.AsReadOnly();
 

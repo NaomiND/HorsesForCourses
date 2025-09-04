@@ -47,21 +47,13 @@ namespace HorsesForCourses.MVC
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Name,Email")] CreateCoachDTO dto)
         {
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    var coach = new Coach(FullName.From(dto.Name), EmailAddress.Create(dto.Email));
-                    await _coachRepository.AddAsync(coach);
-                    await _coachRepository.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
-                }
-                catch (ArgumentException ex)
-                {
-                    ModelState.AddModelError("", $"Fout bij aanmaken coach: {ex.Message}");
-                }
-            }
-            return View(dto);
+            if (!ModelState.IsValid) return View(dto);
+
+            var coach = new Coach(FullName.From(dto.Name), EmailAddress.Create(dto.Email));
+            await _coachRepository.AddAsync(coach);
+            await _coachRepository.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpGet("editskills/{id}")]
