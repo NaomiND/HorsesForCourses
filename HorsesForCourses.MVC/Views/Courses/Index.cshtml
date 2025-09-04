@@ -1,13 +1,14 @@
 @using HorsesForCourses.Application
 @using HorsesForCourses.Application.Paging;
 @using HorsesForCourses.Application.dtos
+@using HorsesForCourses.Core
 @using HorsesForCourses.Infrastructure
 @using HorsesForCourses.MVC
 @using HorsesForCourses.MVC.ViewModels;
-@model PagedResult<CoachDTOPaging>
+@model PagedResult<CourseAssignStatusDTOPaging>
 
 @{
-    ViewData["Title"] = "Coaches summary";
+    ViewData["Title"] = "Courses summary";
 }
 
 @if (TempData["SuccessMessage"] != null)
@@ -20,31 +21,29 @@
 <h2>@ViewData["Title"]</h2>
 
 <p>
-    <a asp-action="Create" class="btn btn-success">Register new coach</a>
+    <a asp-action="Create" class="btn btn-success">Register new course</a>
 </p>
 
 <table class="table table-striped">
 
     <thead>
         <tr>
-            <th>Id</th>
             <th>Name</th>
-            <th>Email</th>
-            <th># of assigned courses</th>
+            <th>Start date</th>
+            <th>End date</th>
             <th>Actions</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var coach in Model.Items)
+        @foreach (var course in Model.Items)
         {
             <tr>
-                <td>@coach.Id</td>
-                <td>@coach.Name</td>
-                <td>@coach.Email</td>
-                <td>@coach.NumberOfCoursesAssignedTo</td>
+                <td>@course.Name</td>
+                <td>@course.StartDate.ToString()</td>
+                @* course.PlanningPeriod.ToString("yyyy-MM-dd") *@
+                <td>@course.EndDate.ToString()</td>
                 <td>
-                    <a asp-action="Details" asp-route-id="@coach.Id" class="btn btn-info btn-sm">Details</a>
-                    <a asp-action="EditSkills" asp-route-id="@coach.Id" class="btn btn-secondary btn-sm">Edit skills</a>
+                    <a asp-action="Details" asp-route-id="@course.Id" class="btn btn-info btn-sm">Details</a>
                 </td>
             </tr>
         }
@@ -58,14 +57,14 @@
         @if (Model.HasPrevious)
         {
             <a href="@Url.Action("Index", new { page = Model.PageNumber - 1, pageSize = Model.PageSize })"
-                class="btn btn-primary btn-sm">
+                class="btn btn-primary">
                 Previous
             </a>
         }
         @if (Model.HasNext)
         {
             <a href="@Url.Action("Index", new { page = Model.PageNumber + 1, pageSize = Model.PageSize })"
-                class="btn btn-primary btn-sm">
+                class="btn btn-primary">
                 Next
             </a>
         }

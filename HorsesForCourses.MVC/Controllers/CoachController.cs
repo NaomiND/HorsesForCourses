@@ -31,7 +31,8 @@ namespace HorsesForCourses.MVC.CoachController
         public async Task<IActionResult> Details(int id)
         {
             var coach = await _coachRepository.GetByIdAsync(id);
-            if (coach == null) return NotFound();
+            if (coach == null)
+                return NotFound();
 
             var allCourses = await _courseRepository.GetAllAsync();
             var coachDetailDto = CoachMapper.ToDetailDTO(coach, allCourses);

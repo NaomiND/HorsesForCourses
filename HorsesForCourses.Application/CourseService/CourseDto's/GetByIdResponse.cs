@@ -1,6 +1,5 @@
 namespace HorsesForCourses.Application.dtos;
 
-
 public class GetByIdResponse
 {
     public int Id { get; set; }
@@ -10,5 +9,7 @@ public class GetByIdResponse
     public List<string> Skills { get; set; } = new();
     public List<TimeSlotJasonDTO> TimeSlots { get; set; } = new();
     public CoachBasicDTO? Coach { get; set; }                           // Genest Coach DTO, nullable
+    public bool IsConfirmed { get; set; }    //public CourseStatus Status { get; private set; } = CourseStatus.Draft; //toegevoegd
+    public int? AssignedCoachId { get; set; }   //toegevoegd
 }
 

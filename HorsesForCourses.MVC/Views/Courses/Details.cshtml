@@ -4,10 +4,10 @@
 @using HorsesForCourses.Infrastructure
 @using HorsesForCourses.MVC
 @using HorsesForCourses.MVC.ViewModels;
-@model CoachDetailDTO
+@model GetByIdResponse
 
 @{
-    ViewData["Title"] = "Coach Details";
+    ViewData["Title"] = "Course Details";
 }
 
 @if (TempData["SuccessMessage"] != null)
@@ -17,7 +17,7 @@
     </div>
 }
 
-<h3>Coachdetails for @Model.Name</h3>
+<h3>Coursedetails for @Model.Name</h3>
 
 <div>
     <hr />
@@ -25,8 +25,14 @@
         <dt class="col-sm-2">ID</dt>
         <dd class="col-sm-10">@Model.Id</dd>
 
-        <dt class="col-sm-2">Email</dt>
-        <dd class="col-sm-10">@Model.Email</dd>
+        <dt class="col-sm-2">Startdatum</dt>
+        <dd class="col-sm-10">@Model.StartDate</dd>
+
+        <dt class="col-sm-2">Einddatum</dt>
+        <dd class="col-sm-10">@Model.EndDate</dd>
+
+        <dt class="col-sm-2">Assigned coach(es)</dt>
+        <dd class="col-sm-10">todo</dd>
     </dl>
 </div>
 
@@ -42,11 +48,12 @@
 }
 else
 {
-    <p>This coach does not have skills.</p>
+    <p>This course does not have skillrequirements yet.</p>
 }
 
-<h4>Assigned courses</h4>
-@if (Model.Courses.Any())
+@* todo
+<h4>Assigned coach(es)</h4>
+ @if (Model.Courses.Any())    
 {
     <ul>
         @foreach (var course in Model.Courses)
@@ -54,21 +61,14 @@ else
             <li><a asp-controller="Courses" asp-action="Details" asp-route-id="@course.Id">@course.Name</a></li>
         }
     </ul>
-}
+} 
 else
 {
-    <p>This coach has not been assigned to any courses.</p>
+    <p>This course does not have skillrequirements yet.</p>
 }
+*@
 
 <div>
-    <a asp-action="EditSkills" asp-route-id="@Model.Id" class="btn btn-warning">Edit skills</a>
-    <a asp-action="Index" class="btn btn-secondary">Back to summary</a>
+    <a asp-action="EditSkills" asp-route-id="@Model.Id" class="btn btn-warning btn-sm">Edit skills</a>
+    <a asp-action="Index" class="btn btn-secondary btn-sm">Back to summary</a>
 </div>
-
-@* dit wil ik nog toevoegen aan coachdetails *@
-@* <ul>
-    @foreach (var course in Model.AssignedCourses)
-    {
-        <li>@course.Name (@course.StartDate - @course.EndDate)</li>
-    }
-</ul> *@
