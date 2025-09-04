@@ -4,7 +4,7 @@ using HorsesForCourses.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using HorsesForCourses.Core;
 
-namespace HorsesForCourses.MVC.CoursController
+namespace HorsesForCourses.MVC.CourseController
 {
     [Controller]
     [Route("courses")]
@@ -50,9 +50,7 @@ namespace HorsesForCourses.MVC.CoursController
         public async Task<IActionResult> Create([Bind("Name,StartDate,EndDate")] CreateCourseDTO dto)
         {
             if (!ModelState.IsValid)
-            {
                 return View(dto);
-            }
 
             try
             {
@@ -75,7 +73,7 @@ namespace HorsesForCourses.MVC.CoursController
             }
             catch (FormatException)
             {
-                ModelState.AddModelError(string.Empty, "Het formaat van de start- of einddatum is ongeldig. Gebruik jjjj-mm-dd.");
+                ModelState.AddModelError(string.Empty, "Ongeldig formaat. Gebruik jjjj-mm-dd.");
                 return View(dto);
             }
         }

@@ -29,24 +29,10 @@ public class AppDbContext : DbContext
         coachBuilder.Property(c => c.Email).HasConversion(email => email.Value, value => EmailAddress.Create(value)).HasColumnName("Email").IsRequired().HasMaxLength(200);   // EmailAddress als string opslaan
         coachBuilder.HasIndex(c => c.Email).IsUnique();                             // Unieke index op Email
 
-        // -----------------------------------------------------------
-        // OLD MAPPING
-        // --
-        // coachBuilder.Property(c => c.Skills).HasField("skills")                     // Private field: skills, opgeslagen als JSON array
-        //     .UsePropertyAccessMode(PropertyAccessMode.Field)
-        //     .HasConversion(
-        //         v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),  // Serialize skills to JSON
-        //         v => JsonSerializer.Deserialize<List<string>>(v, (JsonSerializerOptions)null)
-        //     );
-        // -----------------------------------------------------------
-        // NEW MAPPINGj
-        // --
         coachBuilder
             .Property<List<string>>("skills")
             .UsePropertyAccessMode(PropertyAccessMode.Field)
             .HasConversion(
-                        // v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
-                        // v => JsonSerializer.Deserialize<List<string>>(v, (JsonSerializerOptions)null)
                         v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
                         v => string.IsNullOrWhiteSpace(v)
                         ? new List<string>()
