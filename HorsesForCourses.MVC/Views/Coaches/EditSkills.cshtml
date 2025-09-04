@@ -19,7 +19,8 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group mb-3">
-                <label asp-for="Skills" class="control-label">Skills (separate each skill with a comma ',')</label>
+                <label asp-for="Skills" class="control-label">Aquired skills (separate each skill with a
+                    comma ',')</label>
                 <input asp-for="Skills" class="form-control" value="@string.Join(", ", Model.Skills)" />
                 <span asp-validation-for="Skills" class="text-danger"></span>
             </div>

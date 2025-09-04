@@ -9,6 +9,7 @@
 # geen prioriteit
 - [] Fout bij aanmaken coach: Naam moet een voor- en achternaam bevatten. (Parameter 'fullName') : parametertekst wil ik weg
 - [] Story 5: comma seperated skills aan te passen die userfriendly is. zie Abigail : met aparte modelview, en hierbij kan partial view gebruikt worden
+- [] bij coaches toevoegen hoeveel courses die heeft. Zorg dat coach.course werkt. Tellen mag niet via allcourses want dit is veel te impactvol voor de db. doe dit bv enkel met id. 
 - [X] Foutafhandeling voor domein-validaties geïmplementeerd in controllers via try-catch, wat de correcte aanpak is voor het retourneren van een view met ModelState.
 
 # Architectuur: Layered Architecture (Separation of Concerns)  => meer naar clean architecture (onion architecture)

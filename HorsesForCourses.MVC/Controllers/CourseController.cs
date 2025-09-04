@@ -77,5 +77,64 @@ namespace HorsesForCourses.MVC.CourseController
                 return View(dto);
             }
         }
+
+        [HttpGet("editskillscourse/{id}")]
+        public async Task<IActionResult> EditSkillsCourse(int id)
+        {
+            var course = await _courseRepository.GetByIdAsync(id);
+            if (course == null)
+                return NotFound();
+
+            var dto = new UpdateCourseSkillsDTO
+            {
+                Id = course.Id,
+                Skills = course.Skills.ToList()
+            };
+            ViewBag.CourseName = course.Name;
+            return View(dto);
+        }
+
+        [HttpPost("editskillscourse/{id}")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditSkillsCourse(int id, [Bind("Id,Skills")] UpdateCourseSkillsDTO dto)
+        {
+            if (id != dto.Id)
+                return BadRequest();
+
+            var courseToUpdate = await _courseRepository.GetByIdAsync(id);
+            if (courseToUpdate == null)
+                return NotFound();
+
+            if (!ModelState.IsValid)
+            {
+                ViewBag.CourseName = courseToUpdate.Name;
+                return View(dto);
+            }
+
+            try
+            {
+                var skillsList = Request.Form["Skills"].ToString()
+                    .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(s => s.Trim())
+                    .ToList();
+
+                courseToUpdate.UpdateSkills(skillsList);  // Deze methode kan een exception gooien vanuit de domeinlaag
+                await _courseRepository.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Skills zijn succesvol bijgewerkt.";  //UX-Polish
+                return RedirectToAction(nameof(Details), new { id = dto.Id });
+            }
+
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+                ViewBag.CourseName = courseToUpdate.Name;
+                return View(dto);
+            }
+        }
     }
+
+
+
+
+
 }
