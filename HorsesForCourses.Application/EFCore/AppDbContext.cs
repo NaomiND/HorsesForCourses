@@ -71,7 +71,7 @@ public class AppDbContext : DbContext
             ));
 
         courseBuilder.HasOne(c => c.AssignedCoach)                                  // Relatie: Een cursus heeft één (optionele) coach
-                     .WithMany()                                                    // Een Coach heeft geen collectie van Courses, dus dit is eenrichtingsverkeer
+                     .WithMany(c => c.Courses)                                                    // Een Coach heeft geen collectie van Courses, dus dit is eenrichtingsverkeer
                      .HasForeignKey("AssignedCoachId")
                      .IsRequired(false);                                            // Een coach is niet verplicht bij aanmaak
 

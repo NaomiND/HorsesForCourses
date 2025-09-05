@@ -7,7 +7,8 @@ public class Coach
     public EmailAddress Email { get; }                          //validation in class EmailAddress
     private List<string> skills = new();                        //lijst van skills (collection), geen readonly hier(ef kan die niet vullen)
     public IReadOnlyCollection<string> Skills => skills.AsReadOnly();
-    // AssignedCourses
+    private readonly List<Course> courses = new();              //lijst van courses
+    public IReadOnlyCollection<Course> Courses => courses.AsReadOnly();
     public Coach(FullName name, EmailAddress email)             //constructor (bij entity framework wordt ID automatisch gegenereerd door database dus hier te verwijderen)
     {
         Name = name;

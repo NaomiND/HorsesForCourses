@@ -32,6 +32,7 @@
             <th>Name</th>
             <th>Start date</th>
             <th>End date</th>
+            <th>Status</th>
             <th>Details</th>
         </tr>
     </thead>
@@ -43,6 +44,7 @@
                 <td>@course.Name</td>
                 <td>@course.StartDate.ToString()</td>
                 <td>@course.EndDate.ToString()</td>
+                <td>@course.Status</td>
                 <td>
                     <a asp-action="Details" asp-route-id="@course.Id" class="btn btn-info btn-sm">Details</a>
                 </td>
