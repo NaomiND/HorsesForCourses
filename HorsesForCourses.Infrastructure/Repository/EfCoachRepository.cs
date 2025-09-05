@@ -21,13 +21,14 @@ public class EfCoachRepository : ICoachRepository
 
         var query = _context.Coaches                                        // Volgorde: Order -> Project -> Page
             .AsNoTracking()
+            .Include(c => c.Courses)                                        //laadt cursussen
             .OrderBy(c => c.Name.LastName).ThenBy(c => c.Name.FirstName)    //Stabiele sortering
             .Select(c => new CoachDTOPaging                                       //Projectie naar DTO
             {
                 Id = c.Id,
                 Name = c.Name.FirstName + " " + c.Name.LastName,
                 Email = c.Email.Value,
-                NumberOfCoursesAssignedTo = _context.Courses.Count(course => course.AssignedCoach.Id == c.Id)
+                NumberOfCoursesAssignedTo = c.Courses.Count()
             });
 
         return await query.ToPagedResultAsync(request);                     //Paging toepassen en resultaat ophalen
@@ -35,12 +36,16 @@ public class EfCoachRepository : ICoachRepository
 
     public async Task<IEnumerable<Coach>> GetAllAsync()
     {
-        return await _context.Coaches.ToListAsync();
+        return await _context.Coaches
+            .Include(c => c.Courses)
+            .ToListAsync();
     }
 
     public async Task<Coach?> GetByIdAsync(int id)
     {
-        return await _context.Coaches.FindAsync(id);
+        return await _context.Coaches
+            .Include(c => c.Courses)
+            .FirstOrDefaultAsync(c => c.Id == id);
     }
     public async Task AddAsync(Coach coach)
     {
