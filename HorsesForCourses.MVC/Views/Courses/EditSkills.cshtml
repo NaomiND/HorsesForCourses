@@ -15,7 +15,7 @@
 <hr />
 <div class="row">
     <div class="col-md-6">
-        <form asp-action="EditSkillsCourse">
+        <form asp-action="EditSkills">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group mb-3">
@@ -26,7 +26,7 @@
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
-                <a asp-controller="Course" asp-action="DetailsCourse" asp-route-id="@Model.Id"
+                <a asp-controller="Courses" asp-action="Details" asp-route-id="@Model.Id"
                     class="btn btn-secondary">Cancel</a>
             </div>
         </form>

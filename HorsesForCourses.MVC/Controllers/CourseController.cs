@@ -78,8 +78,8 @@ namespace HorsesForCourses.MVC.CourseController
             }
         }
 
-        [HttpGet("editskillscourse/{id}")]
-        public async Task<IActionResult> EditSkillsCourse(int id)
+        [HttpGet("editskills/{id}")]
+        public async Task<IActionResult> EditSkills(int id)
         {
             var course = await _courseRepository.GetByIdAsync(id);
             if (course == null)
@@ -94,9 +94,9 @@ namespace HorsesForCourses.MVC.CourseController
             return View(dto);
         }
 
-        [HttpPost("editskillscourse/{id}")]
+        [HttpPost("editskills/{id}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditSkillsCourse(int id, [Bind("Id,Skills")] UpdateCourseSkillsDTO dto)
+        public async Task<IActionResult> EditSkills(int id, [Bind("Id,Skills")] UpdateCourseSkillsDTO dto)
         {
             if (id != dto.Id)
                 return BadRequest();
