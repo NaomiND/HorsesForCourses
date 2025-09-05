@@ -16,8 +16,8 @@ namespace HorsesForCourses.Tests
         }
 
         [Theory]
-        [InlineData(null, "De Wit", "Voornaam verplicht")]
-        [InlineData("Ine", null, "Achternaam verplicht")]
+        [InlineData(null, "De Wit", "First name required.")]
+        [InlineData("Ine", null, "Last name required.")]
 
         public void Constructor_ShouldThrow_WhenNamePartsAreNull(string firstName, string lastName, string expectedMessagePart)
         {
@@ -38,10 +38,10 @@ namespace HorsesForCourses.Tests
         }
 
         [Theory]
-        [InlineData(null, "Volledige naam verplicht.")]
-        [InlineData("", "Volledige naam verplicht.")]
-        [InlineData("   ", "Volledige naam verplicht.")]
-        [InlineData("Ine", "Naam moet een voor- en achternaam bevatten.")]
+        [InlineData(null, "Full name required.")]
+        [InlineData("", "Full name required.")]
+        [InlineData("   ", "Full name required.")]
+        [InlineData("Ine", "Name consist of first name and last name.")]
         public void From_ShouldThrowArgumentException_WhenInputIsInvalid(string input, string expectedMessage)
         {
             var ex = Assert.Throws<ArgumentException>(() => FullName.From(input));

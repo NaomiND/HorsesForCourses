@@ -1,11 +1,11 @@
-using HorsesForCourses.MVC;
 using HorsesForCourses.Infrastructure;
-using HorsesForCourses.Application.dtos;
 using HorsesForCourses.Core;
 using Moq;
 using Microsoft.AspNetCore.Mvc;
 using static HorsesForCourses.Tests.Mvc.Helper;
 using HorsesForCourses.MVC.CoachController;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace HorsesForCourses.Tests.Mvc;
 
@@ -37,6 +37,14 @@ public class CreateCoachMVC
         var registerCoach = TheTester.RegisterCoach();
         coachRepository.Setup(repo => repo.AddAsync(It.IsAny<Coach>())).Returns(Task.CompletedTask);
         coachRepository.Setup(repo => repo.SaveChangesAsync()).Returns(Task.CompletedTask);
+
+        // Set up HttpContext (required for TempData)
+        var httpContext = new DefaultHttpContext();
+        coachController.ControllerContext.HttpContext = httpContext;
+
+        // Set up TempData
+        var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
+        coachController.TempData = tempData;
 
         var result = await coachController.Create(registerCoach);
 

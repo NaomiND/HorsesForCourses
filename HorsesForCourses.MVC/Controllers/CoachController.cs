@@ -59,7 +59,7 @@ namespace HorsesForCourses.MVC.CoachController
                     await _coachRepository.AddAsync(coach);
                     await _coachRepository.SaveChangesAsync();
 
-                    TempData["SuccessMessage"] = "Coach is succesvol aangemaakt."; //toegevoegd voor UX-Polish
+                    TempData["SuccessMessage"] = "Coach registered."; //toegevoegd voor UX-Polish
                     return RedirectToAction(nameof(Index));
                 }
                 catch (ArgumentException ex)
@@ -114,7 +114,7 @@ namespace HorsesForCourses.MVC.CoachController
 
                 coachToUpdate.UpdateSkills(skillsList);  // Deze methode kan een exception gooien vanuit de domeinlaag
                 await _coachRepository.SaveChangesAsync();
-                TempData["SuccessMessage"] = "Skills zijn succesvol bijgewerkt.";  //UX-Polish
+                TempData["SuccessMessage"] = "Skills updated.";  //UX-Polish
                 return RedirectToAction(nameof(Details), new { id = dto.Id });
             }
 

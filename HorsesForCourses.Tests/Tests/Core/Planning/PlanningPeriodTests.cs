@@ -32,14 +32,14 @@ public class PlanningPeriodTests
         var endDate = new DateOnly(2025, 1, 30);
 
         var exception = Assert.Throws<ArgumentException>(() => new PlanningPeriod(startDate, endDate));
-        Assert.Equal("Einddatum mag niet voor de startdatum liggen.", exception.Message);
+        Assert.Equal("End date can't be before start date.", exception.Message);
     }
 
     [Fact]
     public void Contains_DateWithinPeriod_ReturnsTrue()
     {
-        var planningPeriod = new PlanningPeriod(new DateOnly(2025, 6, 1), new DateOnly(2025, 6, 30));
-        var dateToCheck = new DateOnly(2025, 6, 15);
+        var planningPeriod = new PlanningPeriod(new DateOnly(2025, 6, 2), new DateOnly(2025, 6, 30));
+        var dateToCheck = new DateOnly(2025, 6, 16);
 
         var result = planningPeriod.Contains(dateToCheck);
 

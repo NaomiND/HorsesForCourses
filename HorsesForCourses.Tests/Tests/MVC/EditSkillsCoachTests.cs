@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using static HorsesForCourses.Tests.Mvc.Helper;
 using Microsoft.AspNetCore.Http;
 using HorsesForCourses.MVC.CoachController;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace HorsesForCourses.Tests.Mvc;
 
@@ -63,6 +64,10 @@ public class EditCoachSkillsMVC
         var httpContext = new DefaultHttpContext();
         httpContext.Request.Form = formCollection;
         coachController.ControllerContext.HttpContext = httpContext;
+
+        // Setup TempData
+        var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
+        coachController.TempData = tempData;
 
         var result = await coachController.EditSkills(1, updateSkills);
 

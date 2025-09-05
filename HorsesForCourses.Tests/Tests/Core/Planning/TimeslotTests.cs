@@ -19,7 +19,7 @@ public class TimeSlotTests
     {
         var exception = Assert.Throws<ArgumentException>(() => new TimeSlot(startTime, endTime));
 
-        Assert.Equal("Startuur moet voor het einduur liggen.", exception.Message);
+        Assert.Equal("Starthour must be before endhour.", exception.Message);
     }
 
     [Fact]
@@ -29,7 +29,7 @@ public class TimeSlotTests
         var endTime = 10;
 
         var exception = Assert.Throws<ArgumentException>(() => new TimeSlot(startTime, endTime));
-        Assert.Equal("Startuur moet voor het einduur liggen.", exception.Message);
+        Assert.Equal("Starthour must be before endhour.", exception.Message);
     }
 
     [Theory]
@@ -41,7 +41,7 @@ public class TimeSlotTests
     public void Constructor_WithTimesOutsideOfficeHours_ThrowsArgumentException(int startTime, int endTime)
     {
         var exception = Assert.Throws<ArgumentException>(() => new TimeSlot(startTime, endTime));
-        Assert.Equal("Een tijdslot moet tijdens de kantooruren vallen (09:00-17:00).", exception.Message);
+        Assert.Equal("A timeslot must be between office hours (09:00-17:00).", exception.Message);
     }
 
     [Fact]
