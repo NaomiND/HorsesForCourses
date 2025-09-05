@@ -17,6 +17,13 @@
     </div>
 }
 
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
 <h3>Coursedetails for @Model.Name</h3>
 
 <div>
@@ -25,14 +32,20 @@
         <dt class="col-sm-2">ID:</dt>
         <dd class="col-sm-10">@Model.Id</dd>
 
+        <dt class="col-sm-2">Status:</dt>
+        <dd class="col-sm-10">@Model.Status</dd>
+
         <dt class="col-sm-2">From:</dt>
         <dd class="col-sm-10">@Model.StartDate</dd>
 
         <dt class="col-sm-2">Until:</dt>
         <dd class="col-sm-10">@Model.EndDate</dd>
 
-        <dt class="col-sm-2">Status:</dt>
-        <dd class="col-sm-10">todo</dd>
+        <dt class="col-sm-2">Day(s)</dt>
+        <dd class="col-sm-10">help</dd>
+
+        <dt class="col-sm-2">Timeslot:</dt>
+        <dd class="col-sm-10">@Model.ScheduledTimeSlots</dd>
 
         <dt class="col-sm-2">Assigned coach(es):</dt>
         <dd class="col-sm-10">todo</dd>
@@ -54,24 +67,22 @@ else
     <p>This course does not have skillrequirements yet.</p>
 }
 
+@if (Model.Status == "Draft")
+{
+    <form asp-action="Confirm" asp-route-id="@Model.Id" method="post" class="d-inline">
+        @Html.AntiForgeryToken()
+        <button type="submit" class="btn btn-success">Confirm Course</button>
+    </form>
+}
+
 @* todo
 <h4>Assigned coach(es)</h4>
  @if (Model.Courses.Any())    
-{
-    <ul>
-        @foreach (var course in Model.Courses)
-        {
-            <li><a asp-controller="Courses" asp-action="Details" asp-route-id="@course.Id">@course.Name</a></li>
-        }
-    </ul>
-} 
-else
-{
-    <p>This course does not have skillrequirements yet.</p>
-}
+
 *@
 
 <div>
     <a asp-action="EditSkills" asp-route-id="@Model.Id" class="btn btn-warning btn-sm">Edit skills</a>
+    <a asp-action="EditTimeSlots" asp-route-id="@Model.Id" class="btn btn-warning btn-sm">Edit timeslot</a>
     <a asp-action="Index" class="btn btn-secondary btn-sm">Back to summary</a>
 </div>

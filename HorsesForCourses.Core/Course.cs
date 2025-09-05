@@ -5,10 +5,9 @@ public class Course
     public int Id { get; private set; }
     public string Name { get; private set; }
     public PlanningPeriod Period { get; private set; }
-
+    public WeekDays weekDays { get; private set; }
     private List<string> skills = new();
     public IReadOnlyCollection<string> Skills => skills.AsReadOnly();
-
     private List<ScheduledTimeSlot> scheduledTimeSlots = new();
     public IReadOnlyCollection<ScheduledTimeSlot> ScheduledTimeSlots => scheduledTimeSlots.AsReadOnly();
 

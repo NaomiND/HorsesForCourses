@@ -1,0 +1,110 @@
+@using HorsesForCourses.Application
+@using HorsesForCourses.Core
+@using HorsesForCourses.Application.dtos
+@using HorsesForCourses.Infrastructure
+@using HorsesForCourses.MVC
+@using HorsesForCourses.MVC.ViewModels
+@model HorsesForCourses.Application.dtos.UpdateTimeSlotsDTO
+
+@{
+    ViewData["Title"] = "Assign a timeslot to this course";
+}
+
+<h3>Edit timeslot(s) for @ViewBag.CourseName</h3>
+<hr />
+
+<form asp-action="EditTimeSlots" asp-route-id="@ViewBag.CourseId" method="post">
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+    <div id="timeslots-container">
+        @for (int i = 0; i < Model.TimeSlots.Count; i++)
+        {
+            <div class="row timeslot-row mb-2 align-items-center">
+                <div class="col-md-4">
+                    <label>Day</label>
+                    <select asp-for="TimeSlots[i].Day" asp-items="Html.GetEnumSelectList<WeekDays>()"
+                        class="form-control"></select>
+                </div>
+                <div class="col-md-3">
+                    <label>Start Time (hour, 9-16)</label>
+                    <input type="number" asp-for="TimeSlots[i].Start" class="form-control" />
+                </div>
+                <div class="col-md-3">
+                    <label>End Time (hour, 10-17)</label>
+                    <input type="number" asp-for="TimeSlots[i].End" class="form-control" />
+                </div>
+                <div class="col-md-2">
+                    <label>&nbsp;</label>
+                    <button type="button" class="btn btn-danger remove-timeslot w-100">Remove</button>
+                </div>
+            </div>
+        }
+    </div>
+    <hr />
+
+    <div class="form-group mt-3">
+        <button type="button" id="add-timeslot" class="btn btn-info">Add timeslot</button>
+        <input type="submit" value="Save Changes" class="btn btn-primary" />
+        <a asp-action="Details" asp-route-id="@ViewBag.CourseId" class="btn btn-secondary">Cancel</a>
+    </div>
+</form>
+
+<div id="timeslot-template" style="display: none;">
+    <div class="row timeslot-row mb-2 align-items-center">
+        <div class="col-md-4">
+            <label>Day</label>
+            <select name="TimeSlots[__INDEX__].Day" class="form-control">
+                @foreach (var day in Html.GetEnumSelectList<WeekDays>())
+                {
+                    <option value="@day.Value">@day.Text</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label>Start Time (hour, 9-16)</label>
+            <input type="number" name="TimeSlots[__INDEX__].Start" class="form-control" value="9" />
+        </div>
+        <div class="col-md-3">
+            <label>End Time (hour, 10-17)</label>
+            <input type="number" name="TimeSlots[__INDEX__].End" class="form-control" value="10" />
+        </div>
+        <div class="col-md-2">
+            <label>&nbsp;</label>
+            <button type="button" class="btn btn-danger remove-timeslot w-100">Remove</button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+
+            // Functie om de namen en ID's van de input-velden opnieuw te indexeren
+            // Dit is cruciaal voor de ASP.NET Core Model Binder
+            function reindexTimeSlots() {
+                $("#timeslots-container .timeslot-row").each(function (index) {
+                    $(this).find("input, select").each(function () {
+                        this.name = this.name.replace(/\[\d+\]/, "[" + index + "]");
+                        this.id = this.id.replace(/_\d+__/, "_" + index + "__");
+                    });
+                });
+            }
+
+            $("#add-timeslot").click(function () {                  // Klik-event voor de 'Add New TimeSlot' knop
+                var newRow = $("#timeslot-template").html();        // Clone template
+                var newIndex = $("#timeslots-container .timeslot-row").length;  // Bepaal de nieuwe index
+
+                newRow = newRow.replace(/__INDEX__/g, newIndex);    // Vervang de placeholder __INDEX__ met de correcte nieuwe index
+
+                $("#timeslots-container").append(newRow);            // Voeg de nieuwe rij toe aan de container
+            });
+
+            $("#timeslots-container").on("click", ".remove-timeslot", function () { // Klik-event voor de 'Remove' knoppen (gebruikt event delegation)
+                $(this).closest(".timeslot-row").remove();          // Verwijder de parent row
+
+                reindexTimeSlots();                                 // Herindexeer alle overgebleven rijen
+            });
+        });
+    </script>
+}

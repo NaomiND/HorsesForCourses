@@ -57,6 +57,7 @@ public static class CourseMapper
             StartDate = course.Period.StartDate.ToString("yyyy-MM-dd"),
             EndDate = course.Period.EndDate.ToString("yyyy-MM-dd"),
             Skills = course.Skills.ToList(),
+            Status = course.Status.ToString(),
             TimeSlots = course.ScheduledTimeSlots
                                 .Select(slot => new TimeSlotJasonDTO
                                 {

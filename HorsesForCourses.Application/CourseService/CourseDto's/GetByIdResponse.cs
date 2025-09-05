@@ -8,8 +8,10 @@ public class GetByIdResponse
     public string EndDate { get; set; }
     public List<string> Skills { get; set; } = new();
     public List<TimeSlotJasonDTO> TimeSlots { get; set; } = new();
+    public List<ScheduledTimeSlotDTO> ScheduledTimeSlots { get; set; } = new();
     public CoachBasicDTO? Coach { get; set; }                           // Genest Coach DTO, nullable
-    public bool IsConfirmed { get; set; }    //public CourseStatus Status { get; private set; } = CourseStatus.Draft; //toegevoegd
+    public string Status { get; set; }
+    public bool IsConfirmed { get; set; }
     public int? AssignedCoachId { get; set; }   //toegevoegd
 }
 

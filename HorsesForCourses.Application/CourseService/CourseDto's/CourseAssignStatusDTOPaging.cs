@@ -8,4 +8,5 @@ public class CourseAssignStatusDTOPaging
     public string EndDate { get; set; }
     public bool HasSchedule { get; set; }
     public bool HasCoach { get; set; }
+    public string Status { get; set; }
 }

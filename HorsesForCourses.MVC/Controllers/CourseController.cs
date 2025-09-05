@@ -131,6 +131,91 @@ namespace HorsesForCourses.MVC.CourseController
                 return View(dto);
             }
         }
+
+        [HttpGet("edittimeslots/{id}")]
+        public async Task<IActionResult> EditTimeSlots(int id)
+        {
+            var course = await _courseRepository.GetByIdAsync(id);
+            if (course == null)
+                return NotFound();
+
+            var dto = new UpdateTimeSlotsDTO
+            {
+                TimeSlots = course.ScheduledTimeSlots.Select(slot => new ScheduledTimeSlotDTO
+                {
+                    Day = slot.Day,
+                    Start = slot.TimeSlot.StartTime,
+                    End = slot.TimeSlot.EndTime
+                }).ToList()
+            };
+
+            ViewBag.CourseName = course.Name;
+            ViewBag.CourseId = course.Id;
+            return View(dto);
+        }
+
+        [HttpPost("edittimeslots/{id}")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditTimeSlots(int id, UpdateTimeSlotsDTO dto)
+        {
+            var courseToUpdate = await _courseRepository.GetByIdAsync(id);
+            if (courseToUpdate == null)
+                return NotFound();
+
+            // Om de view correct opnieuw te tonen bij een fout
+            ViewBag.CourseName = courseToUpdate.Name;
+            ViewBag.CourseId = courseToUpdate.Id;
+
+            try
+            {
+                // Converteer DTOs naar domeinobjecten. Dit kan fouten geven als de input ongeldig is.
+                var newTimeSlots = dto.TimeSlots.Select(ts =>
+                    new ScheduledTimeSlot(ts.Day, new TimeSlot(ts.Start, ts.End))
+                ).ToList();
+
+                var currentSlots = courseToUpdate.ScheduledTimeSlots.ToList();
+                foreach (var slot in currentSlots)
+                {
+                    courseToUpdate.RemoveScheduledTimeSlot(slot);
+                }
+
+                foreach (var newSlot in newTimeSlots)
+                {
+                    courseToUpdate.AddScheduledTimeSlot(newSlot);
+                }
+
+                await _courseRepository.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Lesmomenten zijn succesvol bijgewerkt.";
+                return RedirectToAction(nameof(Details), new { id = id });
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+                return View(dto);
+            }
+        }
+
+        [HttpPost("confirm/{id}")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Confirm(int id)
+        {
+            var course = await _courseRepository.GetByIdAsync(id);
+            if (course == null)
+                return NotFound();
+
+            try
+            {
+                course.Confirm(); // Deze methode kan een exception gooien
+                await _courseRepository.SaveChangesAsync();
+                TempData["SuccessMessage"] = $"Cursus '{course.Name}' is succesvol bevestigd.";
+            }
+            catch (InvalidOperationException ex)
+            {
+                TempData["ErrorMessage"] = $"Fout bij bevestigen: {ex.Message}";
+            }
+
+            return RedirectToAction(nameof(Details), new { id = id });
+        }
     }
 
 
