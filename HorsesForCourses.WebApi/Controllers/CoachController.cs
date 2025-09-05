@@ -32,7 +32,7 @@ public class CoachesController : ControllerBase
         if (coach is null) return NotFound();
 
         var allCourses = await _courseRepository.GetAllAsync();
-        var coachDto = CoachMapper.ToDetailDTO(coach, allCourses);
+        var coachDto = CoachMapper.ToDetailDTO(coach);
         return Ok(coachDto);
     }
 

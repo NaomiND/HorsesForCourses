@@ -29,10 +29,10 @@ public class Coach
     public void AddSkill(string skill)
     {
         if (string.IsNullOrWhiteSpace(skill))
-            throw new ArgumentException("Competentie kan niet leeg zijn.");
+            throw new ArgumentException("Skill can't be empty.");
 
         if (skills.Contains(skill.ToLower()))
-            throw new InvalidOperationException("Competentie werd reeds toegevoegd.");
+            throw new InvalidOperationException("Skill already exists.");
 
         skills.Add(skill.ToLower());
     }
@@ -41,7 +41,7 @@ public class Coach
     {
         int removedCount = skills.RemoveAll(c => string.Equals(c, skill.ToLower())); // RemoveAll en StringComparer (hoofdlettergevoelige delete)
         if (removedCount == 0)
-            throw new InvalidOperationException($"Competentie '{skill}' niet gevonden.");
+            throw new InvalidOperationException($"Skill '{skill}' not found.");
     }
 
     public void ClearSkills()

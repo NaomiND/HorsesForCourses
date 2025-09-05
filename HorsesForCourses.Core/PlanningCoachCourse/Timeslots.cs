@@ -10,16 +10,16 @@ public record TimeSlot                               //record gemaakt ipv class 
     public TimeSlot(int startTime, int endTime)
     {
         if (startTime >= endTime)
-            throw new ArgumentException("Startuur moet voor het einduur liggen.");
+            throw new ArgumentException("Starthour must be before endhour.");
 
         if (endTime - startTime < 1)
-            throw new ArgumentException("Een les moet minstens 1 uur lang zijn.");
+            throw new ArgumentException("A class must be at least 1 hour long.");
         // var duration = endTime - startTime;                 // een lesuur is minstens 1u - enkel nog gebruiken bij TimeOnly
         // if (duration.TotalMinutes < 60)
         // throw new ArgumentException("Een les moet minstens 1 uur lang zijn.");
 
         if (startTime < 9 || endTime > 17)
-            throw new ArgumentException("Een tijdslot moet tijdens de kantooruren vallen (09:00-17:00).");
+            throw new ArgumentException("A timeslot must be between office hours (09:00-17:00).");
         // if (timeSlot.StartTime < new TimeOnly(9, 0) || timeSlot.EndTime > new TimeOnly(17, 0))      // Kantooruren: 9u – 17u - bij TimeOnly
         // throw new ArgumentException("Een tijdslot moet tijdens de kantooruren vallen (09:00-17:00).");
 

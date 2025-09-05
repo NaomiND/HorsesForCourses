@@ -7,13 +7,13 @@ public class PlanningPeriod                     // werkt zoals Timeslot
     public PlanningPeriod(DateOnly startDate, DateOnly endDate)
     {
         if (endDate < startDate)
-            throw new ArgumentException("Einddatum mag niet voor de startdatum liggen.");
+            throw new ArgumentException("End date can't be before start date.");
 
         if (IsWeekend(startDate))
-            throw new ArgumentException("Startdatum mag niet in het weekend vallen.");
+            throw new ArgumentException("Start date can't be in weekends.");
 
         if (IsWeekend(endDate))
-            throw new ArgumentException("Einddatum mag niet in het weekend vallen.");
+            throw new ArgumentException("End date can't be in weekends.");
 
         StartDate = startDate;
         EndDate = endDate;

@@ -34,8 +34,7 @@ namespace HorsesForCourses.MVC.CoachController
             if (coach == null)
                 return NotFound();
 
-            var allCourses = await _courseRepository.GetAllAsync();
-            var coachDetailDto = CoachMapper.ToDetailDTO(coach, allCourses);
+            var coachDetailDto = CoachMapper.ToDetailDTO(coach);
             return View(coachDetailDto);
         }
 

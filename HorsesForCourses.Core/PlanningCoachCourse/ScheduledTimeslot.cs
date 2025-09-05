@@ -7,7 +7,7 @@ public record ScheduledTimeSlot                             //lesmoment (record 
     public ScheduledTimeSlot(WeekDays day, TimeSlot timeSlot)
     {
         if (!Enum.IsDefined(typeof(WeekDays), day))
-            throw new ArgumentException("Ongeldig: enkel lessen van maandag tot vrijdag toegestaan.");
+            throw new ArgumentException("Invalid: only classes from monday to friday allowed.");
 
         Day = day;
         TimeSlot = timeSlot;
