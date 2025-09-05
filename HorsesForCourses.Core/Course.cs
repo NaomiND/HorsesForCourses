@@ -5,7 +5,6 @@ public class Course
     public int Id { get; private set; }
     public string Name { get; private set; }
     public PlanningPeriod Period { get; private set; }
-    public WeekDays weekDays { get; private set; }
     private List<string> skills = new();
     public IReadOnlyCollection<string> Skills => skills.AsReadOnly();
     private List<ScheduledTimeSlot> scheduledTimeSlots = new();
@@ -29,7 +28,7 @@ public class Course
     public static Course Create(string name, PlanningPeriod period)
     {
         if (string.IsNullOrWhiteSpace(name))
-            throw new ArgumentException("Cursusnaam is verplicht.");
+            throw new ArgumentException("Coursename is required.");
 
         return new Course(name, period);
     }
@@ -37,10 +36,10 @@ public class Course
     public void AddSkill(string skill)
     {
         if (string.IsNullOrWhiteSpace(skill))
-            throw new ArgumentException("Competentie kan niet leeg zijn.");
+            throw new ArgumentException("Skill can't be empty.");
 
         if (skills.Contains(skill.ToLower()))
-            throw new InvalidOperationException("Competentie werd reeds toegevoegd.");
+            throw new InvalidOperationException("Skill already exists.");
 
         skills.Add(skill.ToLower());
     }
@@ -49,7 +48,7 @@ public class Course
     {
         int removed = skills.RemoveAll(c => string.Equals(c, skill.ToLower()));
         if (removed == 0)
-            throw new InvalidOperationException($"Competentie '{skill}' niet gevonden.");
+            throw new InvalidOperationException($"Skill '{skill}' not found.");
     }
 
     public void ClearSkills()
@@ -70,10 +69,10 @@ public class Course
     public void AddScheduledTimeSlot(ScheduledTimeSlot slot)            // lesmoment toevoegen
     {
         if (Status != CourseStatus.Draft)
-            throw new InvalidOperationException("Het lesmoment kan niet meer gewijzigd worden na bevestiging of coach toewijzing.");
+            throw new InvalidOperationException("Timeslot can't be changed after confirmation or coach assignment.");
 
         if (scheduledTimeSlots.Any(existing => existing.OverlapsWith(slot)))
-            throw new InvalidOperationException("Dit lesmoment overlapt met een bestaand lesmoment.");
+            throw new InvalidOperationException("This timeslot overlaps with another one.");
 
         scheduledTimeSlots.Add(slot);
     }
@@ -81,16 +80,16 @@ public class Course
     public void RemoveScheduledTimeSlot(ScheduledTimeSlot slot)         //lesmoment verwijderen
     {
         if (Status != CourseStatus.Draft)
-            throw new InvalidOperationException("Het lesmoment kan niet meer gewijzigd worden na bevestiging of coach toewijzing.");
+            throw new InvalidOperationException("Timeslot can't be changed after confirmation or coach assignment.");
 
         if (!scheduledTimeSlots.Remove(slot))
-            throw new InvalidOperationException("Lesmoment niet gevonden.");
+            throw new InvalidOperationException("Timeslot not found.");
     }
 
     public void Confirm()
     {
         if (!scheduledTimeSlots.Any())
-            throw new InvalidOperationException("Kan cursus niet bevestigen zonder lesmoment(en).");
+            throw new InvalidOperationException("Confirmation failed. Please add timeslot(s).");
 
         Status = CourseStatus.Confirmed;
     }
@@ -98,14 +97,14 @@ public class Course
     public void AssignCoach(Coach coach)
     {
         if (Status != CourseStatus.Confirmed)
-            throw new InvalidOperationException("Cursus bevestigen voordat je een coach kan toevoegen.");
+            throw new InvalidOperationException("Please confirm the course before assigning a coach.");
 
         if (!coach.HasAllRequiredSkills(skills))
-            throw new InvalidOperationException("Deze coach heeft niet de gewenste competenties voor deze cursus.");
+            throw new InvalidOperationException("This coach does not have the required skills for this course.");
 
         if (!coachAvailabilityService.IsCoachAvailableForCourse(coach, this, allCourses))
         {
-            throw new InvalidOperationException("Deze coach is niet beschikbaar op de ingeplande momenten van deze cursus.");
+            throw new InvalidOperationException("This coach is unavailable for this course.");
         }
         AssignedCoach = coach;
         Status = CourseStatus.Finalized;

@@ -30,30 +30,38 @@
     </dl>
 </div>
 
-<h4>Skills</h4>
 @if (Model.Skills.Any())
 {
-    <ul>
-        @foreach (var skill in Model.Skills)
+    <div id="skills-container">
+        @for (int i = 0; i < Model.Skills.Count; i++)
         {
-            <li>@skill</li>
+            <div class="row skill-row mb-2 align-items-center">
+                <dt class="col-sm-2">Skill @((i + 1)):</dt>
+                <dd class="col-sm-10">@Model.Skills[i]</dd>
+            </div>
         }
-    </ul>
+    </div>
 }
 else
 {
     <p>This coach does not have skills.</p>
 }
 
-<h4>Assigned courses</h4>
 @if (Model.Courses.Any())
 {
-    <ul>
-        @foreach (var course in Model.Courses)
-        {
-            <li><a asp-controller="Courses" asp-action="Details" asp-route-id="@course.Id">@course.Name</a></li>
-        }
-    </ul>
+    <div id="assigned-courses-container">
+        <dl class="row">
+            @for (int i = 0; i < Model.Courses.Count; i++)
+            {
+                <dt class="col-sm-2">Course @((i + 1)):</dt>
+                <dd class="col-sm-10">
+                    <a asp-controller="Courses" asp-action="Details" asp-route-id="@Model.Courses[i].Id">
+                        @Model.Courses[i].Name
+                    </a>
+                </dd>
+            }
+        </dl>
+    </div>
 }
 else
 {

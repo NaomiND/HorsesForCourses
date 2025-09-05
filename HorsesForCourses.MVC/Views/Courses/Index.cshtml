@@ -28,26 +28,23 @@
 
     <thead>
         <tr>
+            <th>Id</th>
             <th>Name</th>
             <th>Start date</th>
             <th>End date</th>
-            <th>Status</th>
-            <th>Actions</th>
+            <th>Details</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var course in Model.Items)
         {
             <tr>
+                <td>@course.Id</td>
                 <td>@course.Name</td>
                 <td>@course.StartDate.ToString()</td>
-                @* course.PlanningPeriod.ToString("yyyy-MM-dd") *@
                 <td>@course.EndDate.ToString()</td>
-                <td>@course.Status</td>
                 <td>
                     <a asp-action="Details" asp-route-id="@course.Id" class="btn btn-info btn-sm">Details</a>
-                    <a asp-action="EditSkills" asp-route-id="@course.Id" class="btn btn-secondary btn-sm">Edit
-                        skills</a>
                 </td>
             </tr>
         }
@@ -61,8 +58,7 @@
         {
             <li class="page-item">
                 <a class="page-link" asp-action="Index" asp-route-page="@(Model.PageNumber - 1)" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span> Previous
-                </a>
+                    <span aria-hidden="true">&laquo;</span> Previous</a>
             </li>
         }
 

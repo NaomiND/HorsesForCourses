@@ -24,14 +24,13 @@
 </p>
 
 <table class="table table-striped">
-
     <thead>
         <tr>
             <th>Id</th>
             <th>Name</th>
             <th>Email</th>
             <th># of assigned courses</th>
-            <th>Actions</th>
+            <th>Details</th>
         </tr>
     </thead>
     <tbody>
@@ -44,8 +43,6 @@
                 <td>@coach.NumberOfCoursesAssignedTo</td>
                 <td>
                     <a asp-action="Details" asp-route-id="@coach.Id" class="btn btn-info btn-sm">Details</a>
-                    <a asp-action="EditSkillsCourse" asp-route-id="@coach.Id" class="btn btn-secondary btn-sm">Edit
-                        skills</a>
                 </td>
             </tr>
         }

@@ -41,30 +41,46 @@
         <dt class="col-sm-2">Until:</dt>
         <dd class="col-sm-10">@Model.EndDate</dd>
 
-        <dt class="col-sm-2">Day(s)</dt>
-        <dd class="col-sm-10">help</dd>
+        <div id="timeslots-container">
+            @for (int i = 0; i < Model.TimeSlots.Count; i++)
+            {
+                <div class="row timeslot-row mb-2 align-items-center">
+                    <dt class="col-sm-2">Day:</dt>
+                    <dd class="col-sm-10">@Model.TimeSlots[i].Day</dd>
 
-        <dt class="col-sm-2">Timeslot:</dt>
-        <dd class="col-sm-10">@Model.ScheduledTimeSlots</dd>
+                </div>
+                <div class="row timeslot-row mb-2 align-items-center">
+                    <dt class="col-sm-2">Start time:</dt>
+                    <dd class="col-sm-10">@Model.TimeSlots[i].Start</dd>
+                </div>
+                <div class="row timeslot-row mb-2 align-items-center">
+                    <dt class="col-sm-2">End time:</dt>
+                    <dd class="col-sm-10">@Model.TimeSlots[i].End</dd>
+                </div>
+            }
+        </div>
 
         <dt class="col-sm-2">Assigned coach(es):</dt>
         <dd class="col-sm-10">todo</dd>
+
     </dl>
 </div>
 
-<h4>Skills</h4>
 @if (Model.Skills.Any())
 {
-    <ul>
-        @foreach (var skill in Model.Skills)
+    <div id="skills-container">
+        @for (int i = 0; i < Model.Skills.Count; i++)
         {
-            <li>@skill</li>
+            <div class="row skill-row mb-2 align-items-center">
+                <dt class="col-sm-2">Skill @((i + 1)):</dt>
+                <dd class="col-sm-10">@Model.Skills[i]</dd>
+            </div>
         }
-    </ul>
+    </div>
 }
 else
 {
-    <p>This course does not have skillrequirements yet.</p>
+    <p>This course does not have skill requirements yet.</p>
 }
 
 @if (Model.Status == "Draft")
