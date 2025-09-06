@@ -3,6 +3,7 @@ using HorsesForCourses.Application.dtos;
 using HorsesForCourses.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using HorsesForCourses.Core;
+using HorsesForCourses.MVC.ViewModels;
 
 namespace HorsesForCourses.MVC.CourseController
 {
@@ -63,7 +64,7 @@ namespace HorsesForCourses.MVC.CourseController
                 await _courseRepository.AddAsync(course);
                 await _courseRepository.SaveChangesAsync();
 
-                TempData["SuccessMessage"] = "Cursus is succesvol aangemaakt.";
+                TempData["SuccessMessage"] = "Course registered.";
                 return RedirectToAction(nameof(Index));
             }
             catch (ArgumentException ex)
@@ -73,7 +74,7 @@ namespace HorsesForCourses.MVC.CourseController
             }
             catch (FormatException)
             {
-                ModelState.AddModelError(string.Empty, "Ongeldig formaat. Gebruik jjjj-mm-dd.");
+                ModelState.AddModelError(string.Empty, "Invalid format.");
                 return View(dto);
             }
         }
@@ -120,7 +121,7 @@ namespace HorsesForCourses.MVC.CourseController
 
                 courseToUpdate.UpdateSkills(skillsList);  // Deze methode kan een exception gooien vanuit de domeinlaag
                 await _courseRepository.SaveChangesAsync();
-                TempData["SuccessMessage"] = "Skills zijn succesvol bijgewerkt.";  //UX-Polish
+                TempData["SuccessMessage"] = "Skills updated.";  //UX-Polish
                 return RedirectToAction(nameof(Details), new { id = dto.Id });
             }
 
@@ -185,7 +186,7 @@ namespace HorsesForCourses.MVC.CourseController
                 }
 
                 await _courseRepository.SaveChangesAsync();
-                TempData["SuccessMessage"] = "Lesmomenten zijn succesvol bijgewerkt.";
+                TempData["SuccessMessage"] = "Timeslots updated.";
                 return RedirectToAction(nameof(Details), new { id = id });
             }
             catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
@@ -207,19 +208,79 @@ namespace HorsesForCourses.MVC.CourseController
             {
                 course.Confirm(); // Deze methode kan een exception gooien
                 await _courseRepository.SaveChangesAsync();
-                TempData["SuccessMessage"] = $"Cursus '{course.Name}' is succesvol bevestigd.";
+                TempData["SuccessMessage"] = $"Course '{course.Name}' confirmed.";
             }
             catch (InvalidOperationException ex)
             {
-                TempData["ErrorMessage"] = $"Fout bij bevestigen: {ex.Message}";
+                TempData["ErrorMessage"] = $"Error during confirmation: {ex.Message}";
             }
 
             return RedirectToAction(nameof(Details), new { id = id });
         }
+
+        [HttpGet("assigncoach/{id}")]
+        public async Task<IActionResult> AssignCoach(int id)
+        {
+            var course = await _courseRepository.GetByIdAsync(id);
+            if (course == null)
+                return NotFound();
+
+            var coaches = await _coachRepository.GetAllAsync();
+
+            var dto = new AssignCoachDTO
+            {
+                CourseId = course.Id,
+                AvailableCoaches = coaches.Select(c => new ListCoaches
+                {
+                    Id = c.Id,
+
+                }).ToList()
+            };
+
+            ViewBag.CourseName = course.Name;
+            return View(dto);
+        }
+
+        [HttpPost("assigncoach/{id}")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AssignCoach(int id, AssignCoachDTO dto)
+        {
+            if (id != dto.CourseId)
+                return BadRequest();
+
+            var course = await _courseRepository.GetByIdAsync(id);
+            if (course == null)
+                return NotFound();
+
+            var coach = await _coachRepository.GetByIdAsync(dto.CoachId);
+            if (coach == null)
+            {
+                ModelState.AddModelError("CoachId", "Coach not found.");
+                return View(dto);
+            }
+
+            try
+            {
+                course.AssignCoach(coach);  // Zorg dat deze domeinmethode bestaat
+                await _courseRepository.SaveChangesAsync();
+
+                TempData["SuccessMessage"] = $"Coach '{coach.Name}' assigned to course.";
+                return RedirectToAction(nameof(Details), new { id = course.Id });
+            }
+            catch (InvalidOperationException ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+                // Herlaad opnieuw de lijst van coaches bij fout
+                var coaches = await _coachRepository.GetAllAsync();
+                dto.AvailableCoaches = coaches.Select(c => new ListCoaches
+                {
+                    Id = c.Id,
+                    // Name = c.Name
+                }).ToList();
+
+                ViewBag.CourseName = course.Name;
+                return View(dto);
+            }
+        }
     }
-
-
-
-
-
 }

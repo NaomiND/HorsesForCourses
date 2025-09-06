@@ -60,8 +60,7 @@
             }
         </div>
 
-        <dt class="col-sm-2">Assigned coach(es):</dt>
-        <dd class="col-sm-10">todo</dd>
+
 
     </dl>
 </div>
@@ -83,21 +82,39 @@ else
     <p>This course does not have skill requirements yet.</p>
 }
 
-@if (Model.Status == "Draft")
+@if (Model.Coach != null)
 {
-    <form asp-action="Confirm" asp-route-id="@Model.Id" method="post" class="d-inline">
-        @Html.AntiForgeryToken()
-        <button type="submit" class="btn btn-success">Confirm Course</button>
-    </form>
+    <div id="assigned-coaches-container">
+        <dl class="row">
+            <dt class="col-sm-2">Assigned coach:</dt>
+            <dd class="col-sm-10">
+                <a asp-controller="Coaches" asp-action="Details" asp-route-id="@Model.Coach.Id">
+                    @Model.Coach.Name
+                </a>
+            </dd>
+        </dl>
+    </div>
+}
+else
+{
+    <em>No coach assigned.</em>
 }
 
-@* todo
-<h4>Assigned coach(es)</h4>
- @if (Model.Courses.Any())    
-
-*@
 
 <div>
+    @if (Model.Status == "Draft")
+    {
+        <form asp-action="Confirm" asp-route-id="@Model.Id" method="post" class="d-inline">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="btn btn-success">Confirm Course</button>
+        </form>
+    }
+
+    @if (Model.Status == "Confirmed" && Model.Coach == null)
+    {
+        <a asp-action="AssignCoach" asp-route-id="@Model.Id" class="btn btn-success btn-sm">Assign Coach</a>
+    }
+
     <a asp-action="EditSkills" asp-route-id="@Model.Id" class="btn btn-warning btn-sm">Edit skills</a>
     <a asp-action="EditTimeSlots" asp-route-id="@Model.Id" class="btn btn-warning btn-sm">Edit timeslot</a>
     <a asp-action="Index" class="btn btn-secondary btn-sm">Back to summary</a>
