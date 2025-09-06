@@ -16,18 +16,23 @@ public class AppDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        var coachBuilder = modelBuilder.Entity<Coach>();                            //coach mapping
+        var coachBuilder = modelBuilder.Entity<Coach>();                                //coach mapping
         coachBuilder.HasKey(c => c.Id);
         coachBuilder.Property(c => c.Id).ValueGeneratedOnAdd();
 
-        coachBuilder.OwnsOne(c => c.Name, namebuilder =>                            // Value Object: FullName
+        coachBuilder.OwnsOne(c => c.Name, namebuilder =>                                // Value Object: FullName
         {
-            namebuilder.Property(n => n.FirstName).HasColumnName("Firstname").IsRequired().HasMaxLength(100);
-            namebuilder.Property(n => n.LastName).HasColumnName("Lastname").IsRequired().HasMaxLength(100);
+            namebuilder.Property(n => n.FirstName).HasColumnName("Firstname").IsRequired().HasMaxLength(50);
+            namebuilder.Property(n => n.LastName).HasColumnName("Lastname").IsRequired().HasMaxLength(50);
         });
 
-        coachBuilder.Property(c => c.Email).HasConversion(email => email.Value, value => EmailAddress.Create(value)).HasColumnName("Email").IsRequired().HasMaxLength(200);   // EmailAddress als string opslaan
-        coachBuilder.HasIndex(c => c.Email).IsUnique();                             // Unieke index op Email
+        coachBuilder.Property(c => c.Email)
+                    .HasConversion(email => email.Value, value => EmailAddress.Create(value))   //E-mail als string opslaan
+                    .HasColumnName("Email")
+                    .IsRequired()
+                    .HasMaxLength(100);
+        coachBuilder.HasIndex(c => c.Email)
+                    .IsUnique();                                                        // Unieke index op Email
 
         coachBuilder
             .Property<List<string>>("skills")

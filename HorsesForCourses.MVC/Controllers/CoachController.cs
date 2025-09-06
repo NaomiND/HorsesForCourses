@@ -52,9 +52,6 @@ namespace HorsesForCourses.MVC.CoachController
             {
                 try
                 {
-                    if (!ModelState.IsValid)
-                        return View(dto);
-
                     var coach = new Coach(FullName.From(dto.Name), EmailAddress.Create(dto.Email));
                     await _coachRepository.AddAsync(coach);
                     await _coachRepository.SaveChangesAsync();
@@ -64,7 +61,7 @@ namespace HorsesForCourses.MVC.CoachController
                 }
                 catch (ArgumentException ex)
                 {
-                    ModelState.AddModelError(string.Empty, ex.Message);
+                    ModelState.AddModelError(nameof(dto.Email), ex.Message);
                 }
             }
             return View(dto);

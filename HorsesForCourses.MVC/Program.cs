@@ -2,10 +2,6 @@ using HorsesForCourses.Core;
 using HorsesForCourses.Infrastructure;
 using HorsesForCourses.Application;
 using Microsoft.EntityFrameworkCore;
-using QuickPulse.Show;
-using Microsoft.AspNetCore.Mvc;
-using HorsesForCourses.Application.common;
-using HorsesForCourses.MVC;
 
 var builder = WebApplication.CreateBuilder(args);
 

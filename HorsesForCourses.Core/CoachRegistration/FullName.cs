@@ -17,12 +17,12 @@ public record FullName
     public static FullName From(string fullName)
     {
         if (string.IsNullOrWhiteSpace(fullName))
-            throw new ArgumentException("Full name required.", nameof(fullName));
+            throw new ArgumentException("Full name required.");
 
         var parts = fullName.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
         if (parts.Length < 2)
-            throw new ArgumentException("Name consist of first name and last name.", nameof(fullName));
+            throw new ArgumentException("Name consist of first name and last name.");
 
         return new FullName(parts[0], string.Join(" ", parts.Skip(1)));         //vb "Ine Van Den Broeck" 
     }

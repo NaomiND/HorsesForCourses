@@ -10,7 +10,7 @@ public record EmailAddress
     public static EmailAddress Create(string value)
     {
         if (!IsValidEmail(value))
-            throw new ArgumentException("Invalid e-mailaddress", nameof(value));
+            throw new ArgumentException("Invalid e-mailaddress");
 
         return new EmailAddress(value);
     }
