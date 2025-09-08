@@ -1,11 +1,10 @@
-## ToDo
-- [X] Story 1: Project & DI sanity
-- [X] Story 2: Coaches *Index* (lijst) (First Steps)
-- [X] Story 3: *Register Coach* (GET/POST, validatie, anti-forgery)
-- [X] Story 4: *Coach Detail* (read-only)
-- [X] Story 5: *Update Skills* (GET/POST)
-- [X] Story 6: *Paging op Index*
-- [X] Story 7: *Foutafhandeling & UX-polish*
+## Authentication / Authorization
+- [ ] Anonieme gebruiker kan **Index**-pagina zien
+- [ ] Anonieme gebruiker krijgt geen toegang tot de methodes van de CoachesController (route: **/Coaches**)
+- [ ] Anonieme gebruiker kan wel **/Coaches/Index** openen
+- [ ] Ingelogde gebruiker krijgt toegang tot alle methodes van de CoachesController
+
+
 # geen prioriteit
 - [X] Fout bij aanmaken coach: Naam moet een voor- en achternaam bevatten. (Parameter 'fullName') : parametertekst wil ik weg
 - [] Story 5: comma seperated skills aan te passen die userfriendly is. zie Abigail : met aparte modelview, en hierbij kan partial view gebruikt worden

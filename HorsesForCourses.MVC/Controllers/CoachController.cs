@@ -3,10 +3,12 @@ using HorsesForCourses.Application.dtos;
 using HorsesForCourses.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using HorsesForCourses.Core;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HorsesForCourses.MVC.CoachController
 {
     [Controller]
+    // [Authorize]                                     //authorization
     [Route("coaches")]
     public class CoachesController : Controller
     {
@@ -19,6 +21,7 @@ namespace HorsesForCourses.MVC.CoachController
             _courseRepository = courseRepository;
         }
 
+        // [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> Index(int page = 1, int pageSize = 10)
         {
@@ -66,6 +69,23 @@ namespace HorsesForCourses.MVC.CoachController
             }
             return View(dto);
         }
+
+
+        // [HttpPost("create")]
+        // [ValidateAntiForgeryToken]
+        // public async Task<IActionResult> Create([Bind("Name,Email")] CreateCoachDTO dto)
+        // {
+        //     if (ModelState.IsValid)
+        //     {
+        //         var coach = new Coach(FullName.From(dto.Name), EmailAddress.Create(dto.Email));
+        //         await _coachRepository.AddAsync(coach);
+        //         await _coachRepository.SaveChangesAsync();
+
+        //         TempData["SuccessMessage"] = "Coach registered."; // UX polish
+        //         return RedirectToAction(nameof(Index));
+        //     }
+        //     return View(dto);
+        // }
 
         [HttpGet("editskills/{id}")]
         public async Task<IActionResult> EditSkills(int id)

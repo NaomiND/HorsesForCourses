@@ -22,6 +22,11 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
     });
 
+//Cookie auth
+builder.Services.AddAuthentication("Cookies")
+    .AddCookie("Cookies", o => { o.LoginPath = "/Account/Login"; o.LogoutPath = "/Account/Logout"; });
+builder.Services.AddAuthorization();
+
 // builder.Services.AddScoped<DomainExceptionFilter>();
 // builder.Services.AddControllersWithViews(options =>
 // {
@@ -41,6 +46,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",

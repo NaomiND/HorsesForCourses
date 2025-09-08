@@ -14,7 +14,6 @@ public record EmailAddress
 
         return new EmailAddress(value);
     }
-
     public override string ToString() => Value;
 }
 
