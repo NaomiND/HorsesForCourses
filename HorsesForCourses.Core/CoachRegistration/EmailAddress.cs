@@ -11,16 +11,16 @@ public record EmailAddress
     {
         if (!IsValidEmail(value))
             throw new ArgumentException("Invalid e-mailaddress");
-
         return new EmailAddress(value);
     }
     public override string ToString() => Value;
+
 }
 
 public static class EmailHelper
 {
     public static bool IsValidEmail(string email) =>
-        !string.IsNullOrWhiteSpace(email) &&
-        MailAddress.TryCreate(email, out var addr) &&
-        addr.Address == email;
+    !string.IsNullOrWhiteSpace(email) &&
+    MailAddress.TryCreate(email, out var addr) &&
+    addr.Address == email;
 }

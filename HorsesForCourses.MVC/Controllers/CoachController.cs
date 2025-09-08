@@ -4,6 +4,7 @@ using HorsesForCourses.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using HorsesForCourses.Core;
 using Microsoft.AspNetCore.Authorization;
+using System.Linq.Expressions;
 
 namespace HorsesForCourses.MVC.CoachController
 {
@@ -41,7 +42,7 @@ namespace HorsesForCourses.MVC.CoachController
             return View(coachDetailDto);
         }
 
-        [HttpGet("create")]     // je hebt get nodig om een post te maken (formulier aanvragen dan invullen en posten)
+        [HttpGet("create")]
         public IActionResult Create()
         {
             return View();
@@ -49,43 +50,24 @@ namespace HorsesForCourses.MVC.CoachController
 
         [HttpPost("create")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Email")] CreateCoachDTO dto)
+        public async Task<IActionResult> Create([Bind("Name, Email")] CreateCoachDTO dto)
         {
             if (ModelState.IsValid)
-            {
                 try
                 {
                     var coach = new Coach(FullName.From(dto.Name), EmailAddress.Create(dto.Email));
                     await _coachRepository.AddAsync(coach);
                     await _coachRepository.SaveChangesAsync();
 
-                    TempData["SuccessMessage"] = "Coach registered."; //toegevoegd voor UX-Polish
+                    TempData["SuccessMessage"] = "Coach registered.";
                     return RedirectToAction(nameof(Index));
                 }
                 catch (ArgumentException ex)
                 {
                     ModelState.AddModelError(nameof(dto.Email), ex.Message);
                 }
-            }
             return View(dto);
         }
-
-
-        // [HttpPost("create")]
-        // [ValidateAntiForgeryToken]
-        // public async Task<IActionResult> Create([Bind("Name,Email")] CreateCoachDTO dto)
-        // {
-        //     if (ModelState.IsValid)
-        //     {
-        //         var coach = new Coach(FullName.From(dto.Name), EmailAddress.Create(dto.Email));
-        //         await _coachRepository.AddAsync(coach);
-        //         await _coachRepository.SaveChangesAsync();
-
-        //         TempData["SuccessMessage"] = "Coach registered."; // UX polish
-        //         return RedirectToAction(nameof(Index));
-        //     }
-        //     return View(dto);
-        // }
 
         [HttpGet("editskills/{id}")]
         public async Task<IActionResult> EditSkills(int id)

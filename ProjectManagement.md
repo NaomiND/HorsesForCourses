@@ -1,9 +1,41 @@
+coach (IcheckEmail, string Email) die wordt aangeroepen op je domein om ook te valideren op is Unique
 ## Authentication / Authorization
-- [ ] Anonieme gebruiker kan **Index**-pagina zien
-- [ ] Anonieme gebruiker krijgt geen toegang tot de methodes van de CoachesController (route: **/Coaches**)
-- [ ] Anonieme gebruiker kan wel **/Coaches/Index** openen
-- [ ] Ingelogde gebruiker krijgt toegang tot alle methodes van de CoachesController
+# setup
+- [] Anonieme gebruiker kan **Index**-pagina zien
+- [] Anonieme gebruiker krijgt geen toegang tot de methodes van de CoachesController (route: **/Coaches**)
+- [] Anonieme gebruiker kan wel **/Coaches/Index** openen
+- [] Ingelogde gebruiker krijgt toegang tot alle methodes van de CoachesController
 
+# registratie
+- [] Er is een pagina met een registratieformulier (naam, e-mail, wachtwoord, wachtwoordbevestiging).
+- [] Bij foutieve invoer (lege velden, ongeldig e-mailadres, mismatch wachtwoorden) worden duidelijke validatiefouten getoond.
+- [] Na succesvolle registratie wordt de gebruiker automatisch ingelogd en doorgestuurd naar de startpagina.
+- [] Er wordt gecontroleerd of het e-mailadres al bestaat; in dat geval krijgt de gebruiker een foutmelding.
+
+# encrypt pasword
+- [] Het `User` wachtwoord is ge-encrypteerd opgeslagen in de database
+
+# Authenticated enkel voor Geregistreerde Gebruikers
+- [] De login pagina is aangepast en vraagt nu ook naar wachtwoord.
+- [] De controller actie gebruikt `IPasswordHasher` en een Lookup/Query/RepositoryMethod om wachtwoord te confirmeren
+
+# optioneel: data delete
+- [] Gebruiker kan **Delete My Account** uitvoeren => data & account worden verwijderd
+
+# optioneel: data download
+- [] Gebruiker kan **Download My Data** uitvoeren => JSON met eigen gegevens
+
+# registreer als coach
+- [] Registreer pagina heeft optie *Ik ben coach*.
+- [] Indien de gebruiker deze optie aanvinkt wordt er ook een Coach aangemaakt.
+- [] Coach Skills kunnen enkel gewijzigd worden door de gebruiker die bij registratie deze specifieke coach heeft aangemaakt.
+
+# admin
+- [] Enkel *Admin Account* heeft toegang tot `Coaches\RegisterCoach`.
+- [] Enkel *Admin Account* kan wijzigingen aanbrengen aan `Courses` (inclusief aanmaken, verwijderen, ...).
+
+# 403
+- [] verwerk error 403
 
 # geen prioriteit
 - [X] Fout bij aanmaken coach: Naam moet een voor- en achternaam bevatten. (Parameter 'fullName') : parametertekst wil ik weg
@@ -131,7 +163,6 @@ Voorzie foutmeldingen bij invalidaties (bv. 422 BadRequest met uitleg)
 ### 🧩 POST /courses/{id}/assign-coach  OK
 **Als** cursusverantwoordelijke **Wil ik** een coach kunnen toewijzen aan een bevestigde cursus
 **Zodat** de cursus daadwerkelijk kan doorgaan met een geschikte coach
-
 
 ### 🧩 Get /coaches         OK   
 **Als** administrator **Wil ik** een lijst van alle coaches kunnen opvragen
