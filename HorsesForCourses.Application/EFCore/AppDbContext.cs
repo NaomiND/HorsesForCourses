@@ -21,6 +21,9 @@ public class AppDbContext : DbContext
         coachBuilder.HasKey(c => c.Id);
         coachBuilder.Property(c => c.Id).ValueGeneratedOnAdd();
 
+        coachBuilder.Property(c => c.UserId)
+                    .IsRequired(false);                                                 // Maakt expliciet dat deze foreign key optioneel is
+
         coachBuilder.OwnsOne(c => c.Name, namebuilder =>                                // Value Object: FullName
         {
             namebuilder.Property(n => n.FirstName).HasColumnName("Firstname").IsRequired().HasMaxLength(50);
@@ -130,6 +133,9 @@ public class AppDbContext : DbContext
         // )));
 
         var userBuilder = modelBuilder.Entity<User>();
+        // coachBuilder.HasKey(u => u.Id);
+        // coachBuilder.Property(u => u.Id).ValueGeneratedOnAdd();
+
         userBuilder.OwnsOne(u => u.Name, nameBuilder =>
         {
             nameBuilder.Property(n => n.FirstName).HasColumnName("Firstname").IsRequired().HasMaxLength(50);

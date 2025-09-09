@@ -13,13 +13,16 @@ public class CreateCoachMVC
 {
     private readonly Mock<ICoachRepository> coachRepository;
     private readonly Mock<ICourseRepository> courseRepository;
+    private readonly Mock<IUserRepository> userRepository;
     private readonly CoachesController coachController;
 
     public CreateCoachMVC()
     {
         coachRepository = new Mock<ICoachRepository>();
         courseRepository = new Mock<ICourseRepository>();
-        coachController = new(coachRepository.Object, courseRepository.Object);
+        userRepository = new Mock<IUserRepository>();
+
+        coachController = new(coachRepository.Object, courseRepository.Object, userRepository.Object);
     }
 
     [Fact]

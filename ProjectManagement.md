@@ -1,6 +1,7 @@
 coach (IcheckEmail, string Email) die wordt aangeroepen op je domein om ook te valideren op is Unique
 ## Authentication / Authorization
 - [] voorlopig kan ik met elk e-mailadres inloggen
+- [] In MVC-actions kun je expliciet Forbid() teruggeven. Dit op het laatste toevoegen als rollen duidelijk zijn. 
 # setup
 - [X] Anonieme gebruiker kan **Index**-pagina zien
 - [X] Anonieme gebruiker krijgt geen toegang tot de methodes van de CoachesController (route: **/Coaches**)
@@ -36,7 +37,7 @@ coach (IcheckEmail, string Email) die wordt aangeroepen op je domein om ook te v
 - [] Enkel *Admin Account* kan wijzigingen aanbrengen aan `Courses` (inclusief aanmaken, verwijderen, ...).
 
 # 403
-- [] verwerk error 403
+- [X] verwerk error 403
 
 # geen prioriteit
 - [X] Fout bij aanmaken coach: Naam moet een voor- en achternaam bevatten. (Parameter 'fullName') : parametertekst wil ik weg

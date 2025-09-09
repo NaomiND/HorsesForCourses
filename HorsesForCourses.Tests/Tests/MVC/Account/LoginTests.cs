@@ -19,7 +19,7 @@ public class LoginTests
         helper = new ControllerTestHelper();
 
         controller = helper.SetupController(
-            new AccountController(helper.UserRepositoryMock.Object, helper.PasswordHasherMock.Object)
+            new AccountController(helper.UserRepositoryMock.Object, helper.PasswordHasherMock.Object, helper.CoachRepositoryMock.Object)
         );
     }
 

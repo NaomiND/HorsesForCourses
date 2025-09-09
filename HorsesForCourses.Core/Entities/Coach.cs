@@ -5,6 +5,7 @@ public class Coach
     public int Id { get; private set; }                         //Id handmatig instellen
     public FullName Name { get; }                               //validation in class FullName
     public EmailAddress Email { get; }                          //validation in class EmailAddress
+    public int? UserId { get; private set; }                    //relatie tss user en coach
     private List<string> skills = new();                        //lijst van skills (collection), geen readonly hier(ef kan die niet vullen)
     public IReadOnlyCollection<string> Skills => skills.AsReadOnly();
     private readonly List<Course> courses = new();              //lijst van courses
@@ -24,6 +25,15 @@ public class Coach
         var emailAddress = EmailAddress.Create(email);            // string → EmailAddress
         var fullName = FullName.From(name);                     // string → FullName
         return new Coach(fullName, emailAddress);
+    }
+
+    public void AssignUser(int userId)
+    {
+        if (UserId.HasValue)
+        {
+            throw new InvalidOperationException("This coach is already assigned to a user.");
+        }
+        UserId = userId;
     }
 
     public void AddSkill(string skill)

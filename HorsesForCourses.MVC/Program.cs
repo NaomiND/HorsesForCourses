@@ -2,7 +2,7 @@ using HorsesForCourses.Core;
 using HorsesForCourses.Infrastructure;
 using HorsesForCourses.Application;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,8 +25,15 @@ builder.Services.AddControllers()
     });
 
 //Cookie auth
-builder.Services.AddAuthentication("Cookies")
-    .AddCookie("Cookies", o => { o.LoginPath = "/Account/Login"; o.LogoutPath = "/Account/Logout"; });
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie("Cookies", o =>
+    {
+        o.LoginPath = "/Account/Login";
+        o.LogoutPath = "/Account/Logout";
+        o.AccessDeniedPath = "/Account/AccessDenied";   //bij 403
+    });
+
+
 builder.Services.AddAuthorization();
 
 builder.Services.AddScoped<IPasswordHasher, Pbkdf2PasswordHasher>();

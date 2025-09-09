@@ -16,9 +16,10 @@ namespace HorsesForCourses.Tests;
 public class ControllerTestHelper
 {
     public Mock<IUserRepository> UserRepositoryMock { get; }
+    public Mock<ICoachRepository> CoachRepositoryMock { get; }
     public Mock<IPasswordHasher> PasswordHasherMock { get; }
     public Mock<IAuthenticationService> AuthServiceMock { get; }
-    public T SetupController<T>(T controller) where T : Controller
+    public T SetupController<T>(T controller, string userEmail = "test@example.com") where T : Controller
     {
         var tempDataFactoryMock = new Mock<ITempDataDictionaryFactory>();
         var tempDataProviderMock = new Mock<ITempDataProvider>();
@@ -27,16 +28,30 @@ public class ControllerTestHelper
 
         var serviceProvider = new ServiceCollection()
             .AddSingleton(AuthServiceMock.Object)
-            .AddSingleton<ITempDataDictionaryFactory>(tempDataFactoryMock.Object)
-            .AddSingleton<ITempDataProvider>(tempDataProviderMock.Object)
+            // .AddSingleton<ITempDataDictionaryFactory>(tempDataFactoryMock.Object)
+            // .AddSingleton<ITempDataProvider>(tempDataProviderMock.Object)
             .BuildServiceProvider();
 
         httpContext.RequestServices = serviceProvider;
+
+        // Simuleer een ingelogde gebruiker
+        if (!string.IsNullOrEmpty(userEmail))
+        {
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+            {
+                new Claim(ClaimTypes.Name, userEmail),
+            }, "mock"));
+            httpContext.User = user;
+        }
 
         controller.ControllerContext = new ControllerContext
         {
             HttpContext = httpContext
         };
+
+        // Initialiseer TempData
+        var tempData = new TempDataDictionary(httpContext, tempDataProviderMock.Object);
+        controller.TempData = tempData;
 
         var urlHelperMock = new Mock<IUrlHelper>();
         urlHelperMock
@@ -51,6 +66,7 @@ public class ControllerTestHelper
     public ControllerTestHelper()
     {
         UserRepositoryMock = new Mock<IUserRepository>();
+        CoachRepositoryMock = new Mock<ICoachRepository>();
         PasswordHasherMock = new Mock<IPasswordHasher>();
         AuthServiceMock = new Mock<IAuthenticationService>();
 

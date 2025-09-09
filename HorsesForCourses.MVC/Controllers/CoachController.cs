@@ -4,6 +4,7 @@ using HorsesForCourses.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using HorsesForCourses.Core;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace HorsesForCourses.MVC.CoachController
 {
@@ -14,11 +15,13 @@ namespace HorsesForCourses.MVC.CoachController
     {
         private readonly ICoachRepository _coachRepository;
         private readonly ICourseRepository _courseRepository;
+        private readonly IUserRepository _userRepository;
 
-        public CoachesController(ICoachRepository coachrepository, ICourseRepository courseRepository)
+        public CoachesController(ICoachRepository coachrepository, ICourseRepository courseRepository, IUserRepository userRepository)
         {
             _coachRepository = coachrepository;
             _courseRepository = courseRepository;
+            _userRepository = userRepository;
         }
 
         [AllowAnonymous]
@@ -76,6 +79,15 @@ namespace HorsesForCourses.MVC.CoachController
             {
                 return NotFound();
             }
+            // --- authorization check ---
+            var userEmail = User.Identity.Name;
+            var currentUser = await _userRepository.GetByEmailAsync(userEmail);
+
+            if (currentUser == null || coach.UserId != currentUser.Id)
+            {
+                return Forbid(); // Geeft 403
+            }
+
             var dto = new UpdateCoachSkillsDTO
             {
                 Id = coach.Id,
@@ -95,6 +107,15 @@ namespace HorsesForCourses.MVC.CoachController
             var coachToUpdate = await _coachRepository.GetByIdAsync(id);
             if (coachToUpdate == null)
                 return NotFound();
+
+            // --- authorization check ---
+            var userEmail = User.Identity.Name;
+            var currentUser = await _userRepository.GetByEmailAsync(userEmail);
+
+            if (currentUser == null || coachToUpdate.UserId != currentUser.Id)
+            {
+                return Forbid(); // Geeft 403 Toegang Geweigerd
+            }
 
             if (!ModelState.IsValid)
             {

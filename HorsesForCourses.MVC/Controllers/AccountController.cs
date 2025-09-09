@@ -16,11 +16,13 @@ public class AccountController : Controller
 {
     private readonly IUserRepository _userRepository;
     private readonly IPasswordHasher _passwordHasher;
+    private readonly ICoachRepository _coachRepository;
 
-    public AccountController(IUserRepository userRepository, IPasswordHasher passwordHasher)
+    public AccountController(IUserRepository userRepository, IPasswordHasher passwordHasher, ICoachRepository coachRepository)
     {
         _userRepository = userRepository;
         _passwordHasher = passwordHasher;
+        _coachRepository = coachRepository;
     }
 
     // --- Login/logout actions ---
@@ -110,20 +112,23 @@ public class AccountController : Controller
 
         try
         {
-            // var fullName = FullName.From(model.Name);
-            // var emailAddress = EmailAddress.Create(model.Email);
-            // var passwordHash = _passwordHasher.HashPassword(null, model.Pass);
-
             var user = DomainUser.Create(model.Name, model.Email, model.Pass, _passwordHasher);
-
             await _userRepository.AddAsync(user);
-            await _userRepository.SaveChangesAsync();
+            await _userRepository.SaveChangesAsync();   // Sla user eerst op om een ID te krijgen
 
+            if (model.IsCoach)                          //Als "I am a coach" is aangevinkt, maak ook een Coach aan
+            {
+                var coach = Coach.Create(model.Name, model.Email);
+                coach.AssignUser(user.Id);              // Koppel de nieuwe UserId
+                await _coachRepository.AddAsync(coach);
+                await _coachRepository.SaveChangesAsync();
+            }
             // Sign in en redirect logica 
             var claims = new List<Claim> { new Claim(ClaimTypes.Name, user.Email.Value) };
             var claimsIdentity = new ClaimsIdentity(claims, "Cookies");
             await HttpContext.SignInAsync("Cookies", new ClaimsPrincipal(claimsIdentity));
 
+            TempData["SuccessMessage"] = "New user registered.";
             return RedirectToAction("Index", "Home");
         }
         catch (ArgumentException ex)
@@ -133,6 +138,8 @@ public class AccountController : Controller
         }
     }
 
-
-
+    [AllowAnonymous]
+    [HttpGet("denied")]
+    public IActionResult AccessDenied(string? returnUrl = null)
+            => View(model: returnUrl);
 }
