@@ -128,7 +128,6 @@ public class AccountController : Controller
             var claimsIdentity = new ClaimsIdentity(claims, "Cookies");
             await HttpContext.SignInAsync("Cookies", new ClaimsPrincipal(claimsIdentity));
 
-            TempData["SuccessMessage"] = "New user registered.";
             return RedirectToAction("Index", "Home");
         }
         catch (ArgumentException ex)

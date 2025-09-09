@@ -1,7 +1,9 @@
 coach (IcheckEmail, string Email) die wordt aangeroepen op je domein om ook te valideren op is Unique
 ## Authentication / Authorization
 - [] voorlopig kan ik met elk e-mailadres inloggen
-- [] In MVC-actions kun je expliciet Forbid() teruggeven. Dit op het laatste toevoegen als rollen duidelijk zijn. 
+- [] In MVC-actions kun je expliciet Forbid() teruggeven. Dit op het laatste toevoegen als rollen duidelijk zijn.
+- [] AccessDenied pagina nog niet beschikbaar, wordt wel naar verwezen wanneer ik probeer als coach 1 coach 2 aan te passen. 
+
 # setup
 - [X] Anonieme gebruiker kan **Index**-pagina zien
 - [X] Anonieme gebruiker krijgt geen toegang tot de methodes van de CoachesController (route: **/Coaches**)
@@ -28,9 +30,9 @@ coach (IcheckEmail, string Email) die wordt aangeroepen op je domein om ook te v
 - [] Gebruiker kan **Download My Data** uitvoeren => JSON met eigen gegevens
 
 # registreer als coach
-- [] Registreer pagina heeft optie *Ik ben coach*.
-- [] Indien de gebruiker deze optie aanvinkt wordt er ook een Coach aangemaakt.
-- [] Coach Skills kunnen enkel gewijzigd worden door de gebruiker die bij registratie deze specifieke coach heeft aangemaakt.
+- [X] Registreer pagina heeft optie *Ik ben coach*.
+- [X] Indien de gebruiker deze optie aanvinkt wordt er ook een Coach aangemaakt.
+- [X] Coach Skills kunnen enkel gewijzigd worden door de gebruiker die bij registratie deze specifieke coach heeft aangemaakt.
 
 # admin
 - [] Enkel *Admin Account* heeft toegang tot `Coaches\RegisterCoach`.
