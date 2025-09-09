@@ -6,6 +6,7 @@ public class User
     public FullName Name { get; private set; }      //zelfde als coach
     public EmailAddress Email { get; private set; } //zelfde als coach
     public string PasswordHash { get; private set; }
+    public Coach? Coach { get; private set; }
 
     private User(FullName name, EmailAddress email, string passwordHash)
     {

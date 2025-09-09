@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HorsesForCourses.Application.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250909131757_userId")]
-    partial class userId
+    [Migration("20250909143448_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -42,6 +42,9 @@ namespace HorsesForCourses.Application.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("UserId")
                         .IsUnique();
 
                     b.ToTable("Coaches");
@@ -103,6 +106,10 @@ namespace HorsesForCourses.Application.Migrations
 
             modelBuilder.Entity("HorsesForCourses.Core.Coach", b =>
                 {
+                    b.HasOne("HorsesForCourses.Core.User", "User")
+                        .WithOne("Coach")
+                        .HasForeignKey("HorsesForCourses.Core.Coach", "UserId");
+
                     b.OwnsOne("HorsesForCourses.Core.FullName", "Name", b1 =>
                         {
                             b1.Property<int>("CoachId")
@@ -130,6 +137,8 @@ namespace HorsesForCourses.Application.Migrations
 
                     b.Navigation("Name")
                         .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("HorsesForCourses.Core.Course", b =>
@@ -247,6 +256,11 @@ namespace HorsesForCourses.Application.Migrations
             modelBuilder.Entity("HorsesForCourses.Core.Coach", b =>
                 {
                     b.Navigation("Courses");
+                });
+
+            modelBuilder.Entity("HorsesForCourses.Core.User", b =>
+                {
+                    b.Navigation("Coach");
                 });
 #pragma warning restore 612, 618
         }

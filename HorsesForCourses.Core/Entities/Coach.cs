@@ -6,6 +6,7 @@ public class Coach
     public FullName Name { get; }                               //validation in class FullName
     public EmailAddress Email { get; }                          //validation in class EmailAddress
     public int? UserId { get; private set; }                    //relatie tss user en coach
+    public User? User { get; private set; }                     //relatie tss user en coach
     private List<string> skills = new();                        //lijst van skills (collection), geen readonly hier(ef kan die niet vullen)
     public IReadOnlyCollection<string> Skills => skills.AsReadOnly();
     private readonly List<Course> courses = new();              //lijst van courses
