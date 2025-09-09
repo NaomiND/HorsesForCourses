@@ -5,7 +5,7 @@
 namespace HorsesForCourses.Application.Migrations
 {
     /// <inheritdoc />
-    public partial class AddCoachToCourseBidirectionalRelationship : Migration
+    public partial class user : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

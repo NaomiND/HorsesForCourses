@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HorsesForCourses.Application.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250905091327_pogingweekdaysweg")]
-    partial class pogingweekdaysweg
+    [Migration("20250909122102_user")]
+    partial class user
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,7 +28,7 @@ namespace HorsesForCourses.Application.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasMaxLength(200)
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT")
                         .HasColumnName("Email");
 
@@ -74,6 +74,30 @@ namespace HorsesForCourses.Application.Migrations
                     b.ToTable("Courses");
                 });
 
+            modelBuilder.Entity("HorsesForCourses.Core.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT")
+                        .HasColumnName("Email");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.ToTable("Users");
+                });
+
             modelBuilder.Entity("HorsesForCourses.Core.Coach", b =>
                 {
                     b.OwnsOne("HorsesForCourses.Core.FullName", "Name", b1 =>
@@ -83,13 +107,13 @@ namespace HorsesForCourses.Application.Migrations
 
                             b1.Property<string>("FirstName")
                                 .IsRequired()
-                                .HasMaxLength(100)
+                                .HasMaxLength(50)
                                 .HasColumnType("TEXT")
                                 .HasColumnName("Firstname");
 
                             b1.Property<string>("LastName")
                                 .IsRequired()
-                                .HasMaxLength(100)
+                                .HasMaxLength(50)
                                 .HasColumnType("TEXT")
                                 .HasColumnName("Lastname");
 
@@ -108,7 +132,7 @@ namespace HorsesForCourses.Application.Migrations
             modelBuilder.Entity("HorsesForCourses.Core.Course", b =>
                 {
                     b.HasOne("HorsesForCourses.Core.Coach", "AssignedCoach")
-                        .WithMany()
+                        .WithMany("Courses")
                         .HasForeignKey("AssignedCoachId");
 
                     b.OwnsOne("HorsesForCourses.Core.PlanningPeriod", "Period", b1 =>
@@ -184,6 +208,42 @@ namespace HorsesForCourses.Application.Migrations
                         .IsRequired();
 
                     b.Navigation("ScheduledTimeSlots");
+                });
+
+            modelBuilder.Entity("HorsesForCourses.Core.User", b =>
+                {
+                    b.OwnsOne("HorsesForCourses.Core.FullName", "Name", b1 =>
+                        {
+                            b1.Property<int>("UserId")
+                                .HasColumnType("INTEGER");
+
+                            b1.Property<string>("FirstName")
+                                .IsRequired()
+                                .HasMaxLength(50)
+                                .HasColumnType("TEXT")
+                                .HasColumnName("Firstname");
+
+                            b1.Property<string>("LastName")
+                                .IsRequired()
+                                .HasMaxLength(50)
+                                .HasColumnType("TEXT")
+                                .HasColumnName("Lastname");
+
+                            b1.HasKey("UserId");
+
+                            b1.ToTable("Users");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserId");
+                        });
+
+                    b.Navigation("Name")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("HorsesForCourses.Core.Coach", b =>
+                {
+                    b.Navigation("Courses");
                 });
 #pragma warning restore 612, 618
         }

@@ -17,8 +17,8 @@ coach (IcheckEmail, string Email) die wordt aangeroepen op je domein om ook te v
 - [X] Het `User` wachtwoord is ge-encrypteerd opgeslagen in de database
 
 # Authenticated enkel voor Geregistreerde Gebruikers
-- [] De login pagina is aangepast en vraagt nu ook naar wachtwoord.
-- [] De controller actie gebruikt `IPasswordHasher` en een Lookup/Query/RepositoryMethod om wachtwoord te confirmeren
+- [X] De login pagina is aangepast en vraagt nu ook naar wachtwoord.
+- [X] De controller actie gebruikt `IPasswordHasher` en een Lookup/Query/RepositoryMethod om wachtwoord te confirmeren
 
 # optioneel: data delete
 - [] Gebruiker kan **Delete My Account** uitvoeren => data & account worden verwijderd
