@@ -45,7 +45,11 @@ public class RegisterTests
             ConfirmPass = "password123"
         };
 
-        var existingUser = User.Create("Existing User", model.Email, "hashedPassword");
+        var mockHasher = new Mock<IPasswordHasher>();
+        mockHasher.Setup(h => h.Hash(It.IsAny<string>())).Returns("any-hashed-password");
+
+        var existingUser = User.Create("Existing User", model.Email, "any-password", mockHasher.Object);
+
         helper.UserRepositoryMock
             .Setup(r => r.GetByEmailAsync(model.Email))
             .ReturnsAsync(existingUser);
@@ -61,13 +65,7 @@ public class RegisterTests
     [Fact]
     public async Task Register_ReturnsView_WhenPasswordIsEmpty()
     {
-        var model = new RegisterAccountViewModel
-        {
-            Name = "Ine De Wit",
-            Email = "ine@example.com",
-            Pass = "",
-            ConfirmPass = ""
-        };
+        var model = new RegisterAccountViewModel { Pass = "", ConfirmPass = "" };
 
         var result = await controller.Register(model);
 
@@ -80,13 +78,7 @@ public class RegisterTests
     [Fact]
     public async Task Register_ReturnsView_WhenPasswordsDoNotMatch()
     {
-        var model = new RegisterAccountViewModel
-        {
-            Name = "Ine De Wit",
-            Email = "ine@example.com",
-            Pass = "password123",
-            ConfirmPass = "differentPassword"
-        };
+        var model = new RegisterAccountViewModel { Pass = "password123", ConfirmPass = "differentPassword" };
 
         var result = await controller.Register(model);
 
@@ -111,7 +103,7 @@ public class RegisterTests
             .ReturnsAsync((User)null);
 
         helper.PasswordHasherMock
-            .Setup(p => p.HashPassword(null, model.Pass))
+            .Setup(p => p.Hash(model.Pass))
             .Returns("hashedPassword");
 
         var result = await controller.Register(model);

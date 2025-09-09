@@ -9,12 +9,12 @@ coach (IcheckEmail, string Email) die wordt aangeroepen op je domein om ook te v
 
 # registratie
 - [X] Er is een pagina met een registratieformulier (naam, e-mail, wachtwoord, wachtwoordbevestiging).
-- [] Bij foutieve invoer (lege velden, ongeldig e-mailadres, mismatch wachtwoorden) worden duidelijke validatiefouten getoond.(gebruik value objects die ook coach gebruikt)
-- [] Na succesvolle registratie wordt de gebruiker automatisch ingelogd en doorgestuurd naar de startpagina.
+- [X] Bij foutieve invoer (lege velden, ongeldig e-mailadres, mismatch wachtwoorden) worden duidelijke validatiefouten getoond.(gebruik value objects die ook coach gebruikt)
+- [X] Na succesvolle registratie wordt de gebruiker automatisch ingelogd en doorgestuurd naar de startpagina.
 - [X] Er wordt gecontroleerd of het e-mailadres al bestaat; in dat geval krijgt de gebruiker een foutmelding.
 
 # encrypt pasword
-- [] Het `User` wachtwoord is ge-encrypteerd opgeslagen in de database
+- [X] Het `User` wachtwoord is ge-encrypteerd opgeslagen in de database
 
 # Authenticated enkel voor Geregistreerde Gebruikers
 - [] De login pagina is aangepast en vraagt nu ook naar wachtwoord.

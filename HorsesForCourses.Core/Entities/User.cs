@@ -13,15 +13,22 @@ public class User
         Email = email;
         PasswordHash = passwordHash;
     }
+#pragma warning disable CS8618
     private User() { } // Private constructor voor EF Core
-    // Factory method die de validatie van de Value Objects gebruikt
-    public static User Create(string name, string email, string passwordHash)
+#pragma warning restore CS8618
+
+    public static User Create(string name, string email, string plainTextPassword, IPasswordHasher passwordHasher)   //Factory method
     {
         var fullName = FullName.From(name);
         var emailAddress = EmailAddress.Create(email);
 
-        if (string.IsNullOrWhiteSpace(passwordHash))
-            throw new ArgumentException("Password hash cannot be empty.", nameof(passwordHash));
+        if (string.IsNullOrWhiteSpace(plainTextPassword))
+            throw new ArgumentException("Password cannot be empty.", nameof(plainTextPassword));
+
+        if (passwordHasher == null)
+            throw new ArgumentNullException(nameof(passwordHasher));
+
+        var passwordHash = passwordHasher.Hash(plainTextPassword);
 
         return new User(fullName, emailAddress, passwordHash);
     }

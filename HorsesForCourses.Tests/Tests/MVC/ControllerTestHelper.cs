@@ -16,7 +16,7 @@ namespace HorsesForCourses.Tests;
 public class ControllerTestHelper
 {
     public Mock<IUserRepository> UserRepositoryMock { get; }
-    public Mock<IPasswordHasher<User>> PasswordHasherMock { get; }
+    public Mock<IPasswordHasher> PasswordHasherMock { get; }
     public Mock<IAuthenticationService> AuthServiceMock { get; }
     public T SetupController<T>(T controller) where T : Controller
     {
@@ -51,7 +51,7 @@ public class ControllerTestHelper
     public ControllerTestHelper()
     {
         UserRepositoryMock = new Mock<IUserRepository>();
-        PasswordHasherMock = new Mock<IPasswordHasher<User>>();
+        PasswordHasherMock = new Mock<IPasswordHasher>();
         AuthServiceMock = new Mock<IAuthenticationService>();
 
         AuthServiceMock

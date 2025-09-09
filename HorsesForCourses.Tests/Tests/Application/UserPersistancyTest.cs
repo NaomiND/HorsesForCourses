@@ -1,4 +1,5 @@
 using HorsesForCourses.Core;
+using HorsesForCourses.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
 namespace HorsesForCourses.Tests
@@ -8,7 +9,10 @@ namespace HorsesForCourses.Tests
         [Fact]
         public async Task User_CanBeSavedAndRetrieved_PropertiesAreCorrect()
         {
-            var newUser = User.Create("Ine De Wit", "Ine@example.com", "hashed_password_123");
+            var passwordHasher = new Pbkdf2PasswordHasher();
+            var plainTextPassword = "plain_password_123";
+
+            var newUser = User.Create("Ine De Wit", "Ine@example.com", plainTextPassword, passwordHasher);
 
             _context.Users.Add(newUser);
             await _context.SaveChangesAsync();
@@ -20,15 +24,17 @@ namespace HorsesForCourses.Tests
             Assert.NotNull(savedUser);
             Assert.Equal("Ine De Wit", savedUser.Name.DisplayName);
             Assert.Equal("Ine@example.com", savedUser.Email.Value);
-            Assert.Equal("hashed_password_123", savedUser.PasswordHash);
+            Assert.NotEmpty(savedUser.PasswordHash);
+            Assert.True(passwordHasher.Verify(plainTextPassword, savedUser.PasswordHash));
         }
 
         [Fact]
         public async Task User_SavingDuplicateEmail_ThrowsDbUpdateException()
         {
             var email = "duplicate@example.com";
-            var user1 = User.Create("User Een", email, "pass1");
-            var user2 = User.Create("User Twee", email, "pass2");
+            var passwordHasher = new Pbkdf2PasswordHasher();
+            var user1 = User.Create("User Een", email, "pass1", passwordHasher);
+            var user2 = User.Create("User Twee", email, "pass2", passwordHasher);
 
             _context.Users.Add(user1);
             await _context.SaveChangesAsync(); // First user is saved successfully

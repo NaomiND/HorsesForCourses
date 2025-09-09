@@ -15,9 +15,9 @@ namespace HorsesForCourses.MVC.AccountController;
 public class AccountController : Controller
 {
     private readonly IUserRepository _userRepository;
-    private readonly IPasswordHasher<User> _passwordHasher;
+    private readonly IPasswordHasher _passwordHasher;
 
-    public AccountController(IUserRepository userRepository, IPasswordHasher<User> passwordHasher)
+    public AccountController(IUserRepository userRepository, IPasswordHasher passwordHasher)
     {
         _userRepository = userRepository;
         _passwordHasher = passwordHasher;
@@ -85,17 +85,16 @@ public class AccountController : Controller
 
         try
         {
-            var fullName = FullName.From(model.Name);
-            var emailAddress = EmailAddress.Create(model.Email);
-            var passwordHash = _passwordHasher.HashPassword(null, model.Pass);
+            // var fullName = FullName.From(model.Name);
+            // var emailAddress = EmailAddress.Create(model.Email);
+            // var passwordHash = _passwordHasher.HashPassword(null, model.Pass);
 
-            var user = DomainUser.Create(model.Name, model.Email, passwordHash);
-            //   var user = DomainUser.Create(fullName.ToString(), emailAddress.Value, passwordHash);
+            var user = DomainUser.Create(model.Name, model.Email, model.Pass, _passwordHasher);
 
             await _userRepository.AddAsync(user);
             await _userRepository.SaveChangesAsync();
 
-            // Sign in en redirect logica (blijft hetzelfde)
+            // Sign in en redirect logica 
             var claims = new List<Claim> { new Claim(ClaimTypes.Name, user.Email.Value) };
             var claimsIdentity = new ClaimsIdentity(claims, "Cookies");
             await HttpContext.SignInAsync("Cookies", new ClaimsPrincipal(claimsIdentity));

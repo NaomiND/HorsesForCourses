@@ -29,7 +29,7 @@ builder.Services.AddAuthentication("Cookies")
     .AddCookie("Cookies", o => { o.LoginPath = "/Account/Login"; o.LogoutPath = "/Account/Logout"; });
 builder.Services.AddAuthorization();
 
-builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+builder.Services.AddScoped<IPasswordHasher, Pbkdf2PasswordHasher>();
 
 // builder.Services.AddScoped<DomainExceptionFilter>();
 // builder.Services.AddControllersWithViews(options =>
