@@ -39,20 +39,60 @@ public class RegisterTests
     {
         var model = new RegisterAccountViewModel
         {
-            Name = "Ine Wit",
+            Name = "Ine De Wit",
             Email = "ine@example.com",
-            Pass = "password123"
+            Pass = "password123",
+            ConfirmPass = "password123"
         };
 
+        var existingUser = User.Create("Existing User", model.Email, "hashedPassword");
         helper.UserRepositoryMock
             .Setup(r => r.GetByEmailAsync(model.Email))
-            .ReturnsAsync(User.Create("Existing", "ine@example.com", "hashed"));
+            .ReturnsAsync(existingUser);
 
         var result = await controller.Register(model);
 
         var viewResult = Assert.IsType<ViewResult>(result);
         Assert.Equal(model, viewResult.Model);
         Assert.True(controller.ModelState.ContainsKey("Email"));
+    }
+
+
+    [Fact]
+    public async Task Register_ReturnsView_WhenPasswordIsEmpty()
+    {
+        var model = new RegisterAccountViewModel
+        {
+            Name = "Ine De Wit",
+            Email = "ine@example.com",
+            Pass = "",
+            ConfirmPass = ""
+        };
+
+        var result = await controller.Register(model);
+
+        var viewResult = Assert.IsType<ViewResult>(result);
+        Assert.Equal(model, viewResult.Model);
+        Assert.True(controller.ModelState.ContainsKey("Pass"));
+    }
+
+
+    [Fact]
+    public async Task Register_ReturnsView_WhenPasswordsDoNotMatch()
+    {
+        var model = new RegisterAccountViewModel
+        {
+            Name = "Ine De Wit",
+            Email = "ine@example.com",
+            Pass = "password123",
+            ConfirmPass = "differentPassword"
+        };
+
+        var result = await controller.Register(model);
+
+        var viewResult = Assert.IsType<ViewResult>(result);
+        Assert.Equal(model, viewResult.Model);
+        Assert.True(controller.ModelState.ContainsKey("ConfirmPass"));
     }
 
     [Fact]
@@ -62,7 +102,8 @@ public class RegisterTests
         {
             Name = "Ine De Wit",
             Email = "ine@example.com",
-            Pass = "password123"
+            Pass = "password123",
+            ConfirmPass = "password123"
         };
 
         helper.UserRepositoryMock

@@ -85,9 +85,12 @@ public class AccountController : Controller
 
         try
         {
+            var fullName = FullName.From(model.Name);
+            var emailAddress = EmailAddress.Create(model.Email);
             var passwordHash = _passwordHasher.HashPassword(null, model.Pass);
 
             var user = DomainUser.Create(model.Name, model.Email, passwordHash);
+            //   var user = DomainUser.Create(fullName.ToString(), emailAddress.Value, passwordHash);
 
             await _userRepository.AddAsync(user);
             await _userRepository.SaveChangesAsync();
@@ -105,4 +108,7 @@ public class AccountController : Controller
             return View(model);
         }
     }
+
+
+
 }
