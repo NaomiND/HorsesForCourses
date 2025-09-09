@@ -9,6 +9,7 @@ public class AppDbContext : DbContext
 {
     public DbSet<Coach> Coaches { get; set; }
     public DbSet<Course> Courses { get; set; }
+    public DbSet<User> Users { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
@@ -127,5 +128,20 @@ public class AppDbContext : DbContext
         //     c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
         //     c => c.ToList()
         // )));
+
+        var userBuilder = modelBuilder.Entity<User>();
+        userBuilder.Property(u => u.Name)
+                    .HasColumnName("Name")
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+        userBuilder.Property(u => u.Email)
+                    .HasColumnName("Email")
+                    .IsRequired();
+        userBuilder.HasIndex(u => u.Email)
+                    .IsUnique();
+
+        userBuilder.Property(u => u.PasswordHash)
+                    .IsRequired();
     }
 }

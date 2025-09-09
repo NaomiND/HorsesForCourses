@@ -37,6 +37,28 @@
                         </li>
                         </li>
                     </ul>
+                    <ul class="navbar-nav">
+                        @if (User.Identity?.IsAuthenticated ?? false)
+                        {
+                            <li class="nav-item">
+                                <span class="navbar-text">Hello, @User.Identity.Name!</span>
+                            </li>
+                            <li class="nav-item">
+                                <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-link nav-link text-dark">Logout</button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Account" asp-action="Register">Register</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Login</a>
+                            </li>
+                        }
+                    </ul>
                 </div>
             </div>
         </nav>
@@ -46,32 +68,6 @@
             @RenderBody()
         </main>
     </div>
-
-
-    @* @using HorsesForCourses.MVC.Models
-    @model LoginViewModel
-
-    <div class="container-fluid d-flex justify-content-center align-items-center" style="height: 100vh;">
-        <div class="card shadow-sm col-md-6 col-lg-4 p-4">
-            <h2 class="text-center mb-4">Login</h2>
-
-            <form asp-action="Login" method="post">
-                <div class="mb-3">
-                    <label asp-for="Email" class="form-label">Email address</label>
-                    <input asp-for="Email" type="email" class="form-control" placeholder="you@example.com" required />
-                    <span asp-validation-for="Email" class="text-danger"></span>
-                </div>
-
-                <div class="d-grid mb-3">
-                    <button type="submit" class="btn btn-primary">Login</button>
-                </div>
-            </form>
-
-            <form asp-controller="Account" asp-action="Logout" method="post" class="d-grid">
-                <button type="submit" class="btn btn-outline-secondary">Logout</button>
-            </form>
-        </div>
-    </div> *@
 
     <footer class="border-top footer text-muted">
         <div class="container">

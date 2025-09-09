@@ -1,10 +1,11 @@
 coach (IcheckEmail, string Email) die wordt aangeroepen op je domein om ook te valideren op is Unique
 ## Authentication / Authorization
+- [] voorlopig kan ik met elk e-mailadres inloggen
 # setup
-- [] Anonieme gebruiker kan **Index**-pagina zien
-- [] Anonieme gebruiker krijgt geen toegang tot de methodes van de CoachesController (route: **/Coaches**)
-- [] Anonieme gebruiker kan wel **/Coaches/Index** openen
-- [] Ingelogde gebruiker krijgt toegang tot alle methodes van de CoachesController
+- [X] Anonieme gebruiker kan **Index**-pagina zien
+- [X] Anonieme gebruiker krijgt geen toegang tot de methodes van de CoachesController (route: **/Coaches**)
+- [X] Anonieme gebruiker kan wel **/Coaches/Index** openen
+- [X] Ingelogde gebruiker krijgt toegang tot alle methodes van de CoachesController
 
 # registratie
 - [] Er is een pagina met een registratieformulier (naam, e-mail, wachtwoord, wachtwoordbevestiging).

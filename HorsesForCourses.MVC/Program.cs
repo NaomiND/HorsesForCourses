@@ -2,6 +2,7 @@ using HorsesForCourses.Core;
 using HorsesForCourses.Infrastructure;
 using HorsesForCourses.Application;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,8 +15,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite($"Data Source={dbPath}"));   //loggen :     options.UseSqlite($"Data Source={dbPath.PulseToLog()}"));
 
 builder.Services.AddScoped<CoachAvailabilityService>();
-builder.Services.AddScoped<ICourseRepository, EfCourseRepository>();
 builder.Services.AddScoped<ICoachRepository, EfCoachRepository>();
+builder.Services.AddScoped<ICourseRepository, EfCourseRepository>();
+builder.Services.AddScoped<IUserRepository, EfUserRepository>();
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
@@ -26,6 +28,8 @@ builder.Services.AddControllers()
 builder.Services.AddAuthentication("Cookies")
     .AddCookie("Cookies", o => { o.LoginPath = "/Account/Login"; o.LogoutPath = "/Account/Logout"; });
 builder.Services.AddAuthorization();
+
+builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 
 // builder.Services.AddScoped<DomainExceptionFilter>();
 // builder.Services.AddControllersWithViews(options =>

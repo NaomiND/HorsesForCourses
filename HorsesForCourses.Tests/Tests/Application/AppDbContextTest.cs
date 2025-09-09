@@ -8,7 +8,7 @@ public class AppDbContextTests : DbContextTestBase
     [Fact]
     public async Task Coach_CanBeSavedAndRetrieved_PropertiesAreCorrect()
     {
-        // Arrange
+        var id = 0;
         var fullName = FullName.From("Jan De Tester");
         var email = EmailAddress.Create("jan.tester@example.com");
         var newCoach = new Coach(fullName, email);
@@ -24,6 +24,7 @@ public class AppDbContextTests : DbContextTestBase
 
         // Assert
         Assert.NotNull(savedCoach);
+        Assert.Equal(newCoach.Id, savedCoach.Id);
         Assert.Equal("Jan De Tester", savedCoach.Name.DisplayName);
         Assert.Equal("jan.tester@example.com", savedCoach.Email.Value);
         Assert.Contains("c#", savedCoach.Skills); // Skills worden lowercase opgeslagen

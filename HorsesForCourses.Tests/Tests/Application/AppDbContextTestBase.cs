@@ -25,7 +25,8 @@ public abstract class DbContextTestBase : IDisposable
 
         // Zorgt ervoor dat het databaseschema (tabellen, etc.) wordt aangemaakt
         // op basis van de OnModelCreating-configuratie.
-        _context.Database.EnsureCreated();
+        // _context.Database.EnsureCreated();
+        _context.Database.Migrate(); // ❗ Lost problemen op met OwnsMany, enz.
     }
 
     public void Dispose()

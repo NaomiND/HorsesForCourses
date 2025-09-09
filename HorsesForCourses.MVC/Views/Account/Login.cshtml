@@ -1,0 +1,51 @@
+@model HorsesForCourses.MVC.Models.LoginViewModel
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Login" method="post">
+            <h4>Login with your account.</h4>
+            <hr />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group" style="margin-top: 10px;">
+                <button type="submit" class="btn btn-primary">Log in</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+@*
+    <div class="container-fluid d-flex justify-content-center align-items-center" style="height: 100vh;">
+        <div class="card shadow-sm col-md-6 col-lg-4 p-4">
+            <h2 class="text-center mb-4">Login</h2>
+
+            <form asp-action="Login" method="post">
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label">Email address</label>
+                    <input asp-for="Email" type="email" class="form-control" placeholder="you@example.com" required />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="d-grid mb-3">
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </div>
+            </form>
+
+            <form asp-controller="Account" asp-action="Logout" method="post" class="d-grid">
+                <button type="submit" class="btn btn-outline-secondary">Logout</button>
+            </form>
+        </div>
+    </div> *@

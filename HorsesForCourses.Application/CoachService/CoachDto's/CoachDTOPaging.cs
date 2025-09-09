@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace HorsesForCourses.Application.dtos;
 
 public class CoachDTOPaging

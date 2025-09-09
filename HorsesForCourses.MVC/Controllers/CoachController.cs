@@ -4,13 +4,12 @@ using HorsesForCourses.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using HorsesForCourses.Core;
 using Microsoft.AspNetCore.Authorization;
-using System.Linq.Expressions;
 
 namespace HorsesForCourses.MVC.CoachController
 {
     [Controller]
-    // [Authorize]                                     //authorization
     [Route("coaches")]
+    [Authorize]
     public class CoachesController : Controller
     {
         private readonly ICoachRepository _coachRepository;
@@ -22,7 +21,7 @@ namespace HorsesForCourses.MVC.CoachController
             _courseRepository = courseRepository;
         }
 
-        // [AllowAnonymous]
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> Index(int page = 1, int pageSize = 10)
         {

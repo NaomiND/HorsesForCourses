@@ -1,4 +1,3 @@
-using HorsesForCourses.MVC;
 using HorsesForCourses.Application.Paging;
 using HorsesForCourses.Infrastructure;
 using Moq;
