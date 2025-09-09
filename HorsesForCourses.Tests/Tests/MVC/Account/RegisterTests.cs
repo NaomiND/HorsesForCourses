@@ -39,14 +39,14 @@ public class RegisterTests
     {
         var model = new RegisterAccountViewModel
         {
-            Name = "John",
-            Email = "john@example.com",
+            Name = "Ine Wit",
+            Email = "ine@example.com",
             Pass = "password123"
         };
 
         helper.UserRepositoryMock
             .Setup(r => r.GetByEmailAsync(model.Email))
-            .ReturnsAsync(new User("Existing", "john@example.com", "hashed"));
+            .ReturnsAsync(User.Create("Existing", "ine@example.com", "hashed"));
 
         var result = await controller.Register(model);
 
@@ -60,9 +60,9 @@ public class RegisterTests
     {
         var model = new RegisterAccountViewModel
         {
-            Name = "Alice",
-            Email = "alice@example.com",
-            Pass = "securePass"
+            Name = "Ine De Wit",
+            Email = "ine@example.com",
+            Pass = "password123"
         };
 
         helper.UserRepositoryMock
@@ -76,8 +76,8 @@ public class RegisterTests
         var result = await controller.Register(model);
 
         helper.UserRepositoryMock.Verify(r => r.AddAsync(It.Is<User>(u =>
-            u.Name == model.Name &&
-            u.Email == model.Email &&
+            u.Name.DisplayName == model.Name &&
+            u.Email.Value == model.Email &&
             u.PasswordHash == "hashedPassword"
         )), Times.Once);
 

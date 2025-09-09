@@ -130,16 +130,20 @@ public class AppDbContext : DbContext
         // )));
 
         var userBuilder = modelBuilder.Entity<User>();
-        userBuilder.Property(u => u.Name)
-                    .HasColumnName("Name")
-                    .IsRequired()
-                    .HasMaxLength(100);
+        userBuilder.OwnsOne(u => u.Name, nameBuilder =>
+        {
+            nameBuilder.Property(n => n.FirstName).HasColumnName("Firstname").IsRequired().HasMaxLength(50);
+            nameBuilder.Property(n => n.LastName).HasColumnName("Lastname").IsRequired().HasMaxLength(50);
+        });
 
         userBuilder.Property(u => u.Email)
-                    .HasColumnName("Email")
-                    .IsRequired();
+        .HasConversion(email => email.Value, value => EmailAddress.Create(value))
+        .HasColumnName("Email")
+        .IsRequired()
+        .HasMaxLength(100);
+
         userBuilder.HasIndex(u => u.Email)
-                    .IsUnique();
+        .IsUnique();
 
         userBuilder.Property(u => u.PasswordHash)
                     .IsRequired();

@@ -63,7 +63,7 @@ namespace HorsesForCourses.MVC.CoachController
                 }
                 catch (ArgumentException ex)
                 {
-                    ModelState.AddModelError(nameof(dto.Email), ex.Message);
+                    ModelState.AddModelError(string.Empty, ex.Message);
                 }
             return View(dto);
         }

@@ -8,10 +8,10 @@ coach (IcheckEmail, string Email) die wordt aangeroepen op je domein om ook te v
 - [X] Ingelogde gebruiker krijgt toegang tot alle methodes van de CoachesController
 
 # registratie
-- [] Er is een pagina met een registratieformulier (naam, e-mail, wachtwoord, wachtwoordbevestiging).
-- [] Bij foutieve invoer (lege velden, ongeldig e-mailadres, mismatch wachtwoorden) worden duidelijke validatiefouten getoond.
+- [X] Er is een pagina met een registratieformulier (naam, e-mail, wachtwoord, wachtwoordbevestiging).
+- [] Bij foutieve invoer (lege velden, ongeldig e-mailadres, mismatch wachtwoorden) worden duidelijke validatiefouten getoond.(gebruik value objects die ook coach gebruikt)
 - [] Na succesvolle registratie wordt de gebruiker automatisch ingelogd en doorgestuurd naar de startpagina.
-- [] Er wordt gecontroleerd of het e-mailadres al bestaat; in dat geval krijgt de gebruiker een foutmelding.
+- [X] Er wordt gecontroleerd of het e-mailadres al bestaat; in dat geval krijgt de gebruiker een foutmelding.
 
 # encrypt pasword
 - [] Het `User` wachtwoord is ge-encrypteerd opgeslagen in de database

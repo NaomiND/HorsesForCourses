@@ -8,7 +8,7 @@ namespace HorsesForCourses.Tests
         [Fact]
         public async Task User_CanBeSavedAndRetrieved_PropertiesAreCorrect()
         {
-            var newUser = new User("Ine De Wit", "Ine@example.com", "hashed_password_123");
+            var newUser = User.Create("Ine De Wit", "Ine@example.com", "hashed_password_123");
 
             _context.Users.Add(newUser);
             await _context.SaveChangesAsync();
@@ -18,8 +18,8 @@ namespace HorsesForCourses.Tests
             var savedUser = await _context.Users.FindAsync(newUser.Id);
 
             Assert.NotNull(savedUser);
-            Assert.Equal("Ine De Wit", savedUser.Name);
-            Assert.Equal("Ine@example.com", savedUser.Email);
+            Assert.Equal("Ine De Wit", savedUser.Name.DisplayName);
+            Assert.Equal("Ine@example.com", savedUser.Email.Value);
             Assert.Equal("hashed_password_123", savedUser.PasswordHash);
         }
 
@@ -27,8 +27,8 @@ namespace HorsesForCourses.Tests
         public async Task User_SavingDuplicateEmail_ThrowsDbUpdateException()
         {
             var email = "duplicate@example.com";
-            var user1 = new User("User Een", email, "pass1");
-            var user2 = new User("User Twee", email, "pass2");
+            var user1 = User.Create("User Een", email, "pass1");
+            var user2 = User.Create("User Twee", email, "pass2");
 
             _context.Users.Add(user1);
             await _context.SaveChangesAsync(); // First user is saved successfully

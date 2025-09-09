@@ -3,22 +3,26 @@ namespace HorsesForCourses.Core;
 public class User
 {
     public int Id { get; private set; }
-    public string Name { get; set; } = string.Empty;
-    public string Email { get; set; } = string.Empty;
-    public string PasswordHash { get; set; } = string.Empty;
-    private User() { } //EFCore
+    public FullName Name { get; private set; }      //zelfde als coach
+    public EmailAddress Email { get; private set; } //zelfde als coach
+    public string PasswordHash { get; private set; }
 
-    // public static From(string name, string email, string pass, string confirmPass)
-
-    public User(string name, string email, string passwordHash)
+    private User(FullName name, EmailAddress email, string passwordHash)
     {
-        if (string.IsNullOrWhiteSpace(name))
-            throw new ArgumentException("Name cannot be empty.", nameof(name));
-        if (string.IsNullOrWhiteSpace(email))
-            throw new ArgumentException("Email cannot be empty.", nameof(email));
-
         Name = name;
         Email = email;
         PasswordHash = passwordHash;
+    }
+    private User() { } // Private constructor voor EF Core
+    // Factory method die de validatie van de Value Objects gebruikt
+    public static User Create(string name, string email, string passwordHash)
+    {
+        var fullName = FullName.From(name);
+        var emailAddress = EmailAddress.Create(email);
+
+        if (string.IsNullOrWhiteSpace(passwordHash))
+            throw new ArgumentException("Password hash cannot be empty.", nameof(passwordHash));
+
+        return new User(fullName, emailAddress, passwordHash);
     }
 }

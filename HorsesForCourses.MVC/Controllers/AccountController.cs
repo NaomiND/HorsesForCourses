@@ -6,6 +6,7 @@ using HorsesForCourses.MVC.Models;
 using HorsesForCourses.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using HorsesForCourses.Core;
+using DomainUser = HorsesForCourses.Core.User;
 
 namespace HorsesForCourses.MVC.AccountController;
 
@@ -62,6 +63,14 @@ public class AccountController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Register(RegisterAccountViewModel model)
     {
+        if (string.IsNullOrWhiteSpace(model.Pass))
+        {
+            ModelState.AddModelError("Pass", "Password is required.");
+        }
+        else if (model.Pass != model.ConfirmPass)
+        {
+            ModelState.AddModelError("ConfirmPass", "The passwords don't match.");
+        }
         if (!ModelState.IsValid)
         {
             return View(model);
@@ -74,25 +83,26 @@ public class AccountController : Controller
             return View(model);
         }
 
-        var passwordHash = _passwordHasher.HashPassword(null, model.Pass);
-        var user = new User(model.Name, model.Email, passwordHash);
+        try
+        {
+            var passwordHash = _passwordHasher.HashPassword(null, model.Pass);
 
-        await _userRepository.AddAsync(user);
-        await _userRepository.SaveChangesAsync();
+            var user = DomainUser.Create(model.Name, model.Email, passwordHash);
 
-        var claims = new List<Claim> { new Claim(ClaimTypes.Name, user.Email) };                            // Automatically sign in the user
-        var claimsIdentity = new ClaimsIdentity(claims, "Cookies");
-        await HttpContext.SignInAsync("Cookies", new ClaimsPrincipal(claimsIdentity));
+            await _userRepository.AddAsync(user);
+            await _userRepository.SaveChangesAsync();
 
-        return RedirectToAction("Index", "Home");
+            // Sign in en redirect logica (blijft hetzelfde)
+            var claims = new List<Claim> { new Claim(ClaimTypes.Name, user.Email.Value) };
+            var claimsIdentity = new ClaimsIdentity(claims, "Cookies");
+            await HttpContext.SignInAsync("Cookies", new ClaimsPrincipal(claimsIdentity));
+
+            return RedirectToAction("Index", "Home");
+        }
+        catch (ArgumentException ex)
+        {
+            ModelState.AddModelError(string.Empty, ex.Message);
+            return View(model);
+        }
     }
-
-
-
-    // Automatically sign in the user
-    // var claims = new List<Claim> { new Claim(ClaimTypes.Name, user.Email) };
-    // var claimsIdentity = new ClaimsIdentity(claims, "Cookies");
-    // await HttpContext.SignInAsync("Cookies", new ClaimsPrincipal(claimsIdentity));
-
-    // return RedirectToAction("Index", "Home");
 }
