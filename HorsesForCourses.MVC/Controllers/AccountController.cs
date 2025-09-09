@@ -34,12 +34,37 @@ public class AccountController : Controller
     [AllowAnonymous]
     [HttpPost("login")]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Login(string email)
+    public async Task<IActionResult> Login(LoginViewModel model)
     {
-        var claims = new List<Claim> { new Claim(ClaimTypes.Name, email) };
-        var id = new ClaimsIdentity(claims, "Cookies");
-        await HttpContext.SignInAsync("Cookies", new ClaimsPrincipal(id));
-        return Redirect("/");
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        var user = await _userRepository.GetByEmailAsync(model.Email);
+
+        if (user == null || !_passwordHasher.Verify(model.Password, user.PasswordHash))
+        {
+            ModelState.AddModelError(string.Empty, "Invalid login attempt. Please check your email and password.");
+            return View(model);
+        }
+
+        var claims = new List<Claim>
+    {
+        new Claim(ClaimTypes.Name, user.Email.Value),
+        // Je kan hier later meer claims toevoegen, zoals een User ID of rollen
+        // new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+    };
+
+        var claimsIdentity = new ClaimsIdentity(claims, "Cookies");
+        var authProperties = new AuthenticationProperties
+        {
+            IsPersistent = true
+        };
+
+        await HttpContext.SignInAsync("Cookies", new ClaimsPrincipal(claimsIdentity), authProperties);
+        TempData["SuccessMessage"] = "New user registered.";
+        return RedirectToAction("Index", "Home");
     }
 
     [HttpPost("logout")]

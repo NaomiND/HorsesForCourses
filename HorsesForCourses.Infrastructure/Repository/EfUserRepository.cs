@@ -16,7 +16,8 @@ namespace HorsesForCourses.Infrastructure
 
         public async Task<User?> GetByEmailAsync(string email)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Email.Value == email);
+            var emailToCompare = EmailAddress.Create(email);
+            return await _context.Users.FirstOrDefaultAsync(u => u.Email == emailToCompare);
         }
 
         public async Task AddAsync(User user)
