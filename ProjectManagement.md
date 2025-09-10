@@ -1,8 +1,8 @@
 coach (IcheckEmail, string Email) die wordt aangeroepen op je domein om ook te valideren op is Unique
 ## Authentication / Authorization
-- [] voorlopig kan ik met elk e-mailadres inloggen
-- [] In MVC-actions kun je expliciet Forbid() teruggeven. Dit op het laatste toevoegen als rollen duidelijk zijn.
-- [] AccessDenied pagina nog niet beschikbaar, wordt wel naar verwezen wanneer ik probeer als coach 1 coach 2 aan te passen. 
+- [X] voorlopig kan ik met elk e-mailadres inloggen
+- [X] In MVC-actions kun je expliciet Forbid() teruggeven. Dit op het laatste toevoegen als rollen duidelijk zijn.
+- [X] AccessDenied pagina nog niet beschikbaar, wordt wel naar verwezen wanneer ik probeer als coach 1 coach 2 aan te passen. 
 
 # setup
 - [X] Anonieme gebruiker kan **Index**-pagina zien
@@ -16,7 +16,7 @@ coach (IcheckEmail, string Email) die wordt aangeroepen op je domein om ook te v
 - [X] Na succesvolle registratie wordt de gebruiker automatisch ingelogd en doorgestuurd naar de startpagina.
 - [X] Er wordt gecontroleerd of het e-mailadres al bestaat; in dat geval krijgt de gebruiker een foutmelding.
 
-# encrypt pasword
+# encrypt password
 - [X] Het `User` wachtwoord is ge-encrypteerd opgeslagen in de database
 
 # Authenticated enkel voor Geregistreerde Gebruikers

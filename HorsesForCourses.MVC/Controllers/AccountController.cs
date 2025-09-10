@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using HorsesForCourses.MVC.Models;
 using HorsesForCourses.Infrastructure;
-using Microsoft.AspNetCore.Identity;
 using HorsesForCourses.Core;
 using DomainUser = HorsesForCourses.Core.User;
 
@@ -138,7 +137,7 @@ public class AccountController : Controller
     }
 
     [AllowAnonymous]
-    [HttpGet("denied")]
+    [HttpGet("accessdenied")]
     public IActionResult AccessDenied(string? returnUrl = null)
             => View(model: returnUrl);
 }

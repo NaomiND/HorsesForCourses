@@ -3,13 +3,13 @@
     ViewData["Title"] = "Access denied";
 }
 
-<h1 class="display-6">403 — Access denied</h1>
+<h2 class="display-6">403 — Access denied</h2>
 <p>You are logged in, but you do not have the required authorization to access this page.</p>
 
 @if (!string.IsNullOrWhiteSpace(Model))
 {
     <p>
-        <a class="btn btn-primary" href="@Model">Go back</a>
+        <a class="btn btn-primary" href="javascript:history.back()">Go back</a>
         <a class="btn btn-outline-secondary" href="/">To homepage</a>
     </p>
 }
