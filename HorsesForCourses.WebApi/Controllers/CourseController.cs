@@ -129,6 +129,31 @@ public class CoursesController : ControllerBase
         var courseDto = CourseMapper.ToGetByIdResponse(course);
         return Ok(courseDto);
     }
+
+    [HttpGet("{id}/available-coaches")]
+    public async Task<IActionResult> GetAvailableCoaches(int id)
+    {
+        var course = await _courseRepository.GetByIdAsync(id);
+        if (course is null)
+        {
+            return NotFound($"Course with {id} not found.");
+        }
+
+        if (!course.Skills.Any() || !course.ScheduledTimeSlots.Any())
+        {
+            return BadRequest("Course needs to be confirmed first.");
+        }
+
+        var availableCoaches = await _coachRepository.GetAvailableCoachesAsync(course.Skills, course.ScheduledTimeSlots, course.Period);
+
+        var coachDtos = availableCoaches.Select(c => new CoachBasicDTO
+        {
+            Id = c.Id,
+            Name = c.Name.ToString()
+        });
+
+        return Ok(coachDtos);
+    }
 }
 
 

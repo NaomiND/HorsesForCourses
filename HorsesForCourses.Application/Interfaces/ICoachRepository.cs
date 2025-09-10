@@ -11,6 +11,10 @@ public interface ICoachRepository
     Task<PagedResult<CoachDTOPaging>> GetAllPagedAsync(PageRequest request); //TODO
     Task AddAsync(Coach coach);
     Task SaveChangesAsync();
+    Task<IEnumerable<Coach>> GetAvailableCoachesAsync(
+        IEnumerable<string> requiredSkills,
+        IEnumerable<ScheduledTimeSlot> slots,
+        PlanningPeriod period);
 }
 
 //We splitsen Add en Save op. 

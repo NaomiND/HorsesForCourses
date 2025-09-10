@@ -249,6 +249,38 @@ namespace HorsesForCourses.MVC.CourseController
             return View(dto);
         }
 
+        //TO DO: te gebruiken bij aangepaste getavailablecoachesasync
+        // [HttpGet("assigncoach/{id}")]
+        // public async Task<IActionResult> AssignCoach(int id)
+        // {
+        //     var course = await _courseRepository.GetByIdAsync(id);
+        //     if (course == null)
+        //         return NotFound();
+
+        //     // Controleer of de cursus klaar is om een coach toegewezen te krijgen
+        //     if (course.Status != CourseStatus.Confirmed)
+        //     {
+        //         TempData["ErrorMessage"] = "This course needs to be confirmed before you can assign a coach.";
+        //         return RedirectToAction(nameof(Details), new { id = id });
+        //     }
+
+        //     // Gebruik de nieuwe, efficiënte repository-methode!
+        //     var coaches = await _coachRepository.GetAvailableCoachesAsync(course.Skills, course.ScheduledTimeSlots,course.Period));
+
+        //     var dto = new AssignCoachDTO
+        //     {
+        //         CourseId = course.Id,
+        //         AvailableCoaches = coaches.Select(c => new ListCoaches
+        //         {
+        //             Id = c.Id,
+        //             Name = c.Name.ToString()
+        //         }).ToList()
+        //     };
+
+        //     ViewBag.CourseName = course.Name;
+        //     return View(dto);
+        // }
+
         [HttpPost("assigncoach/{id}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AssignCoach(int id, AssignCoachDTO dto)

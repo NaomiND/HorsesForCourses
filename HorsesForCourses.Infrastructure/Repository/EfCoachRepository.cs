@@ -55,5 +55,36 @@ public class EfCoachRepository : ICoachRepository
     {
         await _context.SaveChangesAsync();
     }
+
+    public async Task<IEnumerable<Coach>> GetAvailableCoachesAsync(
+    IEnumerable<string> requiredSkills,
+    IEnumerable<ScheduledTimeSlot> slots,
+    PlanningPeriod period)
+    {
+        var query = _context.Coaches.AsQueryable();
+
+        foreach (var skill in requiredSkills)
+        {
+            var skillPattern = $"%\"{skill}\"%";
+            // Gebruik EF.Property om de onderliggende string-kolom aan te spreken
+            query = query.Where(c => EF.Functions.Like(EF.Property<string>(c, "skills"), skillPattern));
+        }
+
+        query = query.Where(coach =>
+            !coach.Courses.Any(assignedCourse =>
+                assignedCourse.Period.StartDate <= period.EndDate &&
+                assignedCourse.Period.EndDate >= period.StartDate &&
+
+                assignedCourse.ScheduledTimeSlots.Any(existingSlot =>
+                    slots.Any(newSlot =>
+                        existingSlot.TimeSlot.StartTime < newSlot.TimeSlot.EndTime &&
+                        existingSlot.TimeSlot.EndTime > newSlot.TimeSlot.StartTime &&
+                        existingSlot.Day == newSlot.Day
+                    )
+                )
+            )
+        );
+        return await query.ToListAsync();
+    }
 }
 
