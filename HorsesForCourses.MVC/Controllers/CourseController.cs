@@ -4,6 +4,7 @@ using HorsesForCourses.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using HorsesForCourses.Core;
 using HorsesForCourses.MVC.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HorsesForCourses.MVC.CourseController
 {
@@ -40,12 +41,14 @@ namespace HorsesForCourses.MVC.CourseController
             return View(CourseDetailDTO);
         }
 
+        [Authorize(Policy = "CourseManagement")]
         [HttpGet("create")]
         public IActionResult Create()
         {
             return View();
         }
 
+        [Authorize(Policy = "CourseManagement")]
         [HttpPost("create")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Name,StartDate,EndDate")] CreateCourseDTO dto)
@@ -79,6 +82,7 @@ namespace HorsesForCourses.MVC.CourseController
             }
         }
 
+        [Authorize(Policy = "CourseManagement")]
         [HttpGet("editskills/{id}")]
         public async Task<IActionResult> EditSkills(int id)
         {
@@ -95,6 +99,7 @@ namespace HorsesForCourses.MVC.CourseController
             return View(dto);
         }
 
+        [Authorize(Policy = "CourseManagement")]
         [HttpPost("editskills/{id}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditSkills(int id, [Bind("Id,Skills")] UpdateCourseSkillsDTO dto)
@@ -133,6 +138,7 @@ namespace HorsesForCourses.MVC.CourseController
             }
         }
 
+        [Authorize(Policy = "CourseManagement")]
         [HttpGet("edittimeslots/{id}")]
         public async Task<IActionResult> EditTimeSlots(int id)
         {
@@ -155,6 +161,7 @@ namespace HorsesForCourses.MVC.CourseController
             return View(dto);
         }
 
+        [Authorize(Policy = "CourseManagement")]
         [HttpPost("edittimeslots/{id}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditTimeSlots(int id, UpdateTimeSlotsDTO dto)

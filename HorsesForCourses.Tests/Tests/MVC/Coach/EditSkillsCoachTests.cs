@@ -25,11 +25,9 @@ public class EditCoachSkillsMVC
         userRepository = new Mock<IUserRepository>();
         helper = new ControllerTestHelper();
 
-        // De controller wordt ingesteld met een gesimuleerde gebruiker
         coachController = helper.SetupController(new CoachesController(coachRepository.Object, courseRepository.Object, userRepository.Object), "test-user@example.com");
     }
 
-    // Hulpfunctie om een test-user met een specifiek ID aan te maken
     private User CreateTestUser(int id, string email)
     {
         var user = User.Create("Test User", email, "password", new Pbkdf2PasswordHasher());
@@ -37,12 +35,14 @@ public class EditCoachSkillsMVC
         return user;
     }
 
-    // Hulpfunctie om een test-coach met een specifiek ID en gekoppelde UserId aan te maken
-    private Coach CreateTestCoach(int id, int userId)
+    private Coach CreateTestCoach(int coachId, User userToAssign)
     {
         var coach = new Coach(TheTester.FullName, TheTester.EmailAddress);
-        coach.AssignUser(userId);
-        typeof(Coach).GetProperty(nameof(Coach.Id))!.SetValue(coach, id);
+
+        coach.AssignUser(userToAssign);
+        typeof(Coach).GetProperty(nameof(Coach.UserId))!.SetValue(coach, userToAssign.Id); // Stel de Foreign Key in
+
+        typeof(Coach).GetProperty(nameof(Coach.Id))!.SetValue(coach, coachId);
         return coach;
     }
 
@@ -50,7 +50,7 @@ public class EditCoachSkillsMVC
     public async Task EditSkills_GET_ReturnsViewWithSkills_WhenCoachExists()
     {
         var testUser = CreateTestUser(10, "test-user@example.com");
-        var coach = CreateTestCoach(5, 10); // Coach ID 5 is gekoppeld aan User ID 10
+        var coach = CreateTestCoach(5, testUser);
         coach.AddSkill("C#");
 
         coachRepository.Setup(repo => repo.GetByIdAsync(5)).ReturnsAsync(coach);
@@ -58,7 +58,7 @@ public class EditCoachSkillsMVC
 
         var result = await coachController.EditSkills(5);
 
-        var viewResult = Assert.IsType<ViewResult>(result); // Dit zal nu slagen
+        var viewResult = Assert.IsType<ViewResult>(result); // Zal nu slagen
         var model = Assert.IsType<UpdateCoachSkillsDTO>(viewResult.Model);
         Assert.Equal(5, model.Id);
     }
@@ -77,7 +77,7 @@ public class EditCoachSkillsMVC
     public async Task EditSkills_POST_RedirectsToDetails_WhenUpdateIsSuccessful()
     {
         var testUser = CreateTestUser(10, "test-user@example.com");
-        var coach = CreateTestCoach(1, 10); // Coach ID 1 is gekoppeld aan User ID 10
+        var coach = CreateTestCoach(1, testUser);
 
         coachRepository.Setup(repo => repo.GetByIdAsync(1)).ReturnsAsync(coach);
         userRepository.Setup(repo => repo.GetByEmailAsync("test-user@example.com")).ReturnsAsync(testUser);
@@ -91,7 +91,7 @@ public class EditCoachSkillsMVC
 
         var result = await coachController.EditSkills(1, updateSkills);
 
-        coachRepository.Verify(repo => repo.SaveChangesAsync(), Times.Once); // Dit zal nu slagen
+        coachRepository.Verify(repo => repo.SaveChangesAsync(), Times.Once); // Zal nu slagen
         var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
         Assert.Equal("Details", redirectToActionResult.ActionName);
     }

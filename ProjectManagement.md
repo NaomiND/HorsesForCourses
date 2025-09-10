@@ -1,4 +1,5 @@
-coach (IcheckEmail, string Email) die wordt aangeroepen op je domein om ook te valideren op is Unique
+- [] assign coach: functionaliteit implementeren
+
 ## Authentication / Authorization
 - [X] voorlopig kan ik met elk e-mailadres inloggen
 - [X] In MVC-actions kun je expliciet Forbid() teruggeven. Dit op het laatste toevoegen als rollen duidelijk zijn.

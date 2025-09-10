@@ -24,7 +24,7 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
     });
 
-//Cookie auth
+//--- cookie authentication
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie("Cookies", o =>
     {
@@ -33,8 +33,15 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         o.AccessDeniedPath = "/Account/AccessDenied";   //bij 403
     });
 
+//--- authorization policies---
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy =>
+        policy.RequireRole("Admin"));
 
-builder.Services.AddAuthorization();
+    options.AddPolicy("CourseManagement", policy =>
+        policy.RequireRole("Admin"));
+});
 
 builder.Services.AddScoped<IPasswordHasher, Pbkdf2PasswordHasher>();
 

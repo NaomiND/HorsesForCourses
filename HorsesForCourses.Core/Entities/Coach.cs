@@ -28,13 +28,13 @@ public class Coach
         return new Coach(fullName, emailAddress);
     }
 
-    public void AssignUser(int userId)
+    public void AssignUser(User user)
     {
         if (UserId.HasValue)
         {
             throw new InvalidOperationException("This coach is already assigned to a user.");
         }
-        UserId = userId;
+        User = user;    //volledige object gekoppeld voor UOW bij opslaan
     }
 
     public void AddSkill(string skill)

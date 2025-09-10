@@ -113,15 +113,14 @@ public class AccountController : Controller
         {
             var user = DomainUser.Create(model.Name, model.Email, model.Pass, _passwordHasher);
             await _userRepository.AddAsync(user);
-            await _userRepository.SaveChangesAsync();   // Sla user eerst op om een ID te krijgen
 
             if (model.IsCoach)                          //Als "I am a coach" is aangevinkt, maak ook een Coach aan
             {
                 var coach = Coach.Create(model.Name, model.Email);
-                coach.AssignUser(user.Id);              // Koppel de nieuwe UserId
+                coach.AssignUser(user);                 // Koppel de nieuwe User
                 await _coachRepository.AddAsync(coach);
-                await _coachRepository.SaveChangesAsync();
             }
+            await _userRepository.SaveChangesAsync();   // slaat zowel de User als de Coach op
             // Sign in en redirect logica 
             var claims = new List<Claim> { new Claim(ClaimTypes.Name, user.Email.Value) };
             var claimsIdentity = new ClaimsIdentity(claims, "Cookies");

@@ -44,12 +44,14 @@ namespace HorsesForCourses.MVC.CoachController
             return View(coachDetailDto);
         }
 
+        [Authorize(Policy = "AdminOnly")]
         [HttpGet("create")]
         public IActionResult Create()
         {
             return View();
         }
 
+        [Authorize(Policy = "AdminOnly")]
         [HttpPost("create")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Name, Email")] CreateCoachDTO dto)
