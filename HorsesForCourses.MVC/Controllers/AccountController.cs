@@ -6,6 +6,7 @@ using HorsesForCourses.MVC.Models;
 using HorsesForCourses.Infrastructure;
 using HorsesForCourses.Core;
 using DomainUser = HorsesForCourses.Core.User;
+using HorsesForCourses.Application;
 
 namespace HorsesForCourses.MVC.AccountController;
 

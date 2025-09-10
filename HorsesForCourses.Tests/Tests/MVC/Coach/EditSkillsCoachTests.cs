@@ -1,3 +1,4 @@
+using HorsesForCourses.Application;
 using HorsesForCourses.Application.dtos;
 using HorsesForCourses.Core;
 using HorsesForCourses.Infrastructure;

@@ -2,7 +2,7 @@ using HorsesForCourses.Core;
 using HorsesForCourses.Application.Paging;
 using HorsesForCourses.Application.dtos;
 
-namespace HorsesForCourses.Infrastructure;
+namespace HorsesForCourses.Application;
 
 public interface ICoachRepository
 {

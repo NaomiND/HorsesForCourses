@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using HorsesForCourses.Core;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using HorsesForCourses.Application;
 
 namespace HorsesForCourses.MVC.CoachController
 {

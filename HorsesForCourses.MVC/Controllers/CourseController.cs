@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using HorsesForCourses.Core;
 using HorsesForCourses.MVC.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using HorsesForCourses.Application;
 
 namespace HorsesForCourses.MVC.CourseController
 {

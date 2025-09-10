@@ -4,6 +4,7 @@ using HorsesForCourses.Infrastructure;
 using HorsesForCourses.Core;
 using HorsesForCourses.Application.Paging;
 using HorsesForCourses.Application.common;
+using HorsesForCourses.Application;
 
 namespace HorsesForCourses.WebApi.Controllers;
 

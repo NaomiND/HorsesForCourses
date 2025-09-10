@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using HorsesForCourses.Application;
 using HorsesForCourses.Core;
 using HorsesForCourses.Infrastructure;
 using HorsesForCourses.MVC.AccountController;

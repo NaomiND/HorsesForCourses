@@ -6,6 +6,7 @@ using static HorsesForCourses.Tests.Mvc.Helper;
 using HorsesForCourses.MVC.CoachController;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using HorsesForCourses.Application;
 
 namespace HorsesForCourses.Tests.Mvc;
 
