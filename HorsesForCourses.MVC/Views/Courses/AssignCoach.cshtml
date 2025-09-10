@@ -16,7 +16,7 @@
     <div class="form-group">
         <label asp-for="CoachId">Select Coach</label>
         <select asp-for="CoachId" class="form-control"
-            asp-items="@(new SelectList(Model.AvailableCoaches, "Id", "FullName"))">
+            asp-items="@(new SelectList(Model.AvailableCoaches, "Id", "Name"))">
             <option value="">-- Select a coach --</option>
         </select>
         <span asp-validation-for="CoachId" class="text-danger"></span>

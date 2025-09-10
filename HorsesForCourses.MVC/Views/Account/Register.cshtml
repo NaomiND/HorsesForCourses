@@ -19,17 +19,17 @@
             </div>
             <div class="form-group mb-3">
                 <label asp-for="Email"></label>
-                <input asp-for="Email" class="form-control" />
+                <input type="email" asp-for="Email" class="form-control" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
             <div class="form-group mb-3">
                 <label for="Pass" class="form-label">Choose a password</label>
-                <input asp-for="Pass" class="form-control" />
+                <input type="password" asp-for="Pass" class="form-control" />
                 <span asp-validation-for="Pass" class="text-danger"></span>
             </div>
             <div class="form-group mb-3">
                 <label for="Pass" class="form-label">Confirm your password</label>
-                <input asp-for="ConfirmPass" class="form-control" />
+                <input type="password" asp-for="ConfirmPass" class="form-control" />
                 <span asp-validation-for="ConfirmPass" class="text-danger"></span>
             </div>
             <div class="form-group form-check mb-3">

@@ -1,4 +1,5 @@
 - [] assign coach: functionaliteit implementeren
+- [] New user registered. verschijnt overal behalve waar het moet
 
 ## Authentication / Authorization
 - [X] voorlopig kan ik met elk e-mailadres inloggen
@@ -36,8 +37,8 @@
 - [X] Coach Skills kunnen enkel gewijzigd worden door de gebruiker die bij registratie deze specifieke coach heeft aangemaakt.
 
 # admin
-- [] Enkel *Admin Account* heeft toegang tot `Coaches\RegisterCoach`.
-- [] Enkel *Admin Account* kan wijzigingen aanbrengen aan `Courses` (inclusief aanmaken, verwijderen, ...).
+- [X] Enkel *Admin Account* heeft toegang tot `Coaches\RegisterCoach`.
+- [X] Enkel *Admin Account* kan wijzigingen aanbrengen aan `Courses` (inclusief aanmaken, verwijderen, ...).
 
 # 403
 - [X] verwerk error 403

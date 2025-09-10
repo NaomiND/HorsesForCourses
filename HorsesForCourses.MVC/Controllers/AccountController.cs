@@ -53,9 +53,9 @@ public class AccountController : Controller
         var claims = new List<Claim>
     {
         new Claim(ClaimTypes.Name, user.Email.Value),
-        // Je kan hier later meer claims toevoegen, zoals een User ID of rollen
-        // new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-    };
+        new Claim(ClaimTypes.Role, user.Role),
+        // Je kan hier later meer claims toevoegen
+        };
 
         var claimsIdentity = new ClaimsIdentity(claims, "Cookies");
         var authProperties = new AuthenticationProperties

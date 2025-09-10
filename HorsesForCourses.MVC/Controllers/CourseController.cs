@@ -219,7 +219,7 @@ namespace HorsesForCourses.MVC.CourseController
             }
             catch (InvalidOperationException ex)
             {
-                TempData["ErrorMessage"] = $"Error during confirmation: {ex.Message}";
+                TempData["ErrorMessage"] = $" {ex.Message}";
             }
 
             return RedirectToAction(nameof(Details), new { id = id });
@@ -240,7 +240,7 @@ namespace HorsesForCourses.MVC.CourseController
                 AvailableCoaches = coaches.Select(c => new ListCoaches
                 {
                     Id = c.Id,
-
+                    Name = c.Name.ToString()
                 }).ToList()
             };
 
@@ -282,7 +282,7 @@ namespace HorsesForCourses.MVC.CourseController
                 dto.AvailableCoaches = coaches.Select(c => new ListCoaches
                 {
                     Id = c.Id,
-                    // Name = c.Name
+                    Name = c.Name.ToString()
                 }).ToList();
 
                 ViewBag.CourseName = course.Name;
