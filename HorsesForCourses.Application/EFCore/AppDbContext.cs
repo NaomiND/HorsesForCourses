@@ -73,18 +73,6 @@ public class AppDbContext : DbContext
                      .HasForeignKey("AssignedCoachId")
                      .IsRequired(false);                                            // Een coach is niet verplicht bij aanmaak
 
-        // courseBuilder.Property(typeof(List<ScheduledTimeSlot>), "scheduledTimeSlots")
-        //              .HasField("scheduledTimeSlots");
-
-        //     courseBuilder.Property(c => c.ScheduledTimeSlots)
-        //         .HasConversion(
-        //             v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
-        //             v => v == null
-        //                 ? new List<ScheduledTimeSlot>()
-        //                 : JsonSerializer.Deserialize<List<ScheduledTimeSlot>>(v, (JsonSerializerOptions)null) ?? new List<ScheduledTimeSlot>()
-        //         );
-        // }
-
         courseBuilder.OwnsMany(c => c.ScheduledTimeSlots, ts =>
             {
                 ts.HasKey("Id");

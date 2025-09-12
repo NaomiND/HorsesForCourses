@@ -1,11 +1,11 @@
-using HorsesForCourses.Core;
 using HorsesForCourses.Application;
+using HorsesForCourses.Core;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
 namespace HorsesForCourses.Tests;
 
-public class CoachPersistancyTests
+public class AppDbContextTests
 {
     [Fact]
     public async Task ShouldPersistData()
