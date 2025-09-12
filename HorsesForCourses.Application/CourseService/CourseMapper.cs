@@ -2,7 +2,6 @@ using HorsesForCourses.Core;
 
 namespace HorsesForCourses.Application.dtos;
 
-
 public static class CourseMapper
 {
     public static CourseDTO ToDTO(Course course)
@@ -25,7 +24,7 @@ public static class CourseMapper
         {
             Id = course.Id,
             Name = course.Name.ToString(),
-            Skills = course.Skills.ToList(),
+            Skills = course.CourseSkills.Select(cs => cs.Skill.Name).ToList(),
             AssignedCoachId = course.AssignedCoach?.Id,
         };
     }
@@ -56,7 +55,7 @@ public static class CourseMapper
             Name = course.Name,
             StartDate = course.Period.StartDate.ToString("yyyy-MM-dd"),
             EndDate = course.Period.EndDate.ToString("yyyy-MM-dd"),
-            Skills = course.Skills.ToList(),
+            Skills = course.CourseSkills.Select(cs => cs.Skill.Name).ToList(),
             Status = course.Status.ToString(),
             TimeSlots = course.ScheduledTimeSlots
                                 .Select(slot => new TimeSlotJasonDTO

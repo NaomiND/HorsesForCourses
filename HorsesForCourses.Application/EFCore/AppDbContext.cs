@@ -1,7 +1,5 @@
 ﻿using HorsesForCourses.Core;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using System.Text.Json;
 
 namespace HorsesForCourses.Application;
 
@@ -10,12 +8,20 @@ public class AppDbContext : DbContext
     public DbSet<Coach> Coaches { get; set; }
     public DbSet<Course> Courses { get; set; }
     public DbSet<User> Users { get; set; }
+    public DbSet<Skill> Skills { get; set; }
+    public DbSet<CoachSkill> CoachSkills { get; set; }
+    public DbSet<CourseSkill> CourseSkills { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        var skillBuilder = modelBuilder.Entity<Skill>();
+        skillBuilder.HasKey(s => s.Id);
+        skillBuilder.Property(s => s.Name).IsRequired().HasMaxLength(100);
+        skillBuilder.HasIndex(s => s.Name).IsUnique();
 
         var coachBuilder = modelBuilder.Entity<Coach>();                                //coach mapping
         coachBuilder.HasKey(c => c.Id);
@@ -35,20 +41,18 @@ public class AppDbContext : DbContext
         coachBuilder.HasIndex(c => c.Email)
                     .IsUnique();                                                        // Unieke index op Email
 
-        coachBuilder
-            .Property<List<string>>("skills")
-            .UsePropertyAccessMode(PropertyAccessMode.Field)
-            .HasConversion(
-                        v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
-                        v => string.IsNullOrWhiteSpace(v)
-                        ? new List<string>()
-                        : JsonSerializer.Deserialize<List<string>>(v, (JsonSerializerOptions)null) ?? new List<string>()
-            )
-            .Metadata.SetValueComparer(new ValueComparer<List<string>>(
-                (c1, c2) => c1.SequenceEqual(c2),
-                c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
-                c => c.ToList()
-            ));
+        // --- Many-to-Many: Coach <-> Skill ---
+        modelBuilder.Entity<CoachSkill>().HasKey(cs => new { cs.CoachId, cs.SkillId });
+
+        modelBuilder.Entity<CoachSkill>()
+            .HasOne(cs => cs.Coach)
+            .WithMany(c => c.CoachSkills)
+            .HasForeignKey(cs => cs.CoachId);
+
+        modelBuilder.Entity<CoachSkill>()
+            .HasOne(cs => cs.Skill)
+            .WithMany()
+            .HasForeignKey(cs => cs.SkillId);
 
         var courseBuilder = modelBuilder.Entity<Course>();                          //course mapping
         courseBuilder.HasKey(c => c.Id);
@@ -63,18 +67,6 @@ public class AppDbContext : DbContext
             periodBuilder.Property(p => p.StartDate).HasColumnName("Start date");
             periodBuilder.Property(p => p.EndDate).HasColumnName("End date");
         });
-
-        courseBuilder.Property<List<string>>("skills")                                      // Private field: skills, opgeslagen als JSON array
-            .UsePropertyAccessMode(PropertyAccessMode.Field)
-            .HasConversion(
-                v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
-                v => JsonSerializer.Deserialize<List<string>>(v, (JsonSerializerOptions)null) ?? new List<string>()
-            )
-                     .Metadata.SetValueComparer(new ValueComparer<List<string>>(
-                (c1, c2) => c1.SequenceEqual(c2),
-                c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
-                c => c.ToList()
-            ));
 
         courseBuilder.HasOne(c => c.AssignedCoach)                                  // Relatie: Een cursus heeft één (optionele) coach
                      .WithMany(c => c.Courses)                                                    // Een Coach heeft geen collectie van Courses, dus dit is eenrichtingsverkeer
@@ -109,7 +101,6 @@ public class AppDbContext : DbContext
                     timeSlotBuilder.Property(t => t.EndTime).IsRequired();
                 });
 
-
                 // ts.Property(t => t.StartTime);//.HasColumnName("Start");
                 // ts.Property(t => t.EndTime);//.HasColumnName("End");
             });
@@ -128,6 +119,19 @@ public class AppDbContext : DbContext
         //     c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
         //     c => c.ToList()
         // )));
+
+        // --- Many-to-Many: Course <-> Skill ---
+        modelBuilder.Entity<CourseSkill>().HasKey(cs => new { cs.CourseId, cs.SkillId });
+
+        modelBuilder.Entity<CourseSkill>()
+            .HasOne(cs => cs.Course)
+            .WithMany(c => c.CourseSkills)
+            .HasForeignKey(cs => cs.CourseId);
+
+        modelBuilder.Entity<CourseSkill>()
+            .HasOne(cs => cs.Skill)
+            .WithMany()
+            .HasForeignKey(cs => cs.SkillId);
 
         var userBuilder = modelBuilder.Entity<User>();
         coachBuilder.HasKey(u => u.Id);

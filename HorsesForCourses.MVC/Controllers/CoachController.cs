@@ -4,7 +4,6 @@ using HorsesForCourses.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using HorsesForCourses.Core;
 using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
 using HorsesForCourses.Application;
 
 namespace HorsesForCourses.MVC.CoachController
@@ -75,6 +74,7 @@ namespace HorsesForCourses.MVC.CoachController
         }
 
         [HttpGet("editskills/{id}")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditSkills(int id)
         {
             var coach = await _coachRepository.GetByIdAsync(id);
@@ -91,10 +91,11 @@ namespace HorsesForCourses.MVC.CoachController
                 return Forbid(); // Geeft 403
             }
 
+            var skillNames = coach.CoachSkills.Select(cs => cs.Skill.Name).ToList();
             var dto = new UpdateCoachSkillsDTO
             {
                 Id = coach.Id,
-                Skills = coach.Skills.ToList()
+                Skills = skillNames
             };
             ViewBag.CoachName = coach.Name.DisplayName;
             return View(dto);
@@ -134,8 +135,8 @@ namespace HorsesForCourses.MVC.CoachController
                     .Select(s => s.Trim())
                     .ToList();
 
-                coachToUpdate.UpdateSkills(skillsList);  // Deze methode kan een exception gooien vanuit de domeinlaag
-                await _coachRepository.SaveChangesAsync();
+                await _coachRepository.UpdateSkillsAsync(id, skillsList);
+
                 TempData["SuccessMessage"] = "Skills updated.";  //UX-Polish
                 return RedirectToAction(nameof(Details), new { id = dto.Id });
             }

@@ -5,15 +5,17 @@ public class Course
     public int Id { get; private set; }
     public string Name { get; private set; }
     public PlanningPeriod Period { get; private set; }
-    private List<string> skills = new();
-    public IReadOnlyCollection<string> Skills => skills.AsReadOnly();
+    // private List<string> skills = new();
+    // public IReadOnlyCollection<string> Skills => skills.AsReadOnly();
+    private readonly List<CourseSkill> _courseSkills = new();
+    public IReadOnlyCollection<CourseSkill> CourseSkills => _courseSkills.AsReadOnly();
     private List<ScheduledTimeSlot> scheduledTimeSlots = new();
     public IReadOnlyCollection<ScheduledTimeSlot> ScheduledTimeSlots => scheduledTimeSlots.AsReadOnly();
 
     public CourseStatus Status { get; private set; } = CourseStatus.Draft;
     public Coach? AssignedCoach { get; private set; }
-    private readonly CoachAvailabilityService coachAvailabilityService;
-    private readonly IEnumerable<Course> allCourses;
+    // private readonly CoachAvailabilityService coachAvailabilityService;
+    // private readonly IEnumerable<Course> allCourses;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
     private Course() { }                                         // Private constructor voor EF Core
@@ -33,38 +35,7 @@ public class Course
         return new Course(name, period);
     }
 
-    public void AddSkill(string skill)
-    {
-        if (string.IsNullOrWhiteSpace(skill))
-            throw new ArgumentException("Skill can't be empty.");
 
-        if (skills.Contains(skill.ToLower()))
-            throw new InvalidOperationException("Skill already exists.");
-
-        skills.Add(skill.ToLower());
-    }
-
-    public void RemoveSkill(string skill)
-    {
-        int removed = skills.RemoveAll(c => string.Equals(c, skill.ToLower()));
-        if (removed == 0)
-            throw new InvalidOperationException($"Skill '{skill}' not found.");
-    }
-
-    public void ClearSkills()
-    {
-        skills.Clear();
-    }
-
-    public void UpdateSkills(IEnumerable<string> newSkills)
-    {
-        ClearSkills();
-
-        foreach (var skill in newSkills)
-        {
-            AddSkill(skill);
-        }
-    }
 
     public void AddScheduledTimeSlot(ScheduledTimeSlot slot)            // lesmoment toevoegen
     {
@@ -94,19 +65,19 @@ public class Course
         Status = CourseStatus.Confirmed;
     }
 
-    public void AssignCoach(Coach coach)
-    {
-        if (Status != CourseStatus.Confirmed)
-            throw new InvalidOperationException("Please confirm the course before assigning a coach.");
+    // public void AssignCoach(Coach coach)
+    // {
+    //     if (Status != CourseStatus.Confirmed)
+    //         throw new InvalidOperationException("Please confirm the course before assigning a coach.");
 
-        if (!coach.HasAllRequiredSkills(skills))
-            throw new InvalidOperationException("This coach does not have the required skills for this course.");
+    //     if (!coach.HasAllRequiredSkills(skills))
+    //         throw new InvalidOperationException("This coach does not have the required skills for this course.");
 
-        if (!coachAvailabilityService.IsCoachAvailableForCourse(coach, this, allCourses))
-        {
-            throw new InvalidOperationException("This coach is unavailable for this course.");
-        }
-        AssignedCoach = coach;
-        Status = CourseStatus.Finalized;
-    }
+    //     // if (!await coachAvailabilityService.IsCoachAvailableForCourseAsync(coach, this))
+    //     // {
+    //     //     throw new InvalidOperationException("This coach is unavailable for this course.");
+    //     // }
+    //     AssignedCoach = coach;
+    //     Status = CourseStatus.Finalized;
+    // }
 }

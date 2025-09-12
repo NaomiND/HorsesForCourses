@@ -3,6 +3,7 @@ using HorsesForCourses.Infrastructure;
 using HorsesForCourses.Application;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using HorsesForCourses.Application.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,8 @@ builder.Services.AddScoped<CoachAvailabilityService>();
 builder.Services.AddScoped<ICoachRepository, EfCoachRepository>();
 builder.Services.AddScoped<ICourseRepository, EfCourseRepository>();
 builder.Services.AddScoped<IUserRepository, EfUserRepository>();
+builder.Services.AddScoped<ISkillRepository, EfSkillRepository>();
+
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {

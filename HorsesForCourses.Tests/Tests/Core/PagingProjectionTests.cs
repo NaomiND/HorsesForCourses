@@ -1,6 +1,7 @@
 using HorsesForCourses.Core;
 using HorsesForCourses.Infrastructure;
 using HorsesForCourses.Application.Paging;
+using HorsesForCourses.Application;
 
 namespace HorsesForCourses.Tests
 {
@@ -17,7 +18,8 @@ namespace HorsesForCourses.Tests
             }
             await _context.SaveChangesAsync();
 
-            var repository = new EfCoachRepository(_context);
+            var skillRepository = new EfSkillRepository(_context);
+            var repository = new EfCoachRepository(_context, skillRepository);
             var request = new PageRequest(PageNumber: 2, PageSize: 10);
 
             var pagedResult = await repository.GetAllPagedAsync(request);       //vraag p2 op

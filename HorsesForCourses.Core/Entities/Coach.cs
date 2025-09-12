@@ -7,8 +7,10 @@ public class Coach
     public EmailAddress Email { get; }                          //validation in class EmailAddress
     public int? UserId { get; private set; }                    //relatie tss user en coach
     public User? User { get; private set; }                     //relatie tss user en coach
-    private List<string> skills = new();                        //lijst van skills (collection), geen readonly hier(ef kan die niet vullen)
-    public IReadOnlyCollection<string> Skills => skills.AsReadOnly();
+    // private List<string> skills = new();                        //lijst van skills (collection), geen readonly hier(ef kan die niet vullen)
+    // public IReadOnlyCollection<string> Skills => skills.AsReadOnly();
+    private readonly List<CoachSkill> coachSkills = new();
+    public IReadOnlyCollection<CoachSkill> CoachSkills => coachSkills.AsReadOnly();
     private readonly List<Course> courses = new();              //lijst van courses
     public IReadOnlyCollection<Course> Courses => courses.AsReadOnly();
     public Coach(FullName name, EmailAddress email)             //constructor (bij entity framework wordt ID automatisch gegenereerd door database dus hier te verwijderen)
@@ -37,45 +39,15 @@ public class Coach
         User = user;    //volledige object gekoppeld voor UOW bij opslaan
     }
 
-    public void AddSkill(string skill)
+    public bool HasAllRequiredSkills(IEnumerable<string> requiredSkillNames)
     {
-        if (string.IsNullOrWhiteSpace(skill))
-            throw new ArgumentException("Skill can't be empty.");
+        if (requiredSkillNames == null || !requiredSkillNames.Any())
+            return true;
 
-        if (skills.Contains(skill.ToLower()))
-            throw new InvalidOperationException("Skill already exists.");
+        var coachSkillNames = this.CoachSkills
+            .Select(cs => cs.Skill.Name)
+            .ToHashSet(); // ToHashSet is efficiënt voor lookups.
 
-        skills.Add(skill.ToLower());
-    }
-
-    public void RemoveSkill(string skill)
-    {
-        int removedCount = skills.RemoveAll(c => string.Equals(c, skill.ToLower())); // RemoveAll en StringComparer (hoofdlettergevoelige delete)
-        if (removedCount == 0)
-            throw new InvalidOperationException($"Skill '{skill}' not found.");
-    }
-
-    public void ClearSkills()
-    {
-        skills.Clear();
-    }
-
-    public void UpdateSkills(IEnumerable<string> newSkills)
-    {
-        ClearSkills();
-
-        foreach (var skill in newSkills)
-        {
-            AddSkill(skill);
-        }
-    }
-
-    public bool HasAllRequiredSkills(IEnumerable<string> requiredSkills)
-    {
-        List<string> lowerCase = skills.Select(x => x.ToLower()).ToList();
-        if (requiredSkills == null)
-            throw new ArgumentNullException(nameof(requiredSkills));
-
-        return requiredSkills.All(rc => lowerCase.Contains(rc.ToLower()));    //Linq
+        return requiredSkillNames.All(reqSkill => coachSkillNames.Contains(reqSkill.Trim().ToLowerInvariant()));
     }
 }

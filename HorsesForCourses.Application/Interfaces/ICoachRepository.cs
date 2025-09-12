@@ -11,6 +11,9 @@ public interface ICoachRepository
     Task<PagedResult<CoachDTOPaging>> GetAllPagedAsync(PageRequest request); //TODO
     Task AddAsync(Coach coach);
     Task SaveChangesAsync();
+    Task AddSkillToCoach(int coachId, string skillName);
+    Task UpdateSkillsAsync(int coachId, IEnumerable<string> newSkillNames);
+    Task RemoveSkill(int coachId, string skillName);
     Task<IEnumerable<Coach>> GetAvailableCoachesAsync(
         IEnumerable<string> requiredSkills,
         IEnumerable<ScheduledTimeSlot> slots,

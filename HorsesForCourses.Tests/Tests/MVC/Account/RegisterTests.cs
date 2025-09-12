@@ -1,7 +1,6 @@
 using HorsesForCourses.Core;
 using HorsesForCourses.MVC.AccountController;
 using HorsesForCourses.MVC.Models;
-using HorsesForCourses.Tests;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 

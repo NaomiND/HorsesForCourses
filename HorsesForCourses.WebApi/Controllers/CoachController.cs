@@ -32,7 +32,8 @@ public class CoachesController : ControllerBase
         var coach = await _coachRepository.GetByIdAsync(id);
         if (coach is null) return NotFound();
 
-        var allCourses = await _courseRepository.GetAllAsync();
+        await _courseRepository.GetCoursesByCoachIdAsync(id);
+
         var coachDto = CoachMapper.ToDetailDTO(coach);
         return Ok(coachDto);
     }
@@ -45,24 +46,21 @@ public class CoachesController : ControllerBase
         await _coachRepository.SaveChangesAsync();
 
         return Ok(coach.Id);
-
-        // var coachDto = CoachMapper.ToDTO(coach);             //indien Id enkel beschikbaar na mapping
-        // return Ok(coachDto.Id);
     }
 
-    [HttpPost("{id}/skills")]
-    public async Task<IActionResult> UpdateCoachSkills([FromBody] UpdateCoachSkillsDTO dto, int id)
-    {
-        var coach = await _coachRepository.GetByIdAsync(id);
-        if (coach is null) return NotFound();
+    // [HttpPost("{id}/skills")]
+    // public async Task<IActionResult> UpdateCoachSkills([FromBody] UpdateCoachSkillsDTO dto, int id)
+    // {
+    //     var coach = await _coachRepository.GetByIdAsync(id);
+    //     if (coach is null) return NotFound();
 
-        coach.UpdateSkills(dto.Skills);
+    //     coach.UpdateSkills(dto.Skills);
 
-        await _coachRepository.SaveChangesAsync();
+    //     await _coachRepository.SaveChangesAsync();
 
-        // var coachDto = CoachMapper.ToDTO(coach);
-        return Ok(dto);
-    }
+    //     // var coachDto = CoachMapper.ToDTO(coach);
+    //     return Ok(dto);
+    // }
 
     // [HttpGet]  //no paging
     // public async Task<ActionResult<IEnumerable<CoachDTO>>> GetAll()

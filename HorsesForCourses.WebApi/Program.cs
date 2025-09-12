@@ -1,5 +1,4 @@
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-using HorsesForCourses.Core;
 using HorsesForCourses.WebApi;
 using HorsesForCourses.Application.common;
 using HorsesForCourses.Infrastructure;
