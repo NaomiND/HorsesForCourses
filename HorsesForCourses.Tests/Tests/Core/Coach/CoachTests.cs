@@ -1,156 +1,85 @@
-// using HorsesForCourses.Core;
+using System.Reflection;
+using HorsesForCourses.Core;
 
-// namespace HorsesForCourses.Tests;
+namespace HorsesForCourses.Tests;
 
-// public class CoachTests
-// {
-//     [Fact]
-//     public void Coach_Constructor_InitializesPropertiesCorrectly()
-//     {
-//         FullName name = new FullName("Ine", "De Wit");
-//         EmailAddress email = EmailAddress.Create("Ine.dewit@gmail.com");
+public class CoachTests
+{
+    private readonly Coach coach;
 
-//         Coach coach = new Coach(name, email);
+    public CoachTests()
+    {
+        FullName name = new("Ine", "De Wit");
+        EmailAddress email = EmailAddress.Create("Ine.dewit@example.com");
+        coach = new Coach(name, email);
+    }
 
-//         Assert.Equal(name, coach.Name);
-//         Assert.Equal(email, coach.Email);
-//         Assert.Empty(coach.Skills);                        // Competenties moeten leeg zijn bij initialisatie
-//     }
+    [Fact]
+    public void Coach_Constructor_InitializesPropertiesCorrectly()
+    {
+        Assert.Equal("Ine De Wit", coach.Name.DisplayName);
+        Assert.Equal("Ine.dewit@example.com", coach.Email.Value);
+    }
 
-//     [Fact]
-//     public void CreateCoach_ReturnsNewCoachWithValidData()
-//     {
-//         string name = "Ine De Wit";
-//         string email = "Ine.dewit@gmail.com";
+    [Fact]
+    public void CreateCoach_ReturnsNewCoach_WithValidData()
+    {
+        string name = "Ine De Wit";
+        string email = "Ine.dewit@example.com";
 
-//         Coach coach = Coach.Create("Ine De Wit", "Ine.dewit@gmail.com");
+        Coach coach = Coach.Create(name, email);
 
-//         Assert.Equal(0, coach.Id);
-//         Assert.Equal(name, coach.Name.DisplayName);
-//         Assert.Equal(email, coach.Email.Value);
-//         Assert.Empty(coach.Skills);
-//     }
+        Assert.Equal(0, coach.Id);
+        Assert.Equal(name, coach.Name.DisplayName);
+        Assert.Equal(email, coach.Email.Value);
+    }
 
-//     [Theory]
-//     [InlineData(42, "", "test@example.com")]
-//     [InlineData(42, "   ", "test@example.com")]
-//     [InlineData(42, "Test Coach", null)]
-//     [InlineData(42, "Test Coach", "invalid-email")]
-//     public void CreateCoach_ThrowsArgumentExceptionForInvalidInput(int id, string name, string email)
-//     {
-//         Assert.Throws<ArgumentException>(() => Coach.Create(name, email));
-//     }
+    [Theory]
+    [InlineData(42, "", "test@example.com")]
+    [InlineData(42, "   ", "test@example.com")]
+    [InlineData(42, "Test Coach", null)]
+    [InlineData(42, "Test Coach", "invalid-email")]
+    public void CreateCoach_ThrowsArgumentExceptionForInvalidInput(int id, string name, string email)
+    {
+        Assert.Throws<ArgumentException>(() => Coach.Create(name, email));
+    }
 
-//     [Fact]
-//     public void AddSkill_AddsNewSkillToList()
-//     {
-//         FullName name = new FullName("Test", "Coach");
-//         EmailAddress email = EmailAddress.Create("test@example.com");
-//         Coach coach = new Coach(name, email);
-//         string skill = "c# programming";
+    [Fact]
+    public void HasAllRequiredSkills_ReturnsTrueWhenValid()
+    {
+        var skills = new List<CoachSkill>
+        {
+            new() { Coach = coach, Skill = new Skill("c# programming") },
+            new() { Coach = coach, Skill = new Skill("dutch") },
+            new() { Coach = coach, Skill = new Skill("french") }
+        };
+        // Gebruik reflectie om de private readonly 'coachSkills' lijst te vullen.
+        var coachSkillsField = typeof(Coach).GetField("coachSkills", BindingFlags.NonPublic | BindingFlags.Instance);
+        (coachSkillsField.GetValue(coach) as List<CoachSkill>).AddRange(skills);
 
-//         coach.AddSkill(skill);
+        var requiredSkills = new List<string> { "C# Programming", "Dutch" };
 
-//         Assert.Contains(skill, coach.Skills);
-//         Assert.Single(coach.Skills);
-//     }
+        bool result = coach.HasAllRequiredSkills(requiredSkills);
 
-//     [Theory]
-//     [InlineData("")]
-//     [InlineData("   ")]
-//     public void AddSkill_InvalidInput_ThrowsArgumentException(string invalidSkill)
-//     {
-//         FullName name = new FullName("Test", "Coach");
-//         EmailAddress email = EmailAddress.Create("test@example.com");
-//         Coach coach = new Coach(name, email);
+        Assert.True(result);
+    }
 
-//         Assert.Throws<ArgumentException>(() => coach.AddSkill(invalidSkill));
-//     }
+    [Fact]
+    public void HasAllRequiredSkills_ReturnsFalseWhenOneOrMoreSkillsAreMissing()
+    {
+        var skills = new List<CoachSkill>
+        {
+            new() { Coach = coach, Skill = new Skill("c# programming") },
+            new() { Coach = coach, Skill = new Skill("dutch") }
+        };
 
-//     [Fact]
-//     public void AddSkill_ThrowsInvalidOperationExceptionWhenSkillAlreadyExists()
-//     {
-//         FullName name = new FullName("Test", "Coach");
-//         EmailAddress email = EmailAddress.Create("test@example.com");
-//         Coach coach = new Coach(name, email);
-//         string skill = "Dutch";
-//         coach.AddSkill(skill);
+        var coachSkillsField = typeof(Coach).GetField("coachSkills", BindingFlags.NonPublic | BindingFlags.Instance);
+        (coachSkillsField.GetValue(coach) as List<CoachSkill>).AddRange(skills);
 
-//         Assert.Throws<InvalidOperationException>(() => coach.AddSkill("dutch"));
-//     }
+        var requiredSkills = new List<string> { "C# Programming", "French" };
 
-//     [Fact]
-//     public void RemoveSkill_RemovesExistingSkill()
-//     {
-//         FullName name = new FullName("Test", "Coach");
-//         EmailAddress email = EmailAddress.Create("test@example.com");
-//         Coach coach = new Coach(name, email);
-//         coach.AddSkill("French");
-//         coach.AddSkill("C# Programming");
+        bool result = coach.HasAllRequiredSkills(requiredSkills);
 
-//         coach.RemoveSkill("french");
-
-//         Assert.DoesNotContain("French", coach.Skills);
-//         Assert.Single(coach.Skills);
-//         Assert.Contains("c# programming", coach.Skills);
-//     }
-
-//     [Fact]
-//     public void RemoveSkills_ThrowsInvalidOperationExceptionWhenSkillNotFound()
-//     {
-//         FullName name = new FullName("Test", "Coach");
-//         EmailAddress email = EmailAddress.Create("test@example.com");
-//         Coach coach = new Coach(name, email);
-//         coach.AddSkill("C# Programming");
-
-//         Assert.Throws<InvalidOperationException>(() => coach.RemoveSkill("French"));
-//         Assert.Contains("c# programming", coach.Skills);
-//     }
-
-//     [Fact]
-//     public void ClearSkills_RemovesAllSkills()
-//     {
-//         FullName name = new FullName("Test", "Coach");
-//         EmailAddress email = EmailAddress.Create("test@example.com");
-//         Coach coach = new Coach(name, email);
-//         coach.AddSkill("C# Programming");
-//         coach.AddSkill("Dutch");
-
-//         coach.ClearSkills();
-
-//         Assert.Empty(coach.Skills);
-//     }
-
-//     [Fact]
-//     public void HasAllRequiredSkills_ReturnsTrueWhenOk()
-//     {
-//         FullName name = new FullName("Test", "Coach");
-//         EmailAddress email = EmailAddress.Create("test@example.com");
-//         Coach coach = new Coach(name, email);
-//         coach.AddSkill("C# Programming");
-//         coach.AddSkill("dutch");
-//         coach.AddSkill("French");
-
-//         List<string> requiredSkills = new List<string> { "C# Programming", "Dutch" };
-
-//         bool result = coach.HasAllRequiredSkills(requiredSkills);
-
-//         Assert.True(result);
-//     }
-
-//     [Fact]
-//     public void HasAllRequiredSkills_ReturnsFalseWhenOneOrMoreSkillsAreMissing()
-//     {
-//         FullName name = new FullName("Test", "Coach");
-//         EmailAddress email = EmailAddress.Create("test@example.com");
-//         Coach coach = new Coach(name, email);
-//         coach.AddSkill("C# Programming");
-//         coach.AddSkill("Dutch");
-
-//         List<string> requiredSkills = new List<string> { "C# Programming", "French" };
-
-//         bool result = coach.HasAllRequiredSkills(requiredSkills);
-
-//         Assert.False(result);
-//     }
-// }
+        Assert.False(result);
+    }
+}

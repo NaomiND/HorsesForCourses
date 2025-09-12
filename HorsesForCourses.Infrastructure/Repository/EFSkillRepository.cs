@@ -53,6 +53,39 @@ public class EfSkillRepository : ISkillRepository
             .Where(s => distinctSkillNames.Contains(s.Name))
             .ToListAsync();
     }
+    //  public void AddSkill(string skill)  //=course & coach
+    // {
+    //     if (string.IsNullOrWhiteSpace(skill))
+    //         throw new ArgumentException("Skill can't be empty.");
+
+    //     if (skills.Contains(skill.ToLower()))
+    //         throw new InvalidOperationException("Skill already exists.");
+
+    //     skills.Add(skill.ToLower());
+    // }
+
+
+    // public void RemoveSkill(string skill)   //=course & coach
+    // {
+    //     int removedCount = skills.RemoveAll(c => string.Equals(c, skill.ToLower())); // RemoveAll en StringComparer (hoofdlettergevoelige delete)
+    //     if (removedCount == 0)
+    //         throw new InvalidOperationException($"Skill '{skill}' not found.");
+    // }
+
+    //   public void ClearSkills()   //=course & coach
+    // {
+    //     skills.Clear();
+    // }
+
+    // public void UpdateSkills(IEnumerable<string> newSkills) //=course & coach
+    // {
+    //     ClearSkills();
+
+    //     foreach (var skill in newSkills)
+    //     {
+    //         AddSkill(skill);
+    //     }
+    // }
 
     public async Task AddAsync(Skill skill)
     {

@@ -1,106 +1,115 @@
-// using HorsesForCourses.Core;
-// namespace HorsesForCourses.Tests;
+using HorsesForCourses.Core;
+namespace HorsesForCourses.Tests;
 
-// public class CourseTests
-// {
-//     [Fact]
-//     public void CreateValidCourse_WithDraftStatus()
-//     {
-//         var period = new PlanningPeriod(new DateOnly(2025, 7, 1), new DateOnly(2025, 7, 31));
-//         var course = Course.Create("C#", period);
+public class CourseTests
+{
+    private readonly PlanningPeriod _defaultPeriod;
 
-//         Assert.Equal("C#", course.Name);
-//         Assert.Equal(CourseStatus.Draft, course.Status);
-//     }
+    public CourseTests()
+    {
+        _defaultPeriod = new PlanningPeriod(new DateOnly(2025, 7, 1), new DateOnly(2025, 7, 31));
+    }
 
-//     [Fact]
-//     public void AddRequiredSkill_AddsNewToList()
-//     {
-//         var period = new PlanningPeriod(new DateOnly(2025, 7, 1), new DateOnly(2025, 7, 31));
-//         var course = Course.Create("C#", period);
+    [Fact]
+    public void Course_Constructor_InitializesPropertiesCorrectly()
+    {
+        var courseName = "Introduction to Testing";
+        var period = new PlanningPeriod(new DateOnly(2025, 10, 1), new DateOnly(2025, 10, 31));
 
-//         course.AddSkill("Testing");
+        var course = new Course(courseName, period);
 
-//         Assert.Contains("testing", course.Skills);
-//     }
+        Assert.Equal(courseName, course.Name);
+        Assert.Equal(period, course.Period);
+        Assert.Equal(CourseStatus.Draft, course.Status);
+        Assert.Empty(course.ScheduledTimeSlots);
+        Assert.Empty(course.CourseSkills);
+        Assert.Null(course.AssignedCoach);
+    }
 
-//     [Theory]
-//     [InlineData(null)]
-//     [InlineData("")]
-//     [InlineData("   ")]
-//     public void AddRequiredSkill_InvalidInput_ThrowsArgumentException(string invalidSkill)
-//     {
-//         var period = new PlanningPeriod(new DateOnly(2025, 7, 1), new DateOnly(2025, 7, 31));
-//         var course = Course.Create("C#", period);
+    [Fact]
+    public void Create_ValidCourse_SetsNamePeriodAndDraftStatus()
+    {
+        var course = Course.Create("C#", _defaultPeriod);
 
-//         Assert.Throws<ArgumentException>(() => course.AddSkill(invalidSkill));
-//     }
+        Assert.Equal("C#", course.Name);
+        Assert.Equal(_defaultPeriod, course.Period);
+        Assert.Equal(CourseStatus.Draft, course.Status);
+    }
 
-//     [Fact]
-//     public void AddSkill_ThrowsInvalidOperationExceptionWhenSkillAlreadyExists()
-//     {
-//         var period = new PlanningPeriod(new DateOnly(2025, 7, 1), new DateOnly(2025, 7, 31));
-//         var course = Course.Create("C#", period);
-//         string skill = "Dutch";
-//         course.AddSkill(skill);
+    [Fact]
+    public void AddScheduledTimeSlot_Valid_AddsSuccessfully()
+    {
+        var course = Course.Create("C#", _defaultPeriod);
+        var slot = new ScheduledTimeSlot(WeekDays.Monday, new TimeSlot(10, 12));
+        // var slot = new ScheduledTimeSlot(WeekDays.Monday, new TimeSlot(new TimeOnly(10, 0), new TimeOnly(12, 0))); // Voor TimeOnly, maar nu met int start en end time
 
-//         Assert.Throws<InvalidOperationException>(() => course.AddSkill("dutch"));
-//     }
+        course.AddScheduledTimeSlot(slot);
 
-//     [Fact]
-//     public void RemoveRequiredSkill_RemovesExistingSkill()
-//     {
-//         var period = new PlanningPeriod(new DateOnly(2025, 7, 1), new DateOnly(2025, 7, 31));
-//         var course = Course.Create("C#", period);
-//         course.AddSkill("Testing");
+        Assert.Single(course.ScheduledTimeSlots);
+        Assert.Contains(slot, course.ScheduledTimeSlots);
+    }
 
-//         course.RemoveSkill("testing");
+    [Fact]
+    public void Confirm_ChangesStatusToConfirmed()
+    {
+        var course = Course.Create("C#", _defaultPeriod);
+        var slot = new ScheduledTimeSlot(WeekDays.Monday, new TimeSlot(10, 12));
 
-//         Assert.Empty(course.Skills);
-//     }
+        course.AddScheduledTimeSlot(slot);
+        course.Confirm();
 
-//     [Fact]
-//     public void AddScheduledTimeSlot_Valid_AddsSuccessfully()
-//     {
-//         var period = new PlanningPeriod(new DateOnly(2025, 7, 1), new DateOnly(2025, 7, 31));
-//         var course = Course.Create("C#", period);
-//         var slot = new ScheduledTimeSlot(WeekDays.Monday, new TimeSlot(10, 12));
-//         // var slot = new ScheduledTimeSlot(WeekDays.Monday, new TimeSlot(new TimeOnly(10, 0), new TimeOnly(12, 0))); // Voor TimeOnly, maar nu met int start en end time
+        Assert.Equal(CourseStatus.Confirmed, course.Status);
+    }
 
-//         course.AddScheduledTimeSlot(slot);
+    [Fact]
+    public void AddScheduledTimeSlot_WhenStatusIsNotDraft_ThrowsInvalidOperationException()
+    {
+        var course = Course.Create("C# Basics", _defaultPeriod);
+        var slot = new ScheduledTimeSlot(WeekDays.Monday, new TimeSlot(10, 12));
+        course.AddScheduledTimeSlot(slot);
+        course.Confirm();
 
-//         Assert.Single(course.ScheduledTimeSlots);
-//     }
+        var exception = Assert.Throws<InvalidOperationException>(() => course.AddScheduledTimeSlot(slot));
+        Assert.Equal("Timeslot can't be changed after confirmation or coach assignment.", exception.Message);
+    }
 
-//     [Fact]
-//     public void Confirm_ChangesStatusToConfirmed()
-//     {
-//         var period = new PlanningPeriod(new DateOnly(2025, 7, 1), new DateOnly(2025, 7, 31));
-//         var course = Course.Create("C#", period);
-//         var slot = new ScheduledTimeSlot(WeekDays.Monday, new TimeSlot(10, 12));
+    [Fact]
+    public void Confirm_WhenCourseHasTimeSlots_ChangesStatusToConfirmed()
+    {
+        var course = Course.Create("C# Basics", _defaultPeriod);
+        var slot = new ScheduledTimeSlot(WeekDays.Monday, new TimeSlot(10, 12));
+        course.AddScheduledTimeSlot(slot);
 
-//         course.AddScheduledTimeSlot(slot);
-//         course.Confirm();
+        course.Confirm();
 
-//         Assert.Equal(CourseStatus.Confirmed, course.Status);
-//     }
+        Assert.Equal(CourseStatus.Confirmed, course.Status);
+    }
 
-//     // [Fact]  // herschijven na aanpassing assign coach met timeslots
-//     // public void AssignCoach_Valid_SetCoachChangeStatusToFinalized()
-//     // {
-//     //     var period = new PlanningPeriod(new DateOnly(2025, 7, 1), new DateOnly(2025, 7, 31));
-//     //     var course = Course.Create("C#", period);
-//     //     course.AddSkill("Unit Testing");
-//     //     var slot = new ScheduledTimeSlot(WeekDays.Monday, new TimeSlot(10, 12));
-//     //     course.AddScheduledTimeSlot(slot);
-//     //     course.Confirm();
+    [Fact]
+    public void Confirm_WhenCourseHasNoTimeSlots_ThrowsInvalidOperationException()
+    {
+        var course = Course.Create("C# Basics", _defaultPeriod);
 
-//     //     var coach = Coach.Create(42, "Coach Test", "test@example.com");
-//     //     coach.AddSkill("Unit Testing");
+        var exception = Assert.Throws<InvalidOperationException>(() => course.Confirm());
+        Assert.Equal("Confirmation failed. Please add timeslot(s).", exception.Message);
+    }
 
-//     //     course.AssignCoach(coach);
+    // [Fact]  // herschijven na aanpassing assign coach met timeslots
+    // public void AssignCoach_Valid_SetCoachChangeStatusToFinalized()
+    // {
+    //     var period = new PlanningPeriod(new DateOnly(2025, 7, 1), new DateOnly(2025, 7, 31));
+    //     var course = Course.Create("C#", period);
+    //     course.AddSkill("Unit Testing");
+    //     var slot = new ScheduledTimeSlot(WeekDays.Monday, new TimeSlot(10, 12));
+    //     course.AddScheduledTimeSlot(slot);
+    //     course.Confirm();
 
-//     //     Assert.Equal(CourseStatus.Finalized, course.Status);
-//     //     Assert.Equal(coach, course.AssignedCoach);
-//     // }
-// }
+    //     var coach = Coach.Create(42, "Coach Test", "test@example.com");
+    //     coach.AddSkill("Unit Testing");
+
+    //     course.AssignCoach(coach);
+
+    //     Assert.Equal(CourseStatus.Finalized, course.Status);
+    //     Assert.Equal(coach, course.AssignedCoach);
+    // }
+}

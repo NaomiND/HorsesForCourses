@@ -5,20 +5,16 @@ public class Course
     public int Id { get; private set; }
     public string Name { get; private set; }
     public PlanningPeriod Period { get; private set; }
-    // private List<string> skills = new();
-    // public IReadOnlyCollection<string> Skills => skills.AsReadOnly();
     private readonly List<CourseSkill> _courseSkills = new();
     public IReadOnlyCollection<CourseSkill> CourseSkills => _courseSkills.AsReadOnly();
     private List<ScheduledTimeSlot> scheduledTimeSlots = new();
     public IReadOnlyCollection<ScheduledTimeSlot> ScheduledTimeSlots => scheduledTimeSlots.AsReadOnly();
-
     public CourseStatus Status { get; private set; } = CourseStatus.Draft;
     public Coach? AssignedCoach { get; private set; }
     // private readonly CoachAvailabilityService coachAvailabilityService;
-    // private readonly IEnumerable<Course> allCourses;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
-    private Course() { }                                         // Private constructor voor EF Core
+    private Course() { }   // EF Core
 #pragma warning restore CS8618
 
     public Course(string course, PlanningPeriod period)
@@ -34,8 +30,6 @@ public class Course
 
         return new Course(name, period);
     }
-
-
 
     public void AddScheduledTimeSlot(ScheduledTimeSlot slot)            // lesmoment toevoegen
     {

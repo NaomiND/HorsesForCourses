@@ -1,5 +1,6 @@
 - [] assign coach: functionaliteit implementeren
 - [] New user registered. verschijnt overal behalve waar het moet
+- [] User - paswoord validatie is nu verdeeld over core en controller + klasse user nog testen
 
 ## Authentication / Authorization
 - [X] voorlopig kan ik met elk e-mailadres inloggen
