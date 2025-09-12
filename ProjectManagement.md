@@ -179,7 +179,7 @@ Voorzie foutmeldingen bij invalidaties (bv. 422 BadRequest met uitleg)
 **Zodat** deze data beschikbaar is voor weergave en wijziging
 
 ### 🧩 Get /courses         OK
-**Als** cursusverantwoordelijke **Wil ik** een lijst van alle coaches kunnen opvragen
+**Als** cursusverantwoordelijke **Wil ik** een lijst van alle courses kunnen opvragen
 **Zodat** ik een eenvoudig overzicht heb
 
 ### 🧩 Get /courses/{id}    OK

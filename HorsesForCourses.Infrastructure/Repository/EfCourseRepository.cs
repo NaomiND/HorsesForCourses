@@ -38,9 +38,11 @@ public class EfCourseRepository : ICourseRepository
 
     public async Task<Course?> GetByIdAsync(int id)
     {
-        // Gebruik Include om gerelateerde data (de coach) mee te laden.
         return await _context.Courses
             .Include(c => c.AssignedCoach)
+            .Include(c => c.CourseSkills)
+                .ThenInclude(cs => cs.Skill)
+            .Include(c => c.ScheduledTimeSlots)
             .FirstOrDefaultAsync(c => c.Id == id);
     }
 
@@ -49,13 +51,6 @@ public class EfCourseRepository : ICourseRepository
         return await _context.Courses
             .Include(c => c.AssignedCoach)
             .ToListAsync();
-    }
-
-    public async Task<Course?> GetByIdWithSkillsAsync(int id)
-    {
-        return await _context.Courses
-            .Include(c => c.CourseSkills)
-            .FirstOrDefaultAsync(c => c.Id == id);
     }
 
     public async Task AddAsync(Course course)
