@@ -24,23 +24,22 @@ public static class CoachMapper
     //     return coaches.Select(coach => ToDTO(coach, allCourses)).ToList();
     // }
 
-    public static CoachDetailDTO ToDetailDTO(Coach coach)           //GET /coaches/{id} 
+    public static CoachDetailDTO ToDetailDTO(Coach coach)
     {
-        var assignedCourses = coach.Courses
-            .Select(course => new CourseDetailDTO
-            {
-                Id = course.Id,
-                Name = course.Name
-            })
-            .ToList();
-
         return new CoachDetailDTO
         {
             Id = coach.Id,
             Name = coach.Name.ToString(),
             Email = coach.Email.Value,
             Skills = coach.CoachSkills.Select(cs => cs.Skill.Name).ToList(),
-            Courses = assignedCourses.Select(c => new CourseDetailDTO { Id = c.Id, Name = c.Name }).ToList()
+
+            Courses = coach.Courses
+                        .Select(course => new CourseBasicInfo
+                        {
+                            Id = course.Id,
+                            Name = course.Name
+                        })
+                        .ToList()
         };
     }
 }

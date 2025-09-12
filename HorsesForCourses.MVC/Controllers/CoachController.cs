@@ -74,7 +74,6 @@ namespace HorsesForCourses.MVC.CoachController
         }
 
         [HttpGet("editskills/{id}")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditSkills(int id)
         {
             var coach = await _coachRepository.GetByIdAsync(id);
