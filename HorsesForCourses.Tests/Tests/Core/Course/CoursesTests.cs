@@ -1,3 +1,4 @@
+using System.Reflection;
 using HorsesForCourses.Core;
 namespace HorsesForCourses.Tests;
 
@@ -94,22 +95,32 @@ public class CourseTests
         Assert.Equal("Confirmation failed. Please add timeslot(s).", exception.Message);
     }
 
-    // [Fact]  // herschijven na aanpassing assign coach met timeslots
-    // public void AssignCoach_Valid_SetCoachChangeStatusToFinalized()
-    // {
-    //     var period = new PlanningPeriod(new DateOnly(2025, 7, 1), new DateOnly(2025, 7, 31));
-    //     var course = Course.Create("C#", period);
-    //     course.AddSkill("Unit Testing");
-    //     var slot = new ScheduledTimeSlot(WeekDays.Monday, new TimeSlot(10, 12));
-    //     course.AddScheduledTimeSlot(slot);
-    //     course.Confirm();
+    [Fact]
+    public void AssignCoach_Valid_SetCoachChangeStatusToFinalized()
+    {
+        var period = new PlanningPeriod(new DateOnly(2025, 7, 1), new DateOnly(2025, 7, 31));
+        var course = Course.Create("C#", period);
 
-    //     var coach = Coach.Create(42, "Coach Test", "test@example.com");
-    //     coach.AddSkill("Unit Testing");
+        var requiredSkill = new Skill("unit testing");
+        var courseSkill = new CourseSkill { Course = course, Skill = requiredSkill };
 
-    //     course.AssignCoach(coach);
+        // Use reflection to add the skill to the private collection
+        var courseSkillsField = typeof(Course).GetField("_courseSkills", BindingFlags.NonPublic | BindingFlags.Instance);
+        (courseSkillsField.GetValue(course) as List<CourseSkill>).Add(courseSkill);
 
-    //     Assert.Equal(CourseStatus.Finalized, course.Status);
-    //     Assert.Equal(coach, course.AssignedCoach);
-    // }
+        var slot = new ScheduledTimeSlot(WeekDays.Monday, new TimeSlot(10, 12));
+        course.AddScheduledTimeSlot(slot);
+        course.Confirm();
+
+        var coach = Coach.Create("Coach Test", "test@example.com");
+        var coachSkill = new CoachSkill { Coach = coach, Skill = requiredSkill };
+
+        var coachSkillsField = typeof(Coach).GetField("coachSkills", BindingFlags.NonPublic | BindingFlags.Instance);
+        (coachSkillsField.GetValue(coach) as List<CoachSkill>).Add(coachSkill);
+
+        course.AssignCoach(coach);
+
+        Assert.Equal(CourseStatus.Finalized, course.Status);
+        Assert.Equal(coach, course.AssignedCoach);
+    }
 }

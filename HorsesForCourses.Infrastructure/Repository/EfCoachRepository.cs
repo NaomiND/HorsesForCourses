@@ -123,61 +123,6 @@ public class EfCoachRepository : ICoachRepository
         await _context.SaveChangesAsync();
     }
 
-    // public async Task<IEnumerable<Coach>> GetAvailableCoachesAsync(
-    //     IEnumerable<string> requiredSkills,
-    //     IEnumerable<ScheduledTimeSlot> slots,
-    //     PlanningPeriod period)
-    // {
-    //     // ---------------------------------------------------------------------------------
-    //     // STAP 1: Haal ALLE coaches op met hun skills en geplande cursussen.
-    //     // ---------------------------------------------------------------------------------
-    //     var candidateCoaches = await _context.Coaches
-    //         .Include(c => c.Courses)
-    //             .ThenInclude(course => course.ScheduledTimeSlots)
-    //         .ToListAsync(); // alles laden
-
-    //     // ---------------------------------------------------------------------------------
-    //     // STAP 2: Filter de kandidaten op basis van skills
-    //     // ---------------------------------------------------------------------------------
-    //     if (requiredSkills.Any())
-    //     {
-    //         candidateCoaches = candidateCoaches
-    //             .Where(coach => coach.HasAllRequiredSkills(requiredSkills))
-    //             .ToList();
-    //     }
-
-    //     // ---------------------------------------------------------------------------------
-    //     // STAP 3: Filter op beschikbaarheid
-    //     // ---------------------------------------------------------------------------------
-    //     var availableCoaches = new List<Coach>();
-    //     foreach (var coach in candidateCoaches)
-    //     {
-    //         bool hasConflict = coach.Courses.Any(assignedCourse =>
-    //         {
-    //             bool periodOverlaps = assignedCourse.Period.StartDate <= period.EndDate &&
-    //                                   assignedCourse.Period.EndDate >= period.StartDate;
-
-    //             if (!periodOverlaps) return false;
-
-    //             bool timeslotOverlaps = assignedCourse.ScheduledTimeSlots.Any(existingSlot =>
-    //                 slots.Any(newSlot =>
-    //                     existingSlot.Day == newSlot.Day &&
-    //                     existingSlot.TimeSlot.StartTime < newSlot.TimeSlot.EndTime &&
-    //                     existingSlot.TimeSlot.EndTime > newSlot.TimeSlot.StartTime
-    //                 )
-    //             );
-    //             return timeslotOverlaps;
-    //         });
-
-    //         if (!hasConflict)
-    //         {
-    //             availableCoaches.Add(coach);
-    //         }
-    //     }
-
-    //     return availableCoaches;
-    // }
-
     //onderstaande werkt tot timeslots = veranderen naar een OR via PredicateBuilder
     // public async Task<IEnumerable<Coach>> GetAvailableCoachesAsync(
     //  IEnumerable<string> requiredSkillNames,
@@ -226,25 +171,94 @@ public class EfCoachRepository : ICoachRepository
     // }
 
 
-    public async Task<IEnumerable<Coach>> GetAvailableCoachesAsync(
-        IEnumerable<string> requiredSkillNames,
-        IEnumerable<ScheduledTimeSlot> slots,
-        PlanningPeriod period)
-    {
-        // Stap 1: Brede DATABASE-query
-        // We halen een lijst van kandidaat-coaches op die aan de vertaalbare voorwaarden voldoen (skills).
-        // We laden (.Include) hun agenda's mee voor de volgende stap.
+    // public async Task<IEnumerable<Coach>> GetAvailableCoachesAsync(
+    //     IEnumerable<string> requiredSkillNames,
+    //     IEnumerable<ScheduledTimeSlot> slots,
+    //     PlanningPeriod period)
+    // {
+    //     // Stap 1: Brede DATABASE-query
+    //     // We halen een lijst van kandidaat-coaches op die aan de vertaalbare voorwaarden voldoen (skills).
+    //     // We laden (.Include) hun agenda's mee voor de volgende stap.
 
+    //     var requiredSkillIds = await _context.Skills
+    //         .Where(s => requiredSkillNames.Contains(s.Name))
+    //         .Select(s => s.Id)
+    //         .ToListAsync();
+
+    //     if (requiredSkillIds.Count() != requiredSkillNames.Count())
+    //     {
+    //         return new List<Coach>();
+    //     }
+
+    //     var query = _context.Coaches.AsQueryable();
+
+    //     foreach (var skillId in requiredSkillIds)
+    //     {
+    //         query = query.Where(c => c.CoachSkills.Any(cs => cs.SkillId == skillId));
+    //     }
+
+    //     // Materialiseer de kandidaten naar het C#-geheugen
+    //     var candidateCoaches = await query
+    //         .Include(c => c.Courses)
+    //         .ThenInclude(course => course.ScheduledTimeSlots)
+    //         .ToListAsync();
+
+    //     // Stap 2: Precieze IN-MEMORY filtering
+    //     // Nu we een kleinere lijst in het geheugen hebben, kunnen we complexe C#-logica gebruiken.
+    //     var availableCoaches = new List<Coach>();
+
+    //     foreach (var coach in candidateCoaches)
+    //     {
+    //         bool hasConflict = coach.Courses.Any(assignedCourse =>
+    //         {
+    //             bool periodOverlaps = assignedCourse.Period.StartDate <= period.EndDate &&
+    //                                   assignedCourse.Period.EndDate >= period.StartDate;
+
+    //             if (!periodOverlaps) return false;
+
+    //             // Dit is nu een simpele LINQ-to-Objects .Any() aanroep die werkt met Funcs.
+    //             return assignedCourse.ScheduledTimeSlots.Any(existingSlot =>
+    //                 slots.Any(newSlot => existingSlot.OverlapsWith(newSlot))
+    //             );
+    //         });
+
+    //         if (!hasConflict)
+    //         {
+    //             availableCoaches.Add(coach);
+    //         }
+    //     }
+
+    //     return availableCoaches;
+    // }
+
+    public async Task<IEnumerable<Coach>> GetAvailableCoachesAsync(
+    IEnumerable<string> requiredSkillNames,
+    IEnumerable<ScheduledTimeSlot> slots,
+    PlanningPeriod period)
+    {
+        // Stap 1: skill-namen naar Id's (blijft hetzelfde)
         var requiredSkillIds = await _context.Skills
             .Where(s => requiredSkillNames.Contains(s.Name))
             .Select(s => s.Id)
             .ToListAsync();
 
-        if (requiredSkillIds.Count() != requiredSkillNames.Count())
+        if (requiredSkillIds.Count != requiredSkillNames.Count())
         {
             return new List<Coach>();
         }
 
+        // Stap 2: overlap-conditie met PredicateBuilder
+        var overlapPredicate = PredicateBuilder.False<ScheduledTimeSlot>();
+        foreach (var newSlot in slots)
+        {
+            overlapPredicate = overlapPredicate.Or(existingSlot =>
+                existingSlot.Day == newSlot.Day &&
+                existingSlot.TimeSlot.StartTime < newSlot.TimeSlot.EndTime &&
+                existingSlot.TimeSlot.EndTime > newSlot.TimeSlot.StartTime
+            );
+        }
+
+        // Stap 3: hoofdquery met de nieuwe, vertaalbare predicate
         var query = _context.Coaches.AsQueryable();
 
         foreach (var skillId in requiredSkillIds)
@@ -252,39 +266,17 @@ public class EfCoachRepository : ICoachRepository
             query = query.Where(c => c.CoachSkills.Any(cs => cs.SkillId == skillId));
         }
 
-        // Materialiseer de kandidaten naar het C#-geheugen
-        var candidateCoaches = await query
-            .Include(c => c.Courses)
-            .ThenInclude(course => course.ScheduledTimeSlots)
-            .ToListAsync();
+        query = query.Where(coach =>
+            !coach.Courses.Any(assignedCourse =>
+                // Voorwaarde A: Periode-overlap
+                assignedCourse.Period.StartDate <= period.EndDate &&
+                assignedCourse.Period.EndDate >= period.StartDate &&
+                // Voorwaarde B: Timeslot-overlap, nu met onze vertaalbare predicate
+                assignedCourse.ScheduledTimeSlots.AsQueryable().Any(overlapPredicate)
+            )
+        );
 
-        // Stap 2: Precieze IN-MEMORY filtering
-        // Nu we een kleinere lijst in het geheugen hebben, kunnen we complexe C#-logica gebruiken.
-        var availableCoaches = new List<Coach>();
-
-        foreach (var coach in candidateCoaches)
-        {
-            bool hasConflict = coach.Courses.Any(assignedCourse =>
-            {
-                bool periodOverlaps = assignedCourse.Period.StartDate <= period.EndDate &&
-                                      assignedCourse.Period.EndDate >= period.StartDate;
-
-                if (!periodOverlaps) return false;
-
-                // Dit is nu een simpele LINQ-to-Objects .Any() aanroep die werkt met Funcs.
-                return assignedCourse.ScheduledTimeSlots.Any(existingSlot =>
-                    slots.Any(newSlot => existingSlot.OverlapsWith(newSlot))
-                );
-            });
-
-            if (!hasConflict)
-            {
-                availableCoaches.Add(coach);
-            }
-        }
-
-        return availableCoaches;
+        // Stap 4: Voer de query uit (blijft hetzelfde)
+        return await query.ToListAsync();
     }
-
 }
-

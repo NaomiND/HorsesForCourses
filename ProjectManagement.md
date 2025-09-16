@@ -1,6 +1,7 @@
-- [] assign coach: functionaliteit implementeren
+- [X] assign coach: functionaliteit implementeren zonder alle coaches op te halen uit db
 - [] New user registered. verschijnt overal behalve waar het moet
 - [] User - paswoord validatie is nu verdeeld over core en controller + klasse user nog testen
+- [] implementatie in WebApi: editskills + confirm + assign coach zijn nog niet ok (zie MVC)
 
 ## Authentication / Authorization
 - [X] voorlopig kan ik met elk e-mailadres inloggen
@@ -47,7 +48,7 @@
 # geen prioriteit
 - [X] Fout bij aanmaken coach: Naam moet een voor- en achternaam bevatten. (Parameter 'fullName') : parametertekst wil ik weg
 - [] Story 5: comma seperated skills aan te passen die userfriendly is. zie Abigail : met aparte modelview, en hierbij kan partial view gebruikt worden
-- [] bij coaches toevoegen hoeveel courses die heeft. Tellen mag niet via allcourses want dit is veel te impactvol voor de db. doe dit bv enkel met id. 
+- [X] bij coaches toevoegen hoeveel courses die heeft. Tellen mag niet via allcourses want dit is veel te impactvol voor de db. doe dit bv enkel met id. 
 - [X] zorg dat coach.course werkt 
 - [X] Foutafhandeling voor domein-validaties geïmplementeerd in controllers via try-catch, wat de correcte aanpak is voor het retourneren van een view met ModelState.
 

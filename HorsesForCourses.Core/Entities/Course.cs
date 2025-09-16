@@ -11,7 +11,6 @@ public class Course
     public IReadOnlyCollection<ScheduledTimeSlot> ScheduledTimeSlots => scheduledTimeSlots.AsReadOnly();
     public CourseStatus Status { get; private set; } = CourseStatus.Draft;
     public Coach? AssignedCoach { get; private set; }
-    // private readonly CoachAvailability coachAvailability;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
     private Course() { }   // EF Core
@@ -67,10 +66,6 @@ public class Course
         if (!coach.IsSuitable(this.CourseSkills))
             throw new InvalidOperationException("This coach does not have the required skills for this course.");
 
-        // if (!await coachAvailability.IsCoachAvailableForCourseAsync(coach, this))
-        // {
-        //     throw new InvalidOperationException("This coach is unavailable for this course.");
-        // }
         AssignedCoach = coach;
         Status = CourseStatus.Finalized;
     }
