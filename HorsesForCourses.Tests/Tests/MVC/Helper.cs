@@ -20,5 +20,4 @@ public class Helper
         public static FullName FullName => FullName.From(CoachName);
         public static EmailAddress EmailAddress => EmailAddress.Create(CoachEmail);
     }
-
 }

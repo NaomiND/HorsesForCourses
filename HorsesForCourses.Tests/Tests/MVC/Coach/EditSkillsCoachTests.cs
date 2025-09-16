@@ -1,3 +1,4 @@
+using System.Reflection;
 using HorsesForCourses.Application;
 using HorsesForCourses.Application.dtos;
 using HorsesForCourses.Core;
@@ -10,7 +11,7 @@ using static HorsesForCourses.Tests.Mvc.Helper;
 
 namespace HorsesForCourses.Tests.Mvc;
 
-public class EditCoachSkillsMVC
+public class EditSkillsCoachMVC
 {
     private readonly Mock<ICoachRepository> coachRepository;
     private readonly Mock<ICourseRepository> courseRepository;
@@ -18,50 +19,55 @@ public class EditCoachSkillsMVC
     private readonly CoachesController coachController;
     private readonly ControllerTestHelper helper;
 
-    public EditCoachSkillsMVC()
+    public EditSkillsCoachMVC()
     {
-        coachRepository = new Mock<ICoachRepository>();
-        courseRepository = new Mock<ICourseRepository>();
-        userRepository = new Mock<IUserRepository>();
         helper = new ControllerTestHelper();
+        coachRepository = helper.CoachRepositoryMock;
+        courseRepository = helper.CourseRepositoryMock;
+        userRepository = helper.UserRepositoryMock;
 
-        coachController = helper.SetupController(new CoachesController(
-            coachRepository.Object, courseRepository.Object, userRepository.Object), "test-user@example.com");
+        coachController = helper.SetupController(
+                    new CoachesController(coachRepository.Object, new Mock<ICourseRepository>().Object, userRepository.Object),
+                    TheTester.CoachEmail);
     }
 
-    private User CreateTestUser(int id, string email)
+    private Coach SetupTestCoachWithSkills(int coachId, out User user)
     {
-        var user = User.Create("Test User", email, "password", new Pbkdf2PasswordHasher());
-        typeof(User).GetProperty(nameof(User.Id))!.SetValue(user, id);
-        return user;
-    }
+        user = User.Create(TheTester.CoachName, TheTester.CoachEmail, "password", new Pbkdf2PasswordHasher());
+        Hack.TheId(user, 10);
 
-    private Coach CreateTestCoach(int coachId, User userToAssign)
-    {
-        var coach = new Coach(TheTester.FullName, TheTester.EmailAddress);
+        var coach = Coach.Create(TheTester.CoachName, TheTester.CoachEmail);
+        Hack.TheId(coach, coachId);
+        coach.AssignUser(user);
 
-        coach.AssignUser(userToAssign);
-        typeof(Coach).GetProperty(nameof(Coach.UserId))!.SetValue(coach, userToAssign.Id); // Stel de Foreign Key in
+        // Reflection omdat de setter private is.
+        var userIdProperty = typeof(Coach).GetProperty(nameof(Coach.UserId));
+        userIdProperty?.SetValue(coach, user.Id);
 
-        typeof(Coach).GetProperty(nameof(Coach.Id))!.SetValue(coach, coachId);
+        // Gebruik reflection om de skills uit TheTester toe te voegen aan de coach.
+        var skills = TheTester.CoachSkills.Select(s => new Skill(s)).ToList();
+        var coachSkills = skills.Select(s => new CoachSkill { Coach = coach, Skill = s }).ToList();
+        var coachSkillsField = typeof(Coach).GetField("coachSkills", BindingFlags.NonPublic | BindingFlags.Instance);
+        (coachSkillsField?.GetValue(coach) as List<CoachSkill>)?.AddRange(coachSkills);
+
+        userRepository.Setup(r => r.GetByEmailAsync(TheTester.CoachEmail)).ReturnsAsync(user);
+        coachRepository.Setup(r => r.GetByIdAsync(coachId)).ReturnsAsync(coach);
+
         return coach;
     }
 
     [Fact]
     public async Task EditSkills_GET_ReturnsViewWithSkills_WhenCoachExists()
     {
-        var testUser = CreateTestUser(10, "test-user@example.com");
-        var coach = CreateTestCoach(5, testUser);
-        coach.AddSkill("C#");
+        var coachId = 5;
+        SetupTestCoachWithSkills(coachId, out _);
 
-        coachRepository.Setup(repo => repo.GetByIdAsync(5)).ReturnsAsync(coach);
-        userRepository.Setup(repo => repo.GetByEmailAsync("test-user@example.com")).ReturnsAsync(testUser);
+        var result = await coachController.EditSkills(coachId);
 
-        var result = await coachController.EditSkills(5);
-
-        var viewResult = Assert.IsType<ViewResult>(result); // Zal nu slagen
+        var viewResult = Assert.IsType<ViewResult>(result);
         var model = Assert.IsType<UpdateCoachSkillsDTO>(viewResult.Model);
-        Assert.Equal(5, model.Id);
+        Assert.Equal(coachId, model.Id);
+        Assert.Equal(TheTester.CoachSkills.Select(s => s.ToLower()), model.Skills);
     }
 
     [Fact]
@@ -77,24 +83,26 @@ public class EditCoachSkillsMVC
     [Fact]
     public async Task EditSkills_POST_RedirectsToDetails_WhenUpdateIsSuccessful()
     {
-        var testUser = CreateTestUser(10, "test-user@example.com");
-        var coach = CreateTestCoach(1, testUser);
+        var coachId = 1;
+        SetupTestCoachWithSkills(coachId, out _);
 
-        coachRepository.Setup(repo => repo.GetByIdAsync(1)).ReturnsAsync(coach);
-        userRepository.Setup(repo => repo.GetByEmailAsync("test-user@example.com")).ReturnsAsync(testUser);
+        var newSkillsList = new List<string> { "sql", "azure" };
+        var dto = new UpdateCoachSkillsDTO { Id = coachId, Skills = newSkillsList };
 
-        var updateSkills = new UpdateCoachSkillsDTO { Id = 1 };
         var formCollection = new FormCollection(new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>
         {
-            { "Skills", "c#, testing, sql" }
+             { "Skills", string.Join(",", newSkillsList) }
         });
         coachController.ControllerContext.HttpContext.Request.Form = formCollection;
 
-        var result = await coachController.EditSkills(1, updateSkills);
+        var result = await coachController.EditSkills(coachId, dto); ;
 
-        coachRepository.Verify(repo => repo.SaveChangesAsync(), Times.Once); // Zal nu slagen
+        coachRepository.Verify(repo => repo.UpdateSkillsAsync(coachId,
+            It.Is<IEnumerable<string>>(skills => skills.SequenceEqual(newSkillsList))), Times.Once);
+
         var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
         Assert.Equal("Details", redirectToActionResult.ActionName);
+        Assert.Equal(coachId, redirectToActionResult.RouteValues["id"]);
     }
 
     [Fact]

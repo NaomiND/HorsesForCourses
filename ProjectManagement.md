@@ -1,4 +1,5 @@
 - [X] assign coach: functionaliteit implementeren zonder alle coaches op te halen uit db
+- [] alle bestaande testen on GREEN: Todo (coachavailability, editskillscoachtests)
 - [] New user registered. verschijnt overal behalve waar het moet
 - [] User - paswoord validatie is nu verdeeld over core en controller + klasse user nog testen
 - [] implementatie in WebApi: editskills + confirm + assign coach zijn nog niet ok (zie MVC)

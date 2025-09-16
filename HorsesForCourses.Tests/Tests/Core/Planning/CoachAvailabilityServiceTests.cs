@@ -38,7 +38,7 @@ public class CoachAvailabilityTests
         Assert.True(result);
     }
 
-    // probleem in mijn logica voor overlapping courses, test faalt en test is correct, dus code is fout
+    // probleem in mijn logica voor overlapping courses, test faalt en test is correct, dus code is fout. Of toch, want timeslots is getest??
     // [Fact]
     // public async Task Coach_With_Overlapping_Course_And_Overlapping_Timeslot_Should_Not_Be_Available()
     // {

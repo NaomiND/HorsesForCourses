@@ -16,6 +16,7 @@ public class ControllerTestHelper
 {
     public Mock<IUserRepository> UserRepositoryMock { get; }
     public Mock<ICoachRepository> CoachRepositoryMock { get; }
+    public Mock<ICourseRepository> CourseRepositoryMock { get; }
     public Mock<IPasswordHasher> PasswordHasherMock { get; }
     public Mock<IAuthenticationService> AuthServiceMock { get; }
     public T SetupController<T>(T controller, string userEmail = "test@example.com") where T : Controller
@@ -66,6 +67,7 @@ public class ControllerTestHelper
     {
         UserRepositoryMock = new Mock<IUserRepository>();
         CoachRepositoryMock = new Mock<ICoachRepository>();
+        CourseRepositoryMock = new Mock<ICourseRepository>();
         PasswordHasherMock = new Mock<IPasswordHasher>();
         AuthServiceMock = new Mock<IAuthenticationService>();
 
