@@ -13,6 +13,8 @@
 <h3>Assign Coach to @ViewBag.CourseName</h3>
 
 <form asp-action="AssignCoach" asp-route-id="@Model.CourseId" method="post">
+    <input type="hidden" asp-for="CourseId" />
+
     <div class="form-group">
         <label asp-for="CoachId">Select Coach</label>
         <select asp-for="CoachId" class="form-control"
