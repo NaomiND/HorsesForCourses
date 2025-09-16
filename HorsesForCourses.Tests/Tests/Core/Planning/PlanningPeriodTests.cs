@@ -1,4 +1,5 @@
 using HorsesForCourses.Core;
+namespace HorsesForCourses.Tests.Core.Planning;
 
 public class PlanningPeriodTests
 {

@@ -13,7 +13,7 @@ public class EfSkillRepository : ISkillRepository
         _context = context;
     }
 
-    public async Task<List<Skill>> GetSkillsByNamesAsync(IEnumerable<string> names)
+    public async Task<List<Skill>> GetSkills(IEnumerable<string> names)
     {
         var lowerCaseNames = names.Select(n => n.ToLowerInvariant()).ToList();
         return await _context.Skills

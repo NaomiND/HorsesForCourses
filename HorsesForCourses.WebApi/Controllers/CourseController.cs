@@ -14,13 +14,13 @@ public class CoursesController : ControllerBase
 {
     private readonly ICourseRepository _courseRepository;
     private readonly ICoachRepository _coachRepository;
-    private readonly CoachAvailabilityService _coachAvailabilityService;
+    private readonly CoachAvailability _coachAvailability;
 
-    public CoursesController(ICourseRepository courseRepository, ICoachRepository coachRepository, CoachAvailabilityService coachAvailabilityService)
+    public CoursesController(ICourseRepository courseRepository, ICoachRepository coachRepository, CoachAvailability coachAvailability)
     {
         _courseRepository = courseRepository;
         _coachRepository = coachRepository;
-        _coachAvailabilityService = coachAvailabilityService;
+        _coachAvailability = coachAvailability;
     }
 
     [HttpPost]
@@ -136,7 +136,7 @@ public class CoursesController : ControllerBase
     //     var coach = await _coachRepository.GetByIdAsync(dto.CoachId);
     //     if (coach is null) return NotFound($"Coach with Id {dto.CoachId} not found.");
 
-    //     var isAvailable = await _coachAvailabilityService.IsCoachAvailableForCourseAsync(coach, course);
+    //     var isAvailable = await _coachAvailability.IsCoachAvailableForCourseAsync(coach, course);
     //     if (!isAvailable)
     //     {
     //         throw new DomainException("This coach is unavailable for this course.");

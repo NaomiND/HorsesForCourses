@@ -15,7 +15,7 @@ var dbPath = Path.Combine(padAPI, "horses.db");
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite($"Data Source={dbPath}"));   //loggen :     options.UseSqlite($"Data Source={dbPath.PulseToLog()}"));
 
-builder.Services.AddScoped<CoachAvailabilityService>();
+builder.Services.AddScoped<CoachAvailability>();
 builder.Services.AddScoped<ICoachRepository, EfCoachRepository>();
 builder.Services.AddScoped<ICourseRepository, EfCourseRepository>();
 builder.Services.AddScoped<IUserRepository, EfUserRepository>();

@@ -11,7 +11,7 @@ public class Course
     public IReadOnlyCollection<ScheduledTimeSlot> ScheduledTimeSlots => scheduledTimeSlots.AsReadOnly();
     public CourseStatus Status { get; private set; } = CourseStatus.Draft;
     public Coach? AssignedCoach { get; private set; }
-    // private readonly CoachAvailabilityService coachAvailabilityService;
+    // private readonly CoachAvailability coachAvailability;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
     private Course() { }   // EF Core
@@ -59,19 +59,19 @@ public class Course
         Status = CourseStatus.Confirmed;
     }
 
-    // public void AssignCoach(Coach coach)
-    // {
-    //     if (Status != CourseStatus.Confirmed)
-    //         throw new InvalidOperationException("Please confirm the course before assigning a coach.");
+    public void AssignCoach(Coach coach)
+    {
+        if (Status != CourseStatus.Confirmed)
+            throw new InvalidOperationException("Please confirm the course before assigning a coach.");
 
-    //     if (!coach.HasAllRequiredSkills(skills))
-    //         throw new InvalidOperationException("This coach does not have the required skills for this course.");
+        if (!coach.HasAllRequiredSkills(skills))
+            throw new InvalidOperationException("This coach does not have the required skills for this course.");
 
-    //     // if (!await coachAvailabilityService.IsCoachAvailableForCourseAsync(coach, this))
-    //     // {
-    //     //     throw new InvalidOperationException("This coach is unavailable for this course.");
-    //     // }
-    //     AssignedCoach = coach;
-    //     Status = CourseStatus.Finalized;
-    // }
+        // if (!await coachAvailability.IsCoachAvailableForCourseAsync(coach, this))
+        // {
+        //     throw new InvalidOperationException("This coach is unavailable for this course.");
+        // }
+        AssignedCoach = coach;
+        Status = CourseStatus.Finalized;
+    }
 }

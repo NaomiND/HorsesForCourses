@@ -66,8 +66,9 @@ public class EfCourseRepository : ICourseRepository
     public async Task<IEnumerable<Course>> GetCoursesByCoachIdAsync(int coachId)
     {
         return await _context.Courses
-            .Where(c => c.AssignedCoach != null && c.AssignedCoach.Id == coachId)
-            .ToListAsync();
+         .Include(c => c.ScheduledTimeSlots)
+         .Where(c => c.AssignedCoach != null && c.AssignedCoach.Id == coachId)
+         .ToListAsync();
     }
 
     public async Task AddSkillToCourse(int courseId, string skillName)

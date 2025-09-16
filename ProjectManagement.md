@@ -92,7 +92,7 @@
                 Als alles oké is, roept het Course.AssignCoach(coach) aan en slaat de Course op.
 
 - Domain Service (Voor logica die niet logisch in één enkele aggregate past)
-    └──CoachAvailabilityService:
+    └──CoachAvailability:
                 IsCoachAvailableForCourse(coach, Course): Deze service haalt alle andere opleidingen op waar de coach al aan toegewezen is en controleert of de lesmomenten van de nieuwe Course overlappen met de lesmomenten van de bestaande opleidingen.
 
 

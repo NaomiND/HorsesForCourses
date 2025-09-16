@@ -26,7 +26,7 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite("Data Source=horses.db"));
 
-builder.Services.AddScoped<CoachAvailabilityService>();
+builder.Services.AddScoped<CoachAvailability>();
 builder.Services.AddScoped<ICourseRepository, EfCourseRepository>();        //Voor elke unieke HTTP-request wordt er één AppDbContext-instantie gemaakt.
 builder.Services.AddScoped<ICoachRepository, EfCoachRepository>();
 builder.Services.AddScoped<Logger>();

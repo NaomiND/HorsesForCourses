@@ -15,15 +15,15 @@ namespace HorsesForCourses.MVC.CourseController
     {
         private readonly ICourseRepository _courseRepository;
         private readonly ICoachRepository _coachRepository;
-        private readonly CoachAvailabilityService _coachAvailabilityService;
+        private readonly CoachAvailability _coachAvailability;
         private readonly IUserRepository _userRepository;
 
 
-        public CoursesController(ICourseRepository courseRepository, ICoachRepository coachrepository, CoachAvailabilityService coachAvailabilityService, IUserRepository userRepository)
+        public CoursesController(ICourseRepository courseRepository, ICoachRepository coachrepository, CoachAvailability coachAvailability, IUserRepository userRepository)
         {
             _courseRepository = courseRepository;
             _coachRepository = coachrepository;
-            _coachAvailabilityService = coachAvailabilityService;
+            _coachAvailability = coachAvailability;
             _userRepository = userRepository;
         }
 
@@ -387,7 +387,7 @@ namespace HorsesForCourses.MVC.CourseController
 
         //         try
         //         {
-        //             var isAvailable = await _coachAvailabilityService.IsCoachAvailableForCourseAsync(coach, course);
+        //             var isAvailable = await _coachAvailability.IsCoachAvailableForCourseAsync(coach, course);
         //             if (!isAvailable)
         //             {
         //                 throw new InvalidOperationException("This coach is no longer available for the selected timeslots.");
