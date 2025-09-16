@@ -269,150 +269,99 @@ namespace HorsesForCourses.MVC.CourseController
             return RedirectToAction(nameof(Details), new { id = id });
         }
 
-        // [HttpGet("assigncoach/{id}")]
-        // public async Task<IActionResult> AssignCoach(int id)
-        // {
-        //     var course = await _courseRepository.GetByIdAsync(id);
-        //     if (course == null)
-        //         return NotFound();
+        [Authorize(Policy = "CourseManagement")]
+        [HttpGet("assigncoach/{id}")]
+        public async Task<IActionResult> AssignCoach(int id)
+        {
+            var course = await _courseRepository.GetByIdAsync(id);
+            if (course == null)
+                return NotFound();
 
-        //     var coaches = await _coachRepository.GetAllAsync();
+            if (course.Status != CourseStatus.Confirmed)
+                return RedirectToAction(nameof(Details), new { id = id });
 
-        //     var dto = new AssignCoachDTO
-        //     {
-        //         CourseId = course.Id,
-        //         AvailableCoaches = coaches.Select(c => new ListCoaches
-        //         {
-        //             Id = c.Id,
-        //             Name = c.Name.ToString()
-        //         }).ToList()
-        //     };
+            var requiredSkillNames = course.CourseSkills.Select(cs => cs.Skill.Name);
+            var availableCoaches = await _coachRepository.GetAvailableCoachesAsync(requiredSkillNames, course.ScheduledTimeSlots, course.Period);
 
-        //     ViewBag.CourseName = course.Name;
-        //     return View(dto);
-        // }
+            var dto = new AssignCoachDTO
+            {
+                CourseId = course.Id,
+                AvailableCoaches = availableCoaches.Select(c => new ListCoaches
+                {
+                    Id = c.Id,
+                    Name = c.Name.ToString()
+                }).ToList()
+            };
 
-        // [HttpGet("assigncoach/{id}")]
-        // public async Task<IActionResult> AssignCoach(int id)
-        // {
-        //     var course = await _courseRepository.GetByIdAsync(id);
-        //     if (course == null)
-        //         return NotFound();
+            ViewBag.CourseName = course.Name;
+            return View(dto);
+        }
 
-        //     if (course.Status != CourseStatus.Confirmed)
-        //         return RedirectToAction(nameof(Details), new { id = id });
+        [Authorize(Policy = "CourseManagement")]
+        [HttpPost("assigncoach/{id}")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AssignCoach(int id, AssignCoachDTO dto)
+        {
+            if (id != dto.CourseId)
+                return BadRequest();
 
-        //     var coaches = await _coachRepository.GetAvailableCoachesAsync(course.Skills, course.ScheduledTimeSlots, course.Period);
+            var course = await _courseRepository.GetByIdAsync(id);
+            if (course == null)
+                return NotFound();
 
-        //     var dto = new AssignCoachDTO
-        //     {
-        //         CourseId = course.Id,
-        //         AvailableCoaches = coaches.Select(c => new ListCoaches
-        //         {
-        //             Id = c.Id,
-        //             Name = c.Name.ToString()
-        //         }).ToList()
-        //     };
+            var coach = await _coachRepository.GetByIdAsync(dto.CoachId);
+            if (coach == null)
+            {
+                ModelState.AddModelError(nameof(dto.CoachId), "Selected coach not found.");
+            }
 
-        //     ViewBag.CourseName = course.Name;
-        //     return View(dto);
-        // }
+            if (!ModelState.IsValid)
+            {
+                return await ReloadAssignCoachView(course, dto);
+            }
 
-        //     [HttpPost("assigncoach/{id}")]
-        //     [ValidateAntiForgeryToken]
-        //     public async Task<IActionResult> AssignCoach(int id, AssignCoachDTO dto)
-        //     {
-        //         if (id != dto.CourseId)
-        //             return BadRequest();
+            try
+            {
+                // 1. Controleer de beschikbaarheid (Application/Infrastructure Concern)
+                var isAvailable = await _coachAvailability.IsCoachAvailableForCourse(coach, course);
+                if (!isAvailable)
+                {
+                    ModelState.AddModelError(string.Empty, "This coach is no longer available for the selected timeslots.");
+                    return await ReloadAssignCoachView(course, dto);
+                }
 
-        //         var course = await _courseRepository.GetByIdAsync(id);
-        //         if (course == null)
-        //             return NotFound();
+                // 2. Voer de domeinactie uit (deze valideert intern de status en skills).
+                course.AssignCoach(coach);
 
-        //         var coach = await _coachRepository.GetByIdAsync(dto.CoachId);
-        //         if (coach == null)
-        //         {
-        //             ModelState.AddModelError("CoachId", "Coach not found.");
-        //             return View(dto);
-        //         }
+                // 3. Sla de wijzigingen op.
+                await _courseRepository.SaveChangesAsync();
 
-        //         try
-        //         {
-        //             course.AssignCoach(coach);  // Zorg dat deze domeinmethode bestaat
-        //             await _courseRepository.SaveChangesAsync();
+                TempData["SuccessMessage"] = $"Coach '{coach.Name}' assigned to course '{course.Name}'.";
+                return RedirectToAction(nameof(Details), new { id = course.Id });
+            }
+            catch (InvalidOperationException ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+                return await ReloadAssignCoachView(course, dto);
+            }
+        }
 
-        //             TempData["SuccessMessage"] = $"Coach '{coach.Name}' assigned to course.";
-        //             return RedirectToAction(nameof(Details), new { id = course.Id });
-        //         }
-        //         catch (InvalidOperationException ex)
-        //         {
-        //             ModelState.AddModelError(string.Empty, ex.Message);
-        //             // Herlaad opnieuw de lijst van coaches bij fout
-        //             var coaches = await _coachRepository.GetAllAsync();
-        //             dto.AvailableCoaches = coaches.Select(c => new ListCoaches
-        //             {
-        //                 Id = c.Id,
-        //                 Name = c.Name.ToString()
-        //             }).ToList();
+        // Private helper-methode om DRY te respecteren.
+        private async Task<IActionResult> ReloadAssignCoachView(Course course, AssignCoachDTO dto)
+        {
+            ViewBag.CourseName = course.Name;
 
-        //             ViewBag.CourseName = course.Name;
-        //             return View(dto);
-        //         }
-        //     }
-        // }
+            var requiredSkillNames = course.CourseSkills.Select(cs => cs.Skill.Name);
 
-        //     [HttpPost("assigncoach/{id}")]
-        //     [ValidateAntiForgeryToken]
-        //     public async Task<IActionResult> AssignCoach(int id, AssignCoachDTO dto)
-        //     {
-        //         if (id != dto.CourseId)
-        //             return BadRequest();
+            var availableCoaches = await _coachRepository.GetAvailableCoachesAsync(requiredSkillNames, course.ScheduledTimeSlots, course.Period);
 
-        //         var course = await _courseRepository.GetByIdAsync(id);
-        //         if (course == null)
-        //             return NotFound();
+            dto.AvailableCoaches = availableCoaches.Select(c => new ListCoaches
+            {
+                Id = c.Id,
+                Name = c.Name.ToString()
+            }).ToList();
 
-        //         var coach = await _coachRepository.GetByIdAsync(dto.CoachId);
-        //         if (coach == null)
-        //         {
-        //             ModelState.AddModelError("CoachId", "Coach not found.");
-        //             var availableCoachesForView = await _coachRepository.GetAvailableCoachesAsync(course.Skills, course.ScheduledTimeSlots, course.Period);
-        //             dto.AvailableCoaches = availableCoachesForView.Select(c => new ListCoaches
-        //             {
-        //                 Id = c.Id,
-        //                 Name = c.Name.ToString()
-        //             }).ToList();
-        //             return View(dto);
-        //         }
-
-        //         try
-        //         {
-        //             var isAvailable = await _coachAvailability.IsCoachAvailableForCourseAsync(coach, course);
-        //             if (!isAvailable)
-        //             {
-        //                 throw new InvalidOperationException("This coach is no longer available for the selected timeslots.");
-        //             }
-
-        //             course.AssignCoach(coach);
-        //             await _courseRepository.SaveChangesAsync();
-
-        //             TempData["SuccessMessage"] = $"Coach '{coach.Name}' assigned to course.";
-        //             return RedirectToAction(nameof(Details), new { id = course.Id });
-        //         }
-        //         catch (InvalidOperationException ex)
-        //         {
-        //             ModelState.AddModelError(string.Empty, ex.Message);
-
-        //             var availableCoaches = await _coachRepository.GetAvailableCoachesAsync(course.Skills, course.ScheduledTimeSlots, course.Period);
-        //             dto.AvailableCoaches = availableCoaches.Select(c => new ListCoaches
-        //             {
-        //                 Id = c.Id,
-        //                 Name = c.Name.ToString()
-        //             }).ToList();
-
-        //             ViewBag.CourseName = course.Name;
-        //             return View(dto);
-        //         }
-        //     }
+            return View(dto);
+        }
     }
 }

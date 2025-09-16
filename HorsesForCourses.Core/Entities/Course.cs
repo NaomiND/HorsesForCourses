@@ -64,7 +64,7 @@ public class Course
         if (Status != CourseStatus.Confirmed)
             throw new InvalidOperationException("Please confirm the course before assigning a coach.");
 
-        if (!coach.HasAllRequiredSkills(skills))
+        if (!coach.IsSuitable(this.CourseSkills))
             throw new InvalidOperationException("This coach does not have the required skills for this course.");
 
         // if (!await coachAvailability.IsCoachAvailableForCourseAsync(coach, this))

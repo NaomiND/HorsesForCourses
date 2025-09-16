@@ -123,102 +123,6 @@ public class EfCoachRepository : ICoachRepository
     }
 
     // public async Task<IEnumerable<Coach>> GetAvailableCoachesAsync(
-    // IEnumerable<string> requiredSkills,
-    // IEnumerable<ScheduledTimeSlot> slots,
-    // PlanningPeriod period)
-    // {
-    //     var query = _context.Coaches.AsQueryable();
-
-    //     foreach (var skill in requiredSkills)
-    //     {
-    //         var skillPattern = $"%\"{skill}\"%";
-    //         // Gebruik EF.Property om de onderliggende string-kolom aan te spreken
-    //         query = query.Where(c => EF.Functions.Like(EF.Property<string>(c, "skills"), skillPattern));
-    //     }
-
-    //     query = query.Where(coach =>
-    //         !coach.Courses.Any(assignedCourse =>
-    //             assignedCourse.Period.StartDate <= period.EndDate &&
-    //             assignedCourse.Period.EndDate >= period.StartDate &&
-
-    //             assignedCourse.ScheduledTimeSlots.Any(existingSlot =>
-    //                 slots.Any(newSlot =>
-    //                     existingSlot.TimeSlot.StartTime < newSlot.TimeSlot.EndTime &&
-    //                     existingSlot.TimeSlot.EndTime > newSlot.TimeSlot.StartTime &&
-    //                     existingSlot.Day == newSlot.Day
-    //                 )
-    //             )
-    //         )
-    //     );
-    //     return await query.ToListAsync();
-    // }
-
-    // public async Task<IEnumerable<Coach>> GetAvailableCoachesAsync(
-    //     IEnumerable<string> requiredSkills,
-    //     IEnumerable<ScheduledTimeSlot> slots,
-    //     PlanningPeriod period)
-    // {
-    //     // ---------------------------------------------------------------------------------
-    //     // Stap 1: Haal alle coaches op die de vereiste skills hebben.
-    //     // We laden ook hun bestaande cursussen en timeslots mee.
-    //     // ---------------------------------------------------------------------------------
-    //     var query = _context.Coaches
-    //         .Include(c => c.Courses)
-    //             .ThenInclude(course => course.ScheduledTimeSlots)
-    //         .AsQueryable();
-
-    //     if (requiredSkills.Any())
-    //     {
-    //         foreach (var skill in requiredSkills)
-    //         {
-    //             coachesQuery = coachesQuery.Where(c => EF.Property<List<string>>(c, "skills").Contains(skill.ToLower()));
-    //         }
-    //     }
-
-    //     // Voer de database-query uit en haal de kandidaten op.
-    //     var candidateCoaches = await query.ToListAsync();
-
-    //     // ---------------------------------------------------------------------------------
-    //     // Stap 2: Filter de kandidaten in-memory op beschikbaarheid.
-    //     // ---------------------------------------------------------------------------------
-    //     var availableCoaches = new List<Coach>();
-    //     foreach (var coach in candidateCoaches)
-    //     {
-    //         // Controleer of deze coach een conflicterende cursus heeft.
-    //         bool hasConflict = coach.Courses.Any(assignedCourse =>
-    //         {
-    //             // Voorwaarde A: De planningperiodes overlappen.
-    //             bool periodOverlaps = assignedCourse.Period.StartDate <= period.EndDate &&
-    //                                   assignedCourse.Period.EndDate >= period.StartDate;
-
-    //             if (!periodOverlaps)
-    //             {
-    //                 return false; // Geen periode-overlap, dus geen conflict met deze cursus.
-    //             }
-
-    //             // Voorwaarde B: Er is een timeslot-conflict binnen die overlappende periode.
-    //             bool timeslotOverlaps = assignedCourse.ScheduledTimeSlots.Any(existingSlot =>
-    //                 slots.Any(newSlot =>
-    //                     existingSlot.Day == newSlot.Day &&
-    //                     existingSlot.TimeSlot.StartTime < newSlot.TimeSlot.EndTime &&
-    //                     existingSlot.TimeSlot.EndTime > newSlot.TimeSlot.StartTime
-    //                 )
-    //             );
-
-    //             return timeslotOverlaps;
-    //         });
-
-    //         // Als de coach GEEN conflict heeft, is hij/zij beschikbaar.
-    //         if (!hasConflict)
-    //         {
-    //             availableCoaches.Add(coach);
-    //         }
-    //     }
-
-    //     return availableCoaches;
-    // }
-
-    // public async Task<IEnumerable<Coach>> GetAvailableCoachesAsync(
     //     IEnumerable<string> requiredSkills,
     //     IEnumerable<ScheduledTimeSlot> slots,
     //     PlanningPeriod period)
@@ -318,6 +222,5 @@ public class EfCoachRepository : ICoachRepository
             .ThenInclude(course => course.ScheduledTimeSlots)
             .ToListAsync();
     }
-
 }
 

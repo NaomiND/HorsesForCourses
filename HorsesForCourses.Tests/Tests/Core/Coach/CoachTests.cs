@@ -45,9 +45,9 @@ public class CoachTests
     }
 
     [Fact]
-    public void HasAllRequiredSkills_ReturnsTrueWhenValid()
+    public void IsSuitable_ReturnsTrueWhenValid()
     {
-        var skills = new List<CoachSkill>
+        var coachSkills = new List<CoachSkill>
         {
             new() { Coach = coach, Skill = new Skill("c# programming") },
             new() { Coach = coach, Skill = new Skill("dutch") },
@@ -55,30 +55,38 @@ public class CoachTests
         };
         // Gebruik reflectie om de private readonly 'coachSkills' lijst te vullen.
         var coachSkillsField = typeof(Coach).GetField("coachSkills", BindingFlags.NonPublic | BindingFlags.Instance);
-        (coachSkillsField.GetValue(coach) as List<CoachSkill>).AddRange(skills);
+        (coachSkillsField.GetValue(coach) as List<CoachSkill>).AddRange(coachSkills);
 
-        var requiredSkills = new List<string> { "C# Programming", "Dutch" };
+        var requiredCourseSkills = new List<CourseSkill>
+        {
+            new() { Skill = new Skill("c# programming") },
+            new() { Skill = new Skill("dutch") }
+        };
 
-        bool result = coach.HasAllRequiredSkills(requiredSkills);
+        bool result = coach.IsSuitable(requiredCourseSkills);
 
         Assert.True(result);
     }
 
     [Fact]
-    public void HasAllRequiredSkills_ReturnsFalseWhenOneOrMoreSkillsAreMissing()
+    public void IsSuitable_ReturnsFalseWhenOneOrMoreSkillsAreMissing()
     {
-        var skills = new List<CoachSkill>
+        var coachSkills = new List<CoachSkill>
         {
             new() { Coach = coach, Skill = new Skill("c# programming") },
             new() { Coach = coach, Skill = new Skill("dutch") }
         };
 
         var coachSkillsField = typeof(Coach).GetField("coachSkills", BindingFlags.NonPublic | BindingFlags.Instance);
-        (coachSkillsField.GetValue(coach) as List<CoachSkill>).AddRange(skills);
+        (coachSkillsField.GetValue(coach) as List<CoachSkill>).AddRange(coachSkills);
 
-        var requiredSkills = new List<string> { "C# Programming", "French" };
+        var requiredCourseSkills = new List<CourseSkill>
+        {
+            new() { Skill = new Skill("c# programming") },
+            new() { Skill = new Skill("french") }
+        };
 
-        bool result = coach.HasAllRequiredSkills(requiredSkills);
+        bool result = coach.IsSuitable(requiredCourseSkills);
 
         Assert.False(result);
     }

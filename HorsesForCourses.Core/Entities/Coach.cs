@@ -37,15 +37,17 @@ public class Coach
         User = user;    //volledige object gekoppeld voor UOW bij opslaan
     }
 
-    public bool HasAllRequiredSkills(IEnumerable<string> requiredSkillNames)
+    public bool IsSuitable(IReadOnlyCollection<CourseSkill> requiredCourseSkills)
     {
-        if (requiredSkillNames == null || !requiredSkillNames.Any())
+        if (requiredCourseSkills == null || !requiredCourseSkills.Any())
             return true;
+
+        var requiredSkillNames = requiredCourseSkills.Select(cs => cs.Skill.Name).ToHashSet();
 
         var coachSkillNames = this.CoachSkills
             .Select(cs => cs.Skill.Name)
-            .ToHashSet(); // ToHashSet is efficiënt voor lookups.
+            .ToHashSet();
 
-        return requiredSkillNames.All(reqSkill => coachSkillNames.Contains(reqSkill.Trim().ToLowerInvariant()));
+        return requiredSkillNames.IsSubsetOf(coachSkillNames);
     }
 }
