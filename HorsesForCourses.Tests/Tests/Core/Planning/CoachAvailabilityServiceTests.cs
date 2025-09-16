@@ -39,17 +39,17 @@ public class CoachAvailabilityTests
     }
 
     // probleem in mijn logica voor overlapping courses, test faalt en test is correct, dus code is fout. Of toch, want timeslots is getest??
-    // [Fact]
-    // public async Task Coach_With_Overlapping_Course_And_Overlapping_Timeslot_Should_Not_Be_Available()
-    // {
-    //     var newCourse = Course.Create("Overlapping Course", course1.Period);
-    //     Hack.TheId(newCourse, 2);
-    //     courseRepositoryMock.Setup(r => r.GetCoursesByCoachIdAsync(coach1.Id)).ReturnsAsync(new List<Course> { course1 });
+    [Fact]
+    public async Task Coach_With_Overlapping_Course_And_Overlapping_Timeslot_Should_Not_Be_Available()
+    {
+        var newCourse = Course.Create("Overlapping Course", course1.Period);
+        Hack.TheId(newCourse, 2);
+        courseRepositoryMock.Setup(r => r.GetCoursesByCoachIdAsync(coach1.Id)).ReturnsAsync(new List<Course> { course1 });
 
-    //     var result = await availabilityService.IsCoachAvailableForCourse(coach1, newCourse);
+        var result = await availabilityService.IsCoachAvailableForCourse(coach1, newCourse);
 
-    //     Assert.False(result);
-    // }
+        Assert.False(result);
+    }
 
     [Fact]
     public async Task Coach_With_Overlapping_Course_But_NonOverlapping_Timeslot_Should_Be_Available()
