@@ -38,7 +38,7 @@ public class CoachesController : ControllerBase
         return Ok(coachDto);
     }
 
-    [HttpPost]
+    [HttpPost("create")]
     public async Task<IActionResult> CreateCoach([FromBody] CreateCoachDTO dto)
     {
         var coach = new Coach(FullName.From(dto.Name), EmailAddress.Create(dto.Email));
@@ -48,27 +48,44 @@ public class CoachesController : ControllerBase
         return Ok(coach.Id);
     }
 
-    // [HttpPost("{id}/skills")]
-    // public async Task<IActionResult> UpdateCoachSkills([FromBody] UpdateCoachSkillsDTO dto, int id)
-    // {
-    //     var coach = await _coachRepository.GetByIdAsync(id);
-    //     if (coach is null) return NotFound();
+    [HttpPost("{id}/skills")]
+    public async Task<IActionResult> UpdateCoachSkills(int id, [FromBody] UpdateCoachSkillsDTO dto)
+    {
+        if (id != dto.Id)
+            return BadRequest("ID in URL and body do not match.");
 
-    //     coach.UpdateSkills(dto.Skills);
+        var coach = await _coachRepository.GetByIdAsync(id);
+        if (coach is null)
+            return NotFound();
 
-    //     await _coachRepository.SaveChangesAsync();
 
-    //     // var coachDto = CoachMapper.ToDTO(coach);
-    //     return Ok(dto);
-    // }
+        await _coachRepository.UpdateSkillsAsync(id, dto.Skills);
+        return Ok(dto);
+        //return NoContent();
+    }
 
-    // [HttpGet]  //no paging
-    // public async Task<ActionResult<IEnumerable<CoachDTO>>> GetAll()
-    // {
-    //     var coaches = await _coachRepository.GetAllAsync();
-    //     var allCourses = await _courseRepository.GetAllAsync();
-    //     var coachDtos = CoachMapper.ToDTOList(coaches, allCourses);
-    //     return Ok(coachDtos);
-    // }
+    [HttpGet("{id}/available-coaches")]
+    public async Task<IActionResult> GetAvailableCoaches(int id)
+    {
+        var course = await _courseRepository.GetByIdAsync(id);
+        if (course is null)
+        {
+            return NotFound($"Course with Id {id} not found.");
+        }
 
+        if (course.Status != CourseStatus.Confirmed)
+            return BadRequest("Coaches can only be assigned to a confirmed course.");
+
+        var requiredSkillNames = course.CourseSkills.Select(cs => cs.Skill.Name);
+        var availableCoaches = await _coachRepository.GetAvailableCoachesAsync(requiredSkillNames, course.ScheduledTimeSlots, course.Period);
+
+        var coachDtos = availableCoaches.Select(c => new CoachBasicDTO
+        {
+            Id = c.Id,
+            Name = c.Name.ToString()
+        });
+
+        return Ok(coachDtos);
+    }
 }
+

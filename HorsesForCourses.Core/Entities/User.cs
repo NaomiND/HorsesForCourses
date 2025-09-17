@@ -34,7 +34,7 @@ public class User
 
         var passwordHash = passwordHasher.Hash(plainTextPassword);
 
-        // Bepaal de rol. Dit is de admingebruiker.
+        //Dit is de admingebruiker. Login Name: principaluser@admin.com Password: AdminPrincipal@User
         string role = (email.ToLower() == "principaluser@admin.com") ? "Admin" : "User";
 
         return new User(fullName, emailAddress, passwordHash, role);

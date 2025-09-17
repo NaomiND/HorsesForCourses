@@ -7,6 +7,7 @@ using Serilog;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
+using HorsesForCourses.Application.Interfaces;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,6 +30,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<CoachAvailability>();
 builder.Services.AddScoped<ICourseRepository, EfCourseRepository>();        //Voor elke unieke HTTP-request wordt er één AppDbContext-instantie gemaakt.
 builder.Services.AddScoped<ICoachRepository, EfCoachRepository>();
+builder.Services.AddScoped<IUserRepository, EfUserRepository>();
+builder.Services.AddScoped<ISkillRepository, EfSkillRepository>();
 builder.Services.AddScoped<Logger>();
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
@@ -73,7 +76,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();  //voorlopig uitzetten ivm beveiliging
 app.UseAuthorization();
 app.MapControllers();
 

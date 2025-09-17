@@ -78,9 +78,8 @@ namespace HorsesForCourses.MVC.CoachController
         {
             var coach = await _coachRepository.GetByIdAsync(id);
             if (coach == null)
-            {
                 return NotFound();
-            }
+
             // --- authorization check ---
             var userEmail = User.Identity.Name;
             var currentUser = await _userRepository.GetByEmailAsync(userEmail);

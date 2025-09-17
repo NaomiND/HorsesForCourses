@@ -23,7 +23,25 @@ public class CoursesController : ControllerBase
         _coachAvailability = coachAvailability;
     }
 
-    [HttpPost]
+    [HttpGet]
+    public async Task<ActionResult<PagedResult<CourseAssignStatusDTOPaging>>> GetAll([FromQuery] PageRequest request)
+    {
+        var pagedCourses = await _courseRepository.GetAllPagedAsync(request);
+        return Ok(pagedCourses);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetCourseById(int id)
+    {
+        var course = await _courseRepository.GetByIdAsync(id);
+        if (course is null)
+            return NotFound();
+
+        var courseDto = CourseMapper.ToGetByIdResponse(course);
+        return Ok(courseDto);
+    }
+
+    [HttpPost("create")]
     public async Task<IActionResult> CreateCourse([FromBody] CreateCourseDTO dto)
     {
         var period = new PlanningPeriod(DateOnly.Parse(dto.StartDate), DateOnly.Parse(dto.EndDate));
@@ -35,18 +53,31 @@ public class CoursesController : ControllerBase
         return Ok(course.Id);
     }
 
-    // [HttpPost("{id}/skills")]                       // Vervangt de vereiste competenties voor een cursus.
-    // public async Task<IActionResult> UpdateCourseSkills([FromBody] UpdateCourseSkillsDTO dto, int id)
-    // {
-    //     var course = await _courseRepository.GetByIdAsync(id);
-    //     if (course is null) return NotFound();
+    [HttpPost("{id}/skills")]                       // Vervangt de vereiste competenties voor een cursus.
+    public async Task<IActionResult> UpdateCourseSkills([FromBody] UpdateCourseSkillsDTO dto, int id)
+    {
+        if (id != dto.Id)
+            return BadRequest("ID mismatch.");
 
-    //     course.UpdateSkills(dto.Skills);
 
-    //     await _courseRepository.SaveChangesAsync();
+        var course = await _courseRepository.GetByIdAsync(id);
+        if (course is null)
+            return NotFound();
 
-    //     return Ok(dto);
-    // }
+        try
+        {
+            await _courseRepository.UpdateSkillsAsync(id, dto.Skills);
+            return NoContent();
+        }
+        catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
+        {
+            return UnprocessableEntity(new ProblemDetails
+            {
+                Title = "An error occurred while updating skills.",
+                Detail = ex.Message
+            });
+        }
+    }
 
     [HttpPost("{id}/timeslots")]        //moet compacter
     public async Task<IActionResult> UpdateTimeSlots([FromBody] UpdateTimeSlotsDTO dto, int id)
@@ -84,68 +115,51 @@ public class CoursesController : ControllerBase
         return NoContent();
     }
 
-    [HttpGet]
-    public async Task<ActionResult<PagedResult<CourseAssignStatusDTOPaging>>> GetAll([FromQuery] PageRequest request)
-    {
-        var pagedCourses = await _courseRepository.GetAllPagedAsync(request);
-        return Ok(pagedCourses);
-    }
-
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetCourseById(int id)
+    [HttpGet("{id}/available-coaches")]
+    public async Task<IActionResult> GetAvailableCoaches(int id)
     {
         var course = await _courseRepository.GetByIdAsync(id);
         if (course is null)
-            return NotFound();
+            return NotFound($"Course with Id {id} not found.");
+
+
+        if (course.Status != CourseStatus.Confirmed)
+            return BadRequest("Coaches can only be assigned to a confirmed course.");
+
+        var requiredSkillNames = course.CourseSkills.Select(cs => cs.Skill.Name);
+        var availableCoaches = await _coachRepository.GetAvailableCoachesAsync(requiredSkillNames, course.ScheduledTimeSlots, course.Period);
+
+        var coachDtos = availableCoaches.Select(c => new CoachBasicDTO
+        {
+            Id = c.Id,
+            Name = c.Name.ToString()
+        });
+
+        return Ok(coachDtos);
+    }
+
+    [HttpPost("{id}/assign-coach")]
+    public async Task<IActionResult> AssignCoach(int id, [FromBody] AssignCoachDTO dto)
+    {
+        var course = await _courseRepository.GetByIdAsync(id);
+        if (course is null)
+            return NotFound($"Course with Id {id} not found.");
+
+        var coach = await _coachRepository.GetByIdAsync(dto.CoachId);
+        if (coach is null)
+            return NotFound($"Coach with Id {dto.CoachId} not found.");
+
+        var isAvailable = await _coachAvailability.IsCoachAvailableForCourse(coach, course);
+        if (!isAvailable)
+        {
+            throw new DomainException("This coach is unavailable for this course.");
+        }
+
+        course.AssignCoach(coach);
+
+        await _courseRepository.SaveChangesAsync();
 
         var courseDto = CourseMapper.ToGetByIdResponse(course);
         return Ok(courseDto);
     }
-
-    // [HttpGet("{id}/available-coaches")]
-    // public async Task<IActionResult> GetAvailableCoaches(int id)
-    // {
-    //     var course = await _courseRepository.GetByIdAsync(id);
-    //     if (course is null)
-    //     {
-    //         return NotFound($"Course with Id {id} not found.");
-    //     }
-
-    //     if (!course.Skills.Any() || !course.ScheduledTimeSlots.Any())
-    //     {
-    //         return BadRequest("Course needs to be confirmed first.");
-    //     }
-
-    //     var availableCoaches = await _coachRepository.GetAvailableCoachesAsync(course.Skills, course.ScheduledTimeSlots, course.Period);
-
-    //     var coachDtos = availableCoaches.Select(c => new CoachBasicDTO
-    //     {
-    //         Id = c.Id,
-    //         Name = c.Name.ToString()
-    //     });
-
-    //     return Ok(coachDtos);
-    // }
-
-    // [HttpPost("{id}/assign-coach")]                             // Wijst een geschikte coach toe aan een bevestigde cursus.
-    // public async Task<IActionResult> AssignCoach(int id, [FromBody] AssignCoachDTO dto)
-    // {
-    //     var course = await _courseRepository.GetByIdAsync(id);
-    //     if (course is null) return NotFound($"Course with Id {id} not found.");
-
-    //     var coach = await _coachRepository.GetByIdAsync(dto.CoachId);
-    //     if (coach is null) return NotFound($"Coach with Id {dto.CoachId} not found.");
-
-    //     var isAvailable = await _coachAvailability.IsCoachAvailableForCourseAsync(coach, course);
-    //     if (!isAvailable)
-    //     {
-    //         throw new DomainException("This coach is unavailable for this course.");
-    //     }
-
-    //     course.AssignCoach(coach);
-    //     await _courseRepository.SaveChangesAsync();
-
-    //     var courseDto = CourseMapper.ToDTO(course);
-    //     return Ok(courseDto);
-    // }
 }
