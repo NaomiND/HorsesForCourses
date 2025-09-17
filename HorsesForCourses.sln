@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HorsesForCourses.Applicatio
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HorsesForCourses.MVC", "HorsesForCourses.MVC\HorsesForCourses.MVC.csproj", "{9529416D-D7D5-4059-A82F-D4F270A9DAF3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HorsesForCourses.BlazorWasm", "HorsesForCourses.BlazorWasm\HorsesForCourses.BlazorWasm.csproj", "{5B83ADB4-0B8E-4C7C-9763-56E0E4DAC69F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +46,10 @@ Global
 		{9529416D-D7D5-4059-A82F-D4F270A9DAF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9529416D-D7D5-4059-A82F-D4F270A9DAF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9529416D-D7D5-4059-A82F-D4F270A9DAF3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B83ADB4-0B8E-4C7C-9763-56E0E4DAC69F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B83ADB4-0B8E-4C7C-9763-56E0E4DAC69F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B83ADB4-0B8E-4C7C-9763-56E0E4DAC69F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B83ADB4-0B8E-4C7C-9763-56E0E4DAC69F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
