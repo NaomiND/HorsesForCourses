@@ -43,6 +43,7 @@ public class CoachAvailabilityTests
     public async Task Coach_With_Overlapping_Course_And_Overlapping_Timeslot_Should_Not_Be_Available()
     {
         var newCourse = Course.Create("Overlapping Course", course1.Period);
+        newCourse.AddScheduledTimeSlot(new ScheduledTimeSlot(WeekDays.Monday, new TimeSlot(10, 12)));
         Hack.TheId(newCourse, 2);
         courseRepositoryMock.Setup(r => r.GetCoursesByCoachIdAsync(coach1.Id)).ReturnsAsync(new List<Course> { course1 });
 
