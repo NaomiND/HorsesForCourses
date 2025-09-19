@@ -352,7 +352,6 @@ namespace HorsesForCourses.MVC.CourseController
             ViewBag.CourseName = course.Name;
 
             var requiredSkillNames = course.CourseSkills.Select(cs => cs.Skill.Name);
-
             var availableCoaches = await _coachRepository.GetAvailableCoachesAsync(requiredSkillNames, course.ScheduledTimeSlots, course.Period);
 
             dto.AvailableCoaches = availableCoaches.Select(c => new ListCoaches

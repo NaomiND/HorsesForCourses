@@ -11,7 +11,7 @@ namespace HorsesForCourses.Application
         {
             _courseRepository = courseRepository;
         }
-        public async Task<bool> IsCoachAvailableForCourse(Coach coach, Course newCourse)
+        public virtual async Task<bool> IsCoachAvailableForCourse(Coach coach, Course newCourse)
         {
             var assignedCourses = await _courseRepository.GetCoursesByCoachIdAsync(coach.Id);
 

@@ -236,7 +236,7 @@ public class EfCoachRepository : ICoachRepository
     IEnumerable<ScheduledTimeSlot> slots,
     PlanningPeriod period)
     {
-        // Stap 1: skill-namen naar Id's (blijft hetzelfde)
+        // Stap 1: skill-namen naar Id's
         var requiredSkillIds = await _context.Skills
             .Where(s => requiredSkillNames.Contains(s.Name))
             .Select(s => s.Id)
@@ -258,7 +258,7 @@ public class EfCoachRepository : ICoachRepository
             );
         }
 
-        // Stap 3: hoofdquery met de nieuwe, vertaalbare predicate
+        // Stap 3: Hoofdquery met de nieuwe, vertaalbare predicate
         var query = _context.Coaches.AsQueryable();
 
         foreach (var skillId in requiredSkillIds)
@@ -271,12 +271,12 @@ public class EfCoachRepository : ICoachRepository
                 // Voorwaarde A: Periode-overlap
                 assignedCourse.Period.StartDate <= period.EndDate &&
                 assignedCourse.Period.EndDate >= period.StartDate &&
-                // Voorwaarde B: Timeslot-overlap, nu met onze vertaalbare predicate
+                // Voorwaarde B: Timeslot-overlap
                 assignedCourse.ScheduledTimeSlots.AsQueryable().Any(overlapPredicate)
             )
         );
 
-        // Stap 4: Voer de query uit (blijft hetzelfde)
+        // Stap 4: Voer de query uit
         return await query.ToListAsync();
     }
 }
