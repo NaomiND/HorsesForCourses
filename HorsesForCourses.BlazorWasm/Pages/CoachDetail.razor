@@ -1,0 +1,47 @@
+@page "/coaches/details/{Id:int}"
+@using HorsesForCourses.Application.dtos
+@using HorsesForCourses.BlazorWasm.DTOs
+
+@inject HttpClient Http
+
+<PageTitle>Coach Details</PageTitle>
+
+@if (coach == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <h3>Coach Details for @coach.Name</h3>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">Email</dt>
+        <dd class="col-sm-10">@coach.Email</dd>
+
+        <dt class="col-sm-2">Skills</dt>
+        <dd class="col-sm-10">
+            @if (coach.Skills.Any())
+            {
+                @string.Join(", ", coach.Skills)
+            }
+            else
+            {
+                <em>No skills listed.</em>
+            }
+        </dd>
+    </dl>
+
+    <a href="/coaches" class="btn btn-secondary">Back to summary</a>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private CoachDetailDTO? coach;
+
+    protected override async Task OnInitializedAsync()
+    {
+        coach = await Http.GetFromJsonAsync<CoachDetailDTO>($"coaches/{Id}");
+    }
+}
