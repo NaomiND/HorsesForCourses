@@ -1,4 +1,4 @@
-namespace HorsesForCourses.Application.dtos;
+namespace HorsesForCourses.BlazorWasm.DTOs;
 
 public class CreateCoachDTO
 {

@@ -1,8 +1,14 @@
 @page "/coaches/details/{Id:int}"
-@using HorsesForCourses.Application.dtos
 @using HorsesForCourses.BlazorWasm.DTOs
 
 @inject HttpClient Http
+
+@if (SuccessMessage != null)
+{
+    <div class="alert alert-success" role="alert">
+        @SuccessMessage
+    </div>
+}
 
 <PageTitle>Coach Details</PageTitle>
 
@@ -15,31 +21,63 @@ else
     <h3>Coach Details for @coach.Name</h3>
     <hr />
     <dl class="row">
+        <dt class="col-sm-2">Id</dt>
+        <dd class="col-sm-10">@coach.Id</dd>
+
         <dt class="col-sm-2">Email</dt>
         <dd class="col-sm-10">@coach.Email</dd>
 
-        <dt class="col-sm-2">Skills</dt>
-        <dd class="col-sm-10">
-            @if (coach.Skills.Any())
-            {
-                @string.Join(", ", coach.Skills)
-            }
-            else
-            {
-                <em>No skills listed.</em>
-            }
-        </dd>
+        @if (coach.Skills.Any())
+        {
+            <div id="skills-container">
+                @for (int i = 0; i < coach.Skills.Count; i++)
+                {
+                    <div class="row skill-row mb-2 align-items-center">
+                        <dt class="col-sm-2">Skill @((i + 1)):</dt>
+                        <dd class="col-sm-10">@coach.Skills[i]</dd>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p>This coach does not have skills.</p>
+        }
+
+        @if (coach.Courses.Any())
+        {
+            <div id="assigned-courses-container">
+                <dl class="row">
+                    @for (int i = 0; i < coach.Courses.Count; i++)
+                    {
+                        <dt class="col-sm-2">Course @((i + 1)):</dt>
+                        <dd class="col-sm-10">
+                            <NavLink href="@($"courses/details/{coach.Courses[i].Id}")">
+                                @coach.Courses[i].Name
+                            </NavLink>
+                        </dd>
+                    }
+                </dl>
+            </div>
+        }
+        else
+        {
+            <p>This coach has not been assigned to any courses.</p>
+        }
     </dl>
 
-    <a href="/coaches" class="btn btn-secondary">Back to summary</a>
+    <div>
+        <NavLink href="@($"coaches/editskills/{coach.Id}")" class="btn btn-warning">Edit skills</NavLink>
+        <a href="/coaches" class="btn btn-secondary">Back to summary</a>
+        @* <NavLink href="/coaches" class="btn btn-secondary">Back to summary</NavLink> *@
+    </div>
 }
 
 @code {
     [Parameter]
     public int Id { get; set; }
-
-    private CoachDetailDTO? coach;
-
+    public CoachDetailDTO coach { get; set; }
+    public string SuccessMessage { get; set; }
     protected override async Task OnInitializedAsync()
     {
         coach = await Http.GetFromJsonAsync<CoachDetailDTO>($"coaches/{Id}");

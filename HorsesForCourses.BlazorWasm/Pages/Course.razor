@@ -1,0 +1,51 @@
+@* @page "/courses"
+@using HorsesForCourses.BlazorWasm.DTOs
+@inject HttpClient Http
+
+<PageTitle>Courses Summary</PageTitle>
+
+<h3>Courses Summary</h3>
+
+<p>
+    <a href="/courses/create" class="btn btn-success">Register new course</a>
+</p>
+
+@if (pagedResult == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (CourseBasicInfo course in pagedResult.Items)
+            {
+                <tr>
+                    <td>@course.Id</td>
+                    <td>@course.Name</td>
+                    <td>
+                        <a href="@($"coaches/details/{course.Id}")" class="btn btn-info btn-sm">Details</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+}
+
+@code {
+    private PagedResult<CoachDTOPaging>? pagedResult;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Call the WebApi to get the first page of coaches
+        pagedResult = await Http.GetFromJsonAsync<PagedResult<CoachDTOPaging>>("coaches?page=1&pageSize=10");
+    }
+} *@
